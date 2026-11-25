@@ -343,6 +343,39 @@
     .lb-prev { left: 24px; } .lb-next { right: 24px; }
     .lb-close { position: fixed; top: 20px; right: 24px; background: rgba(255,255,255,.14); color: #fff; border: none; }
 
+    /* [3순위 2026-11-25] */
+    #pdfBtn { font-size: 12.5px; }
+    @media (max-width: 1420px) { #pdfBtn { font-size: 0; gap: 0; } }
+    .overflow-chip { color: #B42318; background: #FEF3F2; border-color: #FDA29B; }
+    .overflow-chip.visible { display: inline-flex; }
+    table.pv-grid td.overflow { box-shadow: inset 0 0 0 1.5px rgba(217,45,32,.75); background-image: linear-gradient(rgba(217,45,32,.06), rgba(217,45,32,.06)); }
+    table.pv-grid td.overflow::after { content: ''; position: absolute; top: 0; right: 0; border-style: solid; border-width: 0 7px 7px 0; border-color: transparent #D92D20 transparent transparent; zoom: var(--ui-zoom, 1); }
+    table.pv-grid td.flash { animation: flash 1.2s ease; }
+    @keyframes flash { 0%,60% { box-shadow: inset 0 0 0 3px #D92D20; } 100% { box-shadow: inset 0 0 0 1.5px rgba(217,45,32,.75); } }
+    table.pv-grid td.repeated { background-image: linear-gradient(rgba(124,58,237,.06), rgba(124,58,237,.06)); }
+    table.pv-grid td.repeated::before { content: '↻'; position: absolute; right: 2px; top: 0; font: 600 10px 'Pretendard', sans-serif; color: rgba(124,58,237,.75); zoom: var(--ui-zoom, 1); pointer-events: none; }
+    .anno-layer { position: absolute; pointer-events: none; z-index: 2; }
+    .anno-svg { position: absolute; left: 0; top: 0; overflow: visible; }
+    .anno-text { position: absolute; display: flex; align-items: center; justify-content: center; text-align: center; white-space: pre-wrap; line-height: 1.15; box-sizing: border-box; padding: 1px 3px; overflow: hidden; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; }
+    .anno-modal .modal-box { display: flex; flex-direction: column; gap: 10px; }
+    .anno-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .anno-toolbar select { padding: 5px 6px; font-size: 12px; }
+    .anno-tools button { padding: 6px 10px; }
+    .swatches { display: flex; gap: 4px; }
+    .swatch { width: 22px; height: 22px; padding: 0; border-radius: 50%; border: 1px solid rgba(0,0,0,.25); }
+    .swatch.on { box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--accent); }
+    .anno-stage { position: relative; align-self: center; background: #1E1E1E; border-radius: 6px; line-height: 0; user-select: none; }
+    .anno-img { display: block; pointer-events: none; }
+    .anno-edit-layer { position: absolute; left: 0; top: 0; cursor: crosshair; }
+    .anno-edit-layer svg line, .anno-edit-layer svg rect { pointer-events: stroke; cursor: move; }
+    .anno-edit-layer .anno-text { pointer-events: auto; cursor: move; }
+    .anno-sel { outline: 2px dashed var(--accent); outline-offset: 2px; }
+    .anno-text-edit { position: absolute; resize: none; z-index: 3; outline: 2px solid var(--accent); text-align: center; font-family: 'Malgun Gothic', sans-serif; }
+    .recent-card { display: flex; flex-direction: row; align-items: stretch; padding: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+    .recent-card:hover { border-color: var(--accent); }
+    .recent-open { flex: 1; flex-direction: column; align-items: flex-start; gap: 3px; border: none; border-radius: 0; padding: 12px 14px; text-align: left; min-width: 0; }
+    .recent-dup { border: none; border-left: 1px solid var(--line); border-radius: 0; font-size: 12px; color: var(--ink-2); padding: 0 12px; }
+
     .toast { position: fixed; left: 50%; bottom: 58px; transform: translateX(-50%) translateY(10px); background: rgba(28,29,33,.92); color: #fff; padding: 9px 16px; border-radius: 10px; font-size: 12.5px; opacity: 0; pointer-events: none; transition: opacity .18s, transform .18s; z-index: 200; max-width: 70vw; box-shadow: var(--shadow-pop); }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -523,6 +556,9 @@
       <button id="openSettingsBtn" class="ghost" title="MYBOX 설정">
         <svg class="i" viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 01-.6-8.96A6 6 0 0118 8a4 4 0 01-1 7.87"/><path d="M12 12v8M9 17l3 3 3-3"/></svg>
       </button>
+      <button id="pdfBtn" class="ghost" title="Mac Excel로 PDF 만들기 (⇧⌘E)">
+        <svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>PDF
+      </button>
       <button id="exportBtn" class="primary">
         <svg class="i" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5"/><path d="M5 19h14"/></svg>엑셀로 내보내기
       </button>
@@ -601,6 +637,9 @@
           <svg class="i" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
           <span id="fontBannerText"></span>
           <button id="dismissFontBannerBtn">닫기</button>
+        </div>
+        <div id="overflowChip" class="font-banner overflow-chip" title="칸보다 글자가 긴 곳 — 누르면 차례로 보여 줘요">
+          <svg class="i" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M4 6h16M4 12h10M4 18h7M17 15l4 4M21 15l-4 4"/></svg><span></span>
         </div>
         <span id="pageCountText"></span>
         <span id="sizeEstimateBadge" class="badge">예상 용량 계산 중</span>

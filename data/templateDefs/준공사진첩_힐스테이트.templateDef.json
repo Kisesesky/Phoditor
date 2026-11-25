@@ -1,8 +1,10 @@
 {
   "id": "준공사진첩_힐스테이트",
   "version": 1,
-  "status": "auto-verified",
-  "verified": false,
+  "status": "verified",
+  "verified": true,
+  "verifiedAt": "2026-11-25",
+  "verifiedBy": "사용자 육안 승인(앱 쪽 보기·Excel PDF 비교 확인 후 일괄 승인 지시)",
   "type": "준공사진첩",
   "company": "힐스테이트",
   "source": {

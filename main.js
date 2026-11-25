@@ -15,6 +15,7 @@ const {
   exportWorkbook
 } = require('./export');
 const { MyboxClient, MYBOX_AUTH_ERROR_MSG } = require('./mybox');
+const JSZip = require('jszip');
 const { getPreviewFonts, isPreviewFont, installBundled, resetCache: resetFontCache } = require('./fontcatalog');
 const { extractSheetModel, extractDrawings, extractPageNumbering, defaultFontOf, usePaletteOf } = require('./sheetmodel');
 
@@ -279,6 +280,99 @@ function pushRecent(entry) {
   fs.mkdirSync(path.dirname(recentFile()), { recursive: true });
   fs.writeFileSync(recentFile(), JSON.stringify(list.slice(0, 12), null, 1));
 }
+// [작업 파일 2026-11-25] PLAN 주제 4: 작업 파일 하나에 JSON + 사진을 묶는다(.pbook = zip)
+//   project.json  — 작업 내용(사진은 photos/… 이름으로 가리킴, 원래 경로는 originalPath에 기록)
+//   photos/<해시>.<확장자> — 넣은 원본 사진(같은 사진은 한 번만)
+//   edits/<키>.jpg — 자르거나 돌린 사진
+function forEachSlot(editor, fn) {
+  for (const s of (editor && editor.sheets) || []) {
+    for (const b of s.blocks || []) {
+      for (const pa of Object.values(b.photoAreas || {})) {
+        if (!pa || !Array.isArray(pa.slots)) continue;
+        pa.slots.forEach((sl, i) => { if (sl) fn(sl, pa, i); });
+      }
+    }
+  }
+}
+
+async function writeProjectZip(target, data) {
+  const zip = new JSZip();
+  const doc = JSON.parse(JSON.stringify(data));
+  const byPath = new Map();
+  let photos = 0;
+  let missing = 0;
+  forEachSlot(doc.editor, (sl) => {
+    if (sl.path) {
+      if (!byPath.has(sl.path)) {
+        if (fs.existsSync(sl.path)) {
+          const ext = path.extname(sl.path).toLowerCase() || '.jpg';
+          const name = `photos/${crypto.createHash('sha1').update(sl.path).digest('hex').slice(0, 16)}${ext}`;
+          zip.file(name, fs.readFileSync(sl.path), { compression: 'STORE' });
+          byPath.set(sl.path, name);
+          photos++;
+        } else {
+          byPath.set(sl.path, null);
+          missing++;
+        }
+      }
+      const inZip = byPath.get(sl.path);
+      sl.originalPath = sl.originalPath || sl.path;
+      if (inZip) sl.packed = inZip;
+      delete sl.path;
+      delete sl.thumbUrl;
+      delete sl.previewUrl;
+    }
+    if (sl.croppedDataBase64) {
+      const name = `edits/${crypto.createHash('sha1').update(sl.croppedKey || sl.croppedDataBase64.slice(0, 64)).digest('hex').slice(0, 16)}.jpg`;
+      if (!zip.file(name)) zip.file(name, Buffer.from(sl.croppedDataBase64, 'base64'), { compression: 'STORE' });
+      sl.croppedFile = name;
+      delete sl.croppedDataBase64;
+      delete sl.thumbUrl;
+    }
+  });
+  zip.file('project.json', JSON.stringify(doc), { compression: 'DEFLATE' });
+  const buf = await zip.generateAsync({ type: 'nodebuffer' });
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  const tmp = `${target}.tmp-${process.pid}`;
+  fs.writeFileSync(tmp, buf);
+  fs.renameSync(tmp, target);
+  return { photos, missing, sizeBytes: buf.length };
+}
+
+async function readProjectFile(target) {
+  const buf = fs.readFileSync(target);
+  if (buf[0] !== 0x50 || buf[1] !== 0x4b) return JSON.parse(buf.toString('utf-8')); // 예전(JSON만) 작업 파일
+  const zip = await JSZip.loadAsync(buf);
+  const doc = JSON.parse(await zip.file('project.json').async('string'));
+  // 사진은 앱 데이터 폴더에 풀어 두고 그 경로로 연결한다(원래 사진 폴더가 없어도 열림)
+  const dir = path.join(app.getPath('userData'), 'projects', crypto.createHash('sha1').update(target).digest('hex').slice(0, 12));
+  fs.mkdirSync(path.join(dir, 'photos'), { recursive: true });
+  const extracted = new Map();
+  const slots = [];
+  forEachSlot(doc.editor, (sl) => slots.push(sl));
+  for (const sl of slots) {
+    if (sl.packed && zip.file(sl.packed)) {
+      if (!extracted.has(sl.packed)) {
+        const out = path.join(dir, sl.packed);
+        fs.mkdirSync(path.dirname(out), { recursive: true });
+        if (!fs.existsSync(out)) fs.writeFileSync(out, await zip.file(sl.packed).async('nodebuffer'));
+        extracted.set(sl.packed, out);
+      }
+      sl.path = extracted.get(sl.packed);
+    } else if (sl.originalPath) {
+      sl.path = sl.originalPath;
+    }
+    delete sl.packed;
+    if (sl.croppedFile && zip.file(sl.croppedFile)) {
+      const b64 = await zip.file(sl.croppedFile).async('base64');
+      sl.croppedDataBase64 = b64;
+      sl.thumbUrl = `data:image/jpeg;base64,${b64}`;
+      delete sl.croppedFile;
+    }
+  }
+  return doc;
+}
+
 function writeJsonAtomic(file, obj) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
   const tmp = `${file}.tmp-${process.pid}`;
@@ -298,9 +392,9 @@ ipcMain.handle('project-save', async (_event, { filePath, data, suggestedName, s
       if (res.canceled || !res.filePath) return { ok: false, canceled: true };
       target = res.filePath.endsWith(`.${PROJECT_EXT}`) ? res.filePath : `${res.filePath}.${PROJECT_EXT}`;
     }
-    writeJsonAtomic(target, data);
+    const stats = await writeProjectZip(target, data);
     pushRecent({ path: target, title: data.title || path.basename(target), templateId: data.templateId, savedAt: data.savedAt });
-    return { ok: true, filePath: target };
+    return { ok: true, filePath: target, ...stats };
   } catch (err) {
     return { ok: false, error: String((err && err.message) || err) };
   }
@@ -318,7 +412,7 @@ ipcMain.handle('project-open', async (_event, filePath) => {
       if (res.canceled || !res.filePaths.length) return { ok: false, canceled: true };
       target = res.filePaths[0];
     }
-    const data = JSON.parse(fs.readFileSync(target, 'utf-8'));
+    const data = await readProjectFile(target);
     if (!data || data.format !== 'photobook') return { ok: false, error: '사진첩 작업 파일이 아니에요.' };
     pushRecent({ path: target, title: data.title || path.basename(target), templateId: data.templateId, savedAt: data.savedAt });
     return { ok: true, filePath: target, data };
@@ -408,7 +502,8 @@ function buildAppMenu() {
         { label: '저장', accelerator: 'CmdOrCtrl+S', click: send('save') },
         { label: '다른 이름으로 저장…', accelerator: 'Shift+CmdOrCtrl+S', click: send('save-as') },
         { type: 'separator' },
-        { label: '엑셀로 내보내기…', accelerator: 'CmdOrCtrl+E', click: send('export') }
+        { label: '엑셀로 내보내기…', accelerator: 'CmdOrCtrl+E', click: send('export') },
+        { label: 'PDF로 내보내기…', accelerator: 'Shift+CmdOrCtrl+E', click: send('export-pdf') }
       ]
     },
     {
@@ -676,6 +771,72 @@ ipcMain.handle('estimate-export-size', async (_event, { templateId, photoPaths, 
     uniquePhotoCount: uniquePaths.size + uniqueCropped.size,
     exceeds500MB: totalMB > 500
   };
+});
+
+// [PDF 내보내기 2026-11-25] 엑셀 파일을 만든 뒤 Mac Excel로 PDF 인쇄한다(엑셀 인쇄와 똑같은 결과).
+// Mac Excel은 샌드박스 앱이라 자기 컨테이너 폴더 밖의 파일은 "파일 액세스 부여" 창을 띄운다 → 컨테이너 안 임시 폴더를 쓴다.
+const EXCEL_APP = '/Applications/Microsoft Excel.app';
+const EXCEL_CONTAINER = path.join(os.homedir(), 'Library', 'Containers', 'com.microsoft.Excel', 'Data');
+function runOsa(lines, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const args = [];
+    for (const l of lines) args.push('-e', l);
+    require('child_process').execFile('osascript', args, { timeout: timeoutMs }, (err, stdout, stderr) => {
+      if (err) reject(new Error(String(stderr || err.message || err).trim()));
+      else resolve(String(stdout).trim());
+    });
+  });
+}
+ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggestedName }) => {
+  const def = templateDefCache.get(templateId);
+  if (!def) return { ok: false, error: '템플릿 정의서를 찾을 수 없습니다.' };
+  if (!fs.existsSync(EXCEL_APP)) return { ok: false, error: 'PDF는 Mac용 Microsoft Excel로 만들어요. 이 Mac에 Excel이 없어요.' };
+  const saveRes = await dialog.showSaveDialog(mainWindow, {
+    title: 'PDF로 내보내기',
+    defaultPath: path.join(os.homedir(), 'Desktop', `${(suggestedName || `${def.type}_${def.company}`).replace(/[\\/:*?"<>|]/g, '_')}.pdf`),
+    filters: [{ name: 'PDF', extensions: ['pdf'] }],
+    properties: ['showOverwriteConfirmation']
+  });
+  if (saveRes.canceled || !saveRes.filePath) return { ok: false, canceled: true };
+  const target = saveRes.filePath.toLowerCase().endsWith('.pdf') ? saveRes.filePath : `${saveRes.filePath}.pdf`;
+  const work = path.join(EXCEL_CONTAINER, 'Phoditor-pdf', crypto.randomBytes(6).toString('hex'));
+  const xlsx = path.join(work, 'photobook.xlsx');
+  const pdf = path.join(work, 'photobook.pdf');
+  try {
+    try {
+      fs.mkdirSync(work, { recursive: true });
+    } catch (err) {
+      return { ok: false, error: `Excel 작업 폴더를 쓸 수 없어요(시스템 설정 > 개인정보 보호 및 보안 > 앱 관리 권한 확인): ${err.message}` };
+    }
+    const blankPath = path.join(BLANKS_DIR, `${def.id}.xlsx`);
+    await exportWorkbook({ templateDef: def, editorState, blankXlsxPath: fs.existsSync(blankPath) ? blankPath : null, outputPath: xlsx });
+    const hfs = await runOsa([`POSIX file "${pdf}" as string`], 20000);
+    await runOsa([
+      'with timeout of 300 seconds',
+      'tell application "Microsoft Excel"',
+      'set display alerts to false',
+      `open (POSIX file "${xlsx}")`,
+      `save workbook as active workbook filename "${hfs}" file format PDF file format`,
+      'close active workbook saving no',
+      'end tell',
+      'end timeout'
+    ], 320000);
+    if (!fs.existsSync(pdf)) return { ok: false, error: 'Excel이 PDF를 만들지 못했어요.' };
+    fs.copyFileSync(pdf, target);
+    const pages = (fs.readFileSync(target).toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
+    return { ok: true, filePath: target, pages, sizeBytes: fs.statSync(target).size };
+  } catch (err) {
+    const msg = String(err.message || err);
+    if (/-1743|not authorized|권한/.test(msg)) {
+      return { ok: false, error: 'Excel을 제어할 권한이 없어요. 시스템 설정 > 개인정보 보호 및 보안 > 자동화에서 이 앱이 Microsoft Excel을 제어하도록 허용해 주세요.' };
+    }
+    return { ok: false, error: msg };
+  } finally {
+    for (const f of [xlsx, pdf]) {
+      try { if (fs.existsSync(f)) fs.unlinkSync(f); } catch (_) {}
+    }
+    try { fs.rmdirSync(work); } catch (_) {}
+  }
 });
 
 ipcMain.handle('export-xlsx', async (_event, { templateId, editorState }) => {

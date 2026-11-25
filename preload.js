@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld('api', {
   makeThumbs: (paths) => ipcRenderer.invoke('make-thumbs', paths),
   filesExist: (paths) => ipcRenderer.invoke('files-exist', paths),
   transformPhoto: (payload) => ipcRenderer.invoke('transform-photo', payload),
+  exportPdf: (payload) => ipcRenderer.invoke('export-pdf', payload),
   onMenu: (cb) => ipcRenderer.on('menu', (_e, cmd) => cb(cmd)),
   installFont: (family) => ipcRenderer.invoke('install-font', family),
   openTemplate: (templateId) => ipcRenderer.invoke('open-template', templateId),

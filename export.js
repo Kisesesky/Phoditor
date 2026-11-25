@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 const ExcelJS = require('exceljs');
 const JSZip = require('jszip');
-const { restorePrintSettings } = require('./printfix');
+const { restorePrintSettings, sheetPaths, relsPathOf, resolveTarget, drawingRelOf } = require('./printfix');
 const { renameSheetsInZip } = require('./sheetrename');
 const { evaluateSimpleFormulas } = require('./simpleformula');
 
@@ -845,7 +845,8 @@ function applyCellFontOverrides(ws, cellFonts, blockStarts) {
       if (ov.size) font.size = ov.size;
       if (ov.bold !== undefined) font.bold = !!ov.bold;
       // 스타일 객체를 칸끼리 같이 쓰므로 새 객체로 바꿔 끼운다
-      cell.style = { ...cell.style, font };
+      const alignment = ov.shrink !== undefined ? { ...(cell.alignment || {}), shrinkToFit: !!ov.shrink, ...(ov.shrink ? { wrapText: false } : {}) } : cell.alignment;
+      cell.style = { ...cell.style, font, ...(alignment ? { alignment } : {}) };
       if (cell.value && typeof cell.value === 'object' && Array.isArray(cell.value.richText)) {
         cell.value = { richText: cell.value.richText.map((r) => ({ ...r, font: { ...(r.font || {}), ...(ov.name ? { name: ov.name } : {}), ...(ov.size ? { size: ov.size } : {}), ...(ov.bold !== undefined ? { bold: !!ov.bold } : {}) } })) };
       }
@@ -887,6 +888,68 @@ async function applyFontMapToDrawings(zip, fontMap) {
     });
     if (out !== xml) zip.file(filename, out);
   }
+}
+
+// --- 사진 위 표시(화살표·네모·글상자) → DrawingML 도형 ---
+const EMU = 9525;
+const hex6 = (c, d) => String(c || d).replace('#', '').toUpperCase().slice(0, 6);
+function annotationXml(a, box, id) {
+  const X = (r) => Math.round((box.x + r * box.w) * EMU);
+  const Y = (r) => Math.round((box.y + r * box.h) * EMU);
+  const lineW = Math.round(Math.max(0.5, a.w || 3) * EMU);
+  const color = hex6(a.c, 'E11D48');
+  if (a.t === 'arrow') {
+    const x1 = X(a.x1), y1 = Y(a.y1), x2 = X(a.x2), y2 = Y(a.y2);
+    const flipH = x2 < x1 ? ' flipH="1"' : '';
+    const flipV = y2 < y1 ? ' flipV="1"' : '';
+    const ox = Math.min(x1, x2), oy = Math.min(y1, y2), cx = Math.max(1, Math.abs(x2 - x1)), cy = Math.max(1, Math.abs(y2 - y1));
+    return `<xdr:absoluteAnchor><xdr:pos x="${ox}" y="${oy}"/><xdr:ext cx="${cx}" cy="${cy}"/><xdr:cxnSp macro=""><xdr:nvCxnSpPr><xdr:cNvPr id="${id}" name="표시 화살표 ${id}"/><xdr:cNvCxnSpPr/></xdr:nvCxnSpPr><xdr:spPr><a:xfrm${flipH}${flipV}><a:off x="${ox}" y="${oy}"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="straightConnector1"><a:avLst/></a:prstGeom><a:ln w="${lineW}"><a:solidFill><a:srgbClr val="${color}"/></a:solidFill><a:tailEnd type="triangle" w="med" len="med"/></a:ln></xdr:spPr></xdr:cxnSp><xdr:clientData/></xdr:absoluteAnchor>`;
+  }
+  const ox = X(Math.min(a.x, a.x + a.w2)), oy = Y(Math.min(a.y, a.y + a.h2));
+  const cx = Math.max(1, Math.round(Math.abs(a.w2) * box.w * EMU)), cy = Math.max(1, Math.round(Math.abs(a.h2) * box.h * EMU));
+  if (a.t === 'box') {
+    return `<xdr:absoluteAnchor><xdr:pos x="${ox}" y="${oy}"/><xdr:ext cx="${cx}" cy="${cy}"/><xdr:sp macro="" textlink=""><xdr:nvSpPr><xdr:cNvPr id="${id}" name="표시 네모 ${id}"/><xdr:cNvSpPr/></xdr:nvSpPr><xdr:spPr><a:xfrm><a:off x="${ox}" y="${oy}"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln w="${lineW}"><a:solidFill><a:srgbClr val="${color}"/></a:solidFill></a:ln></xdr:spPr></xdr:sp><xdr:clientData/></xdr:absoluteAnchor>`;
+  }
+  // 글상자
+  const fill = a.bg ? `<a:solidFill><a:srgbClr val="${hex6(a.bg, 'FFFFFF')}"/></a:solidFill>` : '<a:noFill/>';
+  const ln = a.border === false ? '<a:ln><a:noFill/></a:ln>' : `<a:ln w="${Math.round(1.5 * EMU)}"><a:solidFill><a:srgbClr val="${color}"/></a:solidFill></a:ln>`;
+  const sz = Math.round((a.size || 10) * 100);
+  const font = escapeXml(a.font || '맑은 고딕');
+  const paras = String(a.text || '').split('\n').map((line) => `<a:p><a:pPr algn="ctr"/><a:r><a:rPr lang="ko-KR" sz="${sz}" b="${a.bold === false ? 0 : 1}"><a:solidFill><a:srgbClr val="${color}"/></a:solidFill><a:latin typeface="${font}"/><a:ea typeface="${font}"/></a:rPr><a:t>${escapeXml(line)}</a:t></a:r></a:p>`).join('');
+  return `<xdr:absoluteAnchor><xdr:pos x="${ox}" y="${oy}"/><xdr:ext cx="${cx}" cy="${cy}"/><xdr:sp macro="" textlink=""><xdr:nvSpPr><xdr:cNvPr id="${id}" name="표시 글상자 ${id}"/><xdr:cNvSpPr txBox="1"/></xdr:nvSpPr><xdr:spPr><a:xfrm><a:off x="${ox}" y="${oy}"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom>${fill}${ln}</xdr:spPr><xdr:txBody><a:bodyPr wrap="square" lIns="36000" tIns="18000" rIns="36000" bIns="18000" anchor="ctr"/><a:lstStyle/>${paras}</xdr:txBody></xdr:sp><xdr:clientData/></xdr:absoluteAnchor>`;
+}
+
+async function injectAnnotations(zip, jobs) {
+  if (!jobs.length) return 0;
+  const read = async (p) => (zip.file(p) ? zip.file(p).async('string') : null);
+  const sheets = sheetPaths({ 'xl/workbook.xml': await read('xl/workbook.xml'), 'xl/_rels/workbook.xml.rels': await read('xl/_rels/workbook.xml.rels') });
+  const bySheet = new Map();
+  for (const j of jobs) {
+    if (!bySheet.has(j.sheetName)) bySheet.set(j.sheetName, []);
+    bySheet.get(j.sheetName).push(j);
+  }
+  let count = 0;
+  for (const [name, list] of bySheet) {
+    const sPath = sheets[name];
+    if (!sPath) continue;
+    const rel = drawingRelOf(await read(relsPathOf(sPath)));
+    if (!rel) continue;
+    const dPath = resolveTarget(sPath, rel.target);
+    let xml = await read(dPath);
+    if (!xml) continue;
+    let id = Math.max(0, ...[...xml.matchAll(/<xdr:cNvPr\b[^>]*\bid="(\d+)"/g)].map((m) => +m[1])) + 1;
+    let add = '';
+    for (const j of list) {
+      for (const a of j.items) {
+        add += annotationXml(a, j, id++);
+        count++;
+      }
+    }
+    if (!/xmlns:a=/.test(xml.slice(0, 600))) xml = xml.replace(/<xdr:wsDr\b/, '<xdr:wsDr xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"');
+    xml = xml.replace(/<\/xdr:wsDr>\s*$/, `${add}</xdr:wsDr>`);
+    zip.file(dPath, xml);
+  }
+  return count;
 }
 
 function escapeXml(str) {
@@ -1004,6 +1067,7 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
   const numberingMap = computeDocumentNumbering(templateDef, editorState);
   const imageCache = new Map(); // sha256 -> { imageId, width, height, extension }
   let totalPhotoPlacements = 0;
+  const annotationJobs = [];
   let uniqueImagesEmbedded = 0;
   let convertedCount = 0;
   let exifRotatedCount = 0;
@@ -1190,6 +1254,10 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
               editAs: 'oneCell'
             });
             totalPhotoPlacements++;
+            // [사진 표시 2026-11-25] 사진 위 화살표·네모·글상자 → 나중에 엑셀 도형으로 넣는다
+            if (Array.isArray(slot.annotations) && slot.annotations.length) {
+              annotationJobs.push({ sheetName: sState.name, x: placement.x, y: placement.y, w: placement.width, h: placement.height, items: slot.annotations });
+            }
           }
         }
       }
@@ -1256,6 +1324,9 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
   // [글꼴 선택 2026-11-25] 글상자·도형 글꼴(빈 양식에서 되살린 도형 포함)
   await applyFontMapToDrawings(zip, fontMap);
 
+  // [사진 표시 2026-11-25] 사진 위 표시를 엑셀 도형으로 넣는다(엑셀에서 고칠 수 있음)
+  const annotationCount = await injectAnnotations(zip, annotationJobs);
+
   // [시트 이름 바꾸기 2026-11-25] 탭에서 바꾼 이름을 마지막에 파일 안 시트 이름으로 바꾼다
   const renameMap = new Map(
     editorState.sheets.filter((s) => s.label && s.label !== s.name).map((s) => [s.name, s.label])
@@ -1273,7 +1344,8 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
     convertedCount,
     exifRotatedCount,
     replacedPlaceholders,
-    renamedSheets
+    renamedSheets,
+    annotationCount
   };
 }
 
