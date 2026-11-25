@@ -1,0 +1,510 @@
+{
+  "id": "공용홀_블루밍",
+  "version": 1,
+  "status": "auto-verified",
+  "verified": false,
+  "type": "공용홀",
+  "company": "블루밍",
+  "source": {
+    "json": "공용홀_블루밍.json",
+    "file": "벽산 블루밍 주촌 더 파크_준공사진첩/준공사진첩/벽산 블루밍 주촌 더 파크 공용홀 준공사진첩.xlsx"
+  },
+  "sheets": [
+    {
+      "name": "표지",
+      "state": "visible",
+      "role": "cover",
+      "coverFieldCandidates": [
+        {
+          "cell": "A9",
+          "current": "벽산 블루밍 주촌 더 파크"
+        },
+        {
+          "cell": "A19",
+          "current": "[ 공 용 홀 ]"
+        },
+        {
+          "cell": "A22",
+          "current": "준 공 사 진"
+        }
+      ],
+      "coverNote": "글자 14pt 이상 텍스트를 후보로 뽑음(현장명·타입·제목 등). 어느 칸을 입력받을지 확인 필요",
+      "keepImages": [],
+      "coverFields": [
+        {
+          "cell": "A9",
+          "kind": "siteName",
+          "current": "벽산 블루밍 주촌 더 파크"
+        }
+      ],
+      "coverFieldsNote": "후보 중 현장명·타입·날짜로 보이는 셀만 자동 확정. 나머지 후보는 고정 제목으로 보고 라벨로 둔다"
+    },
+    {
+      "name": "목차",
+      "state": "visible",
+      "role": "toc",
+      "keepImages": []
+    },
+    {
+      "name": "외관",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 12,
+        "blocksWithContent": 12,
+        "blockLengthHistogram": {
+          "10": 11
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "주촌 더 파크",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 120,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 125
+          },
+          "periodicLabels": [
+            "주촌 더 파크",
+            "준공사진\n- 공용홀 -",
+            "담당자",
+            "일  자",
+            "공  종",
+            "외관(주경)",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO.",
+            "정면"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+1}",
+            "text": "준공사진\n- 공용홀 -",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "12/12",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "주출입구",
+              "정면",
+              "주차장"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "전경1",
+              "전경2",
+              "사인1"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "자재명"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "주촌 더 파크",
+            "presentInBlocks": "12/12",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "46204",
+            "presentInBlocks": "12/12",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "외관(주경)",
+            "presentInBlocks": "12/12",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 1,
+          "lastValue": 12,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "12/12",
+            "imagesPerAreaObserved": {
+              "1": 12
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "외관!$A$1:$J$120",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": "99",
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 12,
+        "blocksWithContent": 12,
+        "labelsMatched": "108/108",
+        "photoMergesMatched": "12/12",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "2층",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 61,
+        "blocksWithContent": 61,
+        "blockLengthHistogram": {
+          "10": 60
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "주촌 더 파크",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 610,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 710
+          },
+          "periodicLabels": [
+            "주촌 더 파크",
+            "준공사진\n- 공용홀 -",
+            "담당자",
+            "일  자",
+            "공  종",
+            "2층 홀",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO.",
+            "상담공간"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+1}",
+            "text": "준공사진\n- 공용홀 -",
+            "presentInBlocks": "61/61",
+            "item": 0
+          },
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "61/61",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "61/61",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "61/61",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "61/61",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "61/61",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "61/61",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "61/61",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "61/61",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "최문수 과장",
+              "",
+              "김대영 실장"
+            ],
+            "presentInBlocks": "60/61",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "상담공간",
+              "단지모형",
+              "세대입구"
+            ],
+            "presentInBlocks": "61/61",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "전경1",
+              "전경2",
+              "전경3"
+            ],
+            "presentInBlocks": "61/61",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "천장지 : F301-1",
+              "벽 : 인테리어필름 / NS122",
+              "바닥 : HOT0068 /\n LX 하우시스"
+            ],
+            "presentInBlocks": "48/61",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "I{+8}",
+            "examples": [
+              "제일벽지",
+              "우성 F&C",
+              "LX하우시스"
+            ],
+            "presentInBlocks": "47/61",
+            "item": 0,
+            "label": "업체명"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "주촌 더 파크",
+            "presentInBlocks": "61/61",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "46204",
+            "presentInBlocks": "61/61",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "2층 홀",
+            "presentInBlocks": "61/61",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 13,
+          "lastValue": 73,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "61/61",
+            "imagesPerAreaObserved": {
+              "1": 43,
+              "2": 12,
+              "3": 3,
+              "6": 3
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "'2층'!$A$1:$J$610",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": "99",
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "manual",
+        "evidence": "블록 경계와 맞는 나누기 1/1"
+      },
+      "autoCheck": {
+        "blocks": 61,
+        "blocksWithContent": 61,
+        "labelsMatched": "549/549",
+        "photoMergesMatched": "61/61",
+        "labelMismatchSample": []
+      }
+    }
+  ],
+  "blockSheetsShareLayout": true,
+  "exceptions": [],
+  "keepImages": [],
+  "decisionsPending": [],
+  "keepImagesRule": "표지·목차의 그림 중 표시 크기 300×150px 이하만 남김(로고 추정). 큰 그림은 현장 사진·조감도로 보고 지움. 블록 시트 그림은 모두 지움",
+  "autoVerifyIssues": [],
+  "schemaVersion": "v0.6-D13",
+  "headerSiteNamePlaceholder": false
+}

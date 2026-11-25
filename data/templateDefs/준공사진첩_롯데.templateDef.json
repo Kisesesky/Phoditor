@@ -1,0 +1,2263 @@
+{
+  "id": "준공사진첩_롯데",
+  "version": 1,
+  "status": "auto-verified",
+  "verified": false,
+  "type": "준공사진첩",
+  "company": "롯데",
+  "source": {
+    "json": "준공사진첩_롯데.json",
+    "file": "화성 향남 롯데캐슬 시그니처/준공사진첩/화성 향남 롯데캐슬 시그니처_준공사진첩_84B.xlsx"
+  },
+  "sheets": [
+    {
+      "name": "표지",
+      "state": "visible",
+      "role": "cover",
+      "coverFieldCandidates": [
+        {
+          "cell": "A9",
+          "current": "화성 향남 롯데캐슬 시그니처"
+        },
+        {
+          "cell": "A19",
+          "current": "[ UNIT-84B㎡ ]"
+        },
+        {
+          "cell": "A22",
+          "current": "준 공 사 진"
+        }
+      ],
+      "coverNote": "글자 14pt 이상 텍스트를 후보로 뽑음(현장명·타입·제목 등). 어느 칸을 입력받을지 확인 필요",
+      "keepImages": [],
+      "coverFields": [
+        {
+          "cell": "A9",
+          "kind": "siteName",
+          "current": "화성 향남 롯데캐슬 시그니처"
+        },
+        {
+          "cell": "A19",
+          "kind": "unitType",
+          "current": "[ UNIT-84B㎡ ]"
+        }
+      ],
+      "coverFieldsNote": "후보 중 현장명·타입·날짜로 보이는 셀만 자동 확정. 나머지 후보는 고정 제목으로 보고 라벨로 둔다"
+    },
+    {
+      "name": "목차",
+      "state": "visible",
+      "role": "toc",
+      "keepImages": []
+    },
+    {
+      "name": "공간별전경",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 44,
+        "blocksWithContent": 44,
+        "blockLengthHistogram": {
+          "10": 43
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "화성 향남 롯데캐슬 시그니처",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 440,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 541,
+            "40": 2
+          },
+          "periodicLabels": [
+            "화성 향남 롯데캐슬 시그니처",
+            "준공사진\n- UNIT 84B㎡ -",
+            "담당자",
+            "일  자",
+            "2026. 10",
+            "공  종",
+            "공간별전경",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO."
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "44/44",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "욕실2(부부욕실)",
+              "거실",
+              "주방/식당"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "전경1",
+              "전경2",
+              "전경3"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "I{+8}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "업체명"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "화성 향남 롯데캐슬 시그니처",
+            "presentInBlocks": "44/44",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "준공사진\n- UNIT 84B㎡ -",
+            "presentInBlocks": "44/44",
+            "why": "평형·타입 모양",
+            "item": 0,
+            "uiLabel": "평형·타입 모양",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "2026. 10",
+            "presentInBlocks": "44/44",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "공간별전경",
+            "presentInBlocks": "44/44",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 1,
+          "lastValue": 44,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "35/44",
+            "imagesPerAreaObserved": {
+              "1": 23,
+              "2": 11,
+              "3": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "공간별전경!$A$1:$J$440",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 20,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 9,
+          "evidence": "페이지 나누기 3개, 간격 최빈 20행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "blocksPerPrintedPage": 2,
+        "evidence": "페이지 나누기 3개 중 3개가 블록 경계, 간격 2블록이 2번"
+      },
+      "autoCheck": {
+        "blocks": 44,
+        "blocksWithContent": 44,
+        "labelsMatched": "352/352",
+        "photoMergesMatched": "44/44",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "가구공사",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 44,
+        "blocksWithContent": 44,
+        "blockLengthHistogram": {
+          "10": 43
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "화성 향남 롯데캐슬 시그니처",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 440,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 587
+          },
+          "periodicLabels": [
+            "화성 향남 롯데캐슬 시그니처",
+            "준공사진\n- UNIT 84B㎡ -",
+            "담당자",
+            "일  자",
+            "2026. 10",
+            "공  종",
+            "가구공사",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO."
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "44/44",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "주방/식당",
+              "현관",
+              "욕실2(부부욕실)"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "상부장",
+              "신발장 내부",
+              "상부장 내부"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "PET 도어/케이싱/훼샤 : \nLX하우시스 / YEK61-SR \nLPM 바디 : \n금강데코 / KLP322DS",
+              "-",
+              "슬라이딩 욕실장 : \nPS 위 전사 마감 (KCC_HC0082)"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "G{+0}",
+            "examples": [
+              "c"
+            ],
+            "presentInBlocks": "2/44",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에 남은 한두 글자·기호(작업 잔여물로 보임) — 라벨 없음",
+            "labelKind": "strayChar"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "화성 향남 롯데캐슬 시그니처",
+            "presentInBlocks": "44/44",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "준공사진\n- UNIT 84B㎡ -",
+            "presentInBlocks": "44/44",
+            "why": "평형·타입 모양",
+            "item": 0,
+            "uiLabel": "평형·타입 모양",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "2026. 10",
+            "presentInBlocks": "44/44",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "가구공사",
+            "presentInBlocks": "44/44",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          },
+          {
+            "cell": "I{+8}",
+            "example": "롯데건설 OEM",
+            "presentInBlocks": "44/44",
+            "why": "왼쪽 칸이 라벨(업체명)인 값",
+            "item": 0,
+            "label": "업체명",
+            "uiLabel": "업체명",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 45,
+          "lastValue": 88,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "39/44",
+            "imagesPerAreaObserved": {
+              "1": 18,
+              "2": 15,
+              "3": 5,
+              "4": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "가구공사!$A$1:$J$440",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 44,
+        "blocksWithContent": 44,
+        "labelsMatched": "352/352",
+        "photoMergesMatched": "44/44",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "창호및목공사",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 53,
+        "blocksWithContent": 18,
+        "blockLengthHistogram": {
+          "10": 51,
+          "6": 1
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "준공사진\n- UNIT 84B㎡ -",
+          "offsetFromBlockStart": 1
+        },
+        "lastUsedRow": 600,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 220
+          },
+          "periodicLabels": [
+            "준공사진\n- UNIT 84B㎡ -",
+            "2026. 10",
+            "화성 향남 롯데캐슬 시그니처",
+            "담당자",
+            "일  자",
+            "공  종",
+            "창호 및 목공사",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO."
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "17/18",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "17/18",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "17/18",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "17/18",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "17/18",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "17/18",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "17/18",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "17/18",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "17/18",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "안방",
+              "침실1",
+              "침실2"
+            ],
+            "presentInBlocks": "17/18",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "PVC창호",
+              "목창호",
+              "ABS 도어"
+            ],
+            "presentInBlocks": "17/18",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "PVC 창호 시트 : L13B7-2JP \n(실내면 창호 위 시트마감)",
+              "PVC 시트 :  GP302-2U",
+              "PVC 몰딩 + \n백색시트 래핑 \n/ 도면 참조 \n(35*15)"
+            ],
+            "presentInBlocks": "17/18",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "N{+0}",
+            "examples": [
+              ""
+            ],
+            "presentInBlocks": "1/18",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에 남은 한두 글자·기호(작업 잔여물로 보임) — 라벨 없음",
+            "labelKind": "strayChar"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "화성 향남 롯데캐슬 시그니처",
+            "presentInBlocks": "17/18",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "준공사진\n- UNIT 84B㎡ -",
+            "presentInBlocks": "18/18",
+            "why": "평형·타입 모양",
+            "item": 0,
+            "uiLabel": "평형·타입 모양",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "2026. 10",
+            "presentInBlocks": "17/18",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "창호 및 목공사",
+            "presentInBlocks": "17/18",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          },
+          {
+            "cell": "I{+8}",
+            "example": "LX하우시스",
+            "presentInBlocks": "16/18",
+            "why": "왼쪽 칸이 라벨(업체명)인 값",
+            "item": 0,
+            "label": "업체명",
+            "uiLabel": "업체명",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 89,
+          "lastValue": 105,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "14/17",
+            "imagesPerAreaObserved": {
+              "1": 6,
+              "2": 4,
+              "3": 4
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": true,
+          "cells": [
+            "I600"
+          ]
+        },
+        "lengthMix": {
+          "mainLength": 10,
+          "distribution": {
+            "10": 51,
+            "6": 1
+          },
+          "oddBlocks": [
+            [
+              511,
+              6
+            ]
+          ],
+          "heightSamples": [
+            {
+              "blockStart": 511,
+              "length": 6,
+              "heights": [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+              ]
+            }
+          ],
+          "mainHeights": [
+            38.0,
+            38.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            24.0,
+            132.0,
+            24.0,
+            24.0
+          ]
+        }
+      },
+      "print": {
+        "printArea": "창호및목공사!$A$1:$J$170",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 53,
+        "blocksWithContent": 19,
+        "labelsMatched": "136/152",
+        "photoMergesMatched": "17/19",
+        "labelMismatchSample": [
+          [
+            "담당자",
+            511
+          ],
+          [
+            "담당자",
+            517
+          ],
+          [
+            "일  자",
+            511
+          ],
+          [
+            "일  자",
+            517
+          ],
+          [
+            "공  종",
+            511
+          ]
+        ]
+      }
+    },
+    {
+      "name": "유리및금속공사",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 56,
+        "blocksWithContent": 9,
+        "blockLengthHistogram": {
+          "10": 55
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "준공사진\n- UNIT 84B㎡ -",
+          "offsetFromBlockStart": 1
+        },
+        "lastUsedRow": 654,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 87
+          },
+          "periodicLabels": [
+            "준공사진\n- UNIT 84B㎡ -",
+            "2026. 10",
+            "화성 향남 롯데캐슬 시그니처",
+            "담당자",
+            "일  자",
+            "공  종",
+            "유리 및 금속공사",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO."
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "8/9",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "8/9",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "8/9",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "8/9",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "8/9",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "8/9",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "8/9",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "8/9",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "8/9",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "현관",
+              "알파룸",
+              "안방"
+            ],
+            "presentInBlocks": "8/9",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "3연동 슬라이딩 도어[유상]",
+              "포켓 도어[유상]",
+              "샤워부스[유상]"
+            ],
+            "presentInBlocks": "8/9",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "AL FRAME_코프럭스 F-3322(아노다이징 그레이)\n+ 5T 강화 패턴유리_LU BO08X-012",
+              "ALL GLASS TYPE / \n8.76T 접합유리,\n무힌지 타입 / \n아노다이징 도금",
+              "양면 분체도장 마감\n(도어 색상 : 삼화 / H-WH0482-S5 (RAL 9002))\n(도어프레임 색상 : 삼화 / SH 2004C\n(수성/ 도어 유사 색))"
+            ],
+            "presentInBlocks": "8/9",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "I{+8}",
+            "examples": [
+              "한샘",
+              "롯데건설 OEM",
+              "비유씨로크"
+            ],
+            "presentInBlocks": "8/9",
+            "item": 0,
+            "label": "업체명"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "화성 향남 롯데캐슬 시그니처",
+            "presentInBlocks": "8/9",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "준공사진\n- UNIT 84B㎡ -",
+            "presentInBlocks": "9/9",
+            "why": "평형·타입 모양",
+            "item": 0,
+            "uiLabel": "평형·타입 모양",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "2026. 10",
+            "presentInBlocks": "8/9",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "유리 및 금속공사",
+            "presentInBlocks": "8/9",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 106,
+          "lastValue": 113,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "6/8",
+            "imagesPerAreaObserved": {
+              "1": 2,
+              "2": 2,
+              "3": 1,
+              "5": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": true,
+          "cells": [
+            "I654"
+          ]
+        }
+      },
+      "print": {
+        "printArea": "유리및금속공사!$A$1:$J$80",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 56,
+        "blocksWithContent": 9,
+        "labelsMatched": "64/72",
+        "photoMergesMatched": "8/9",
+        "labelMismatchSample": [
+          [
+            "담당자",
+            551
+          ],
+          [
+            "일  자",
+            551
+          ],
+          [
+            "공  종",
+            551
+          ],
+          [
+            "위  치",
+            551
+          ],
+          [
+            "자재명",
+            551
+          ]
+        ]
+      }
+    },
+    {
+      "name": "수장공사",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 58,
+        "blocksWithContent": 19,
+        "blockLengthHistogram": {
+          "10": 57
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "준공사진\n- UNIT 84B㎡ -",
+          "offsetFromBlockStart": 1
+        },
+        "lastUsedRow": 674,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 220
+          },
+          "periodicLabels": [
+            "준공사진\n- UNIT 84B㎡ -",
+            "2026. 10",
+            "화성 향남 롯데캐슬 시그니처",
+            "담당자",
+            "일  자",
+            "공  종",
+            "수장공사",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO."
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "18/19",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "18/19",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "18/19",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "18/19",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "18/19",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "18/19",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "18/19",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "18/19",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "18/19",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "각 실",
+              "다용도실",
+              "복도"
+            ],
+            "presentInBlocks": "18/19",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "강마루",
+              "프리미엄 벽지[유상]",
+              "천장재"
+            ],
+            "presentInBlocks": "18/19",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "샤트데코_14-11049-136 (Palm Beach Ash)\n115X800X7.5T, NM경면",
+              "ABS 천장재",
+              "PVC 몰딩 + \n백색시트 래핑 \n/ 도면 참조 \n(60*9)"
+            ],
+            "presentInBlocks": "18/19",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "I{+8}",
+            "examples": [
+              "롯데건설 OEM",
+              "-",
+              "삼화"
+            ],
+            "presentInBlocks": "18/19",
+            "item": 0,
+            "label": "업체명"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "화성 향남 롯데캐슬 시그니처",
+            "presentInBlocks": "18/19",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "준공사진\n- UNIT 84B㎡ -",
+            "presentInBlocks": "19/19",
+            "why": "평형·타입 모양",
+            "item": 0,
+            "uiLabel": "평형·타입 모양",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "2026. 10",
+            "presentInBlocks": "18/19",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "수장공사",
+            "presentInBlocks": "18/19",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 114,
+          "lastValue": 131,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "14/18",
+            "imagesPerAreaObserved": {
+              "1": 9,
+              "2": 3,
+              "3": 2
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": true,
+          "cells": [
+            "I674"
+          ]
+        }
+      },
+      "print": {
+        "printArea": "수장공사!$A$1:$J$180",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 58,
+        "blocksWithContent": 19,
+        "labelsMatched": "144/152",
+        "photoMergesMatched": "18/19",
+        "labelMismatchSample": [
+          [
+            "담당자",
+            571
+          ],
+          [
+            "일  자",
+            571
+          ],
+          [
+            "공  종",
+            571
+          ],
+          [
+            "위  치",
+            571
+          ],
+          [
+            "자재명",
+            571
+          ]
+        ]
+      }
+    },
+    {
+      "name": "기계공사",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 60,
+        "blocksWithContent": 35,
+        "blockLengthHistogram": {
+          "10": 59
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "준공사진\n- UNIT 84B㎡ -",
+          "offsetFromBlockStart": 1
+        },
+        "lastUsedRow": 654,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 422
+          },
+          "periodicLabels": [
+            "준공사진\n- UNIT 84B㎡ -",
+            "2026. 10",
+            "화성 향남 롯데캐슬 시그니처",
+            "담당자",
+            "일  자",
+            "공  종",
+            "기계공사",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO."
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "34/35",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "34/35",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "34/35",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "34/35",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "34/35",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "34/35",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "34/35",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "34/35",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "34/35",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "욕실1(공용욕실)",
+              "욕실2(부부욕실)",
+              "다용도실"
+            ],
+            "presentInBlocks": "34/35",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "냉방용 시스템 에어컨\n[유상]",
+              "바닥 배수구",
+              "비데일체형 양변기[유상]"
+            ],
+            "presentInBlocks": "34/35",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "-",
+              "MI-945DCN \n(무광니켈)",
+              "휴젠트 루미"
+            ],
+            "presentInBlocks": "34/35",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "I{+8}",
+            "examples": [
+              "-",
+              "다다",
+              "엠아이리빙"
+            ],
+            "presentInBlocks": "34/35",
+            "item": 0,
+            "label": "업체명"
+          },
+          {
+            "cell": "G{+0}",
+            "examples": [
+              "ㅊ"
+            ],
+            "presentInBlocks": "4/35",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에 남은 한두 글자·기호(작업 잔여물로 보임) — 라벨 없음",
+            "labelKind": "strayChar"
+          },
+          {
+            "cell": "M{+1}",
+            "examples": [
+              ""
+            ],
+            "presentInBlocks": "1/35",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에 남은 한두 글자·기호(작업 잔여물로 보임) — 라벨 없음",
+            "labelKind": "strayChar"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "화성 향남 롯데캐슬 시그니처",
+            "presentInBlocks": "34/35",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "준공사진\n- UNIT 84B㎡ -",
+            "presentInBlocks": "35/35",
+            "why": "평형·타입 모양",
+            "item": 0,
+            "uiLabel": "평형·타입 모양",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "2026. 10",
+            "presentInBlocks": "34/35",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "기계공사",
+            "presentInBlocks": "34/35",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 132,
+          "lastValue": 165,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "30/34",
+            "imagesPerAreaObserved": {
+              "1": 21,
+              "2": 7,
+              "3": 2
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": true,
+          "cells": [
+            "I654"
+          ]
+        }
+      },
+      "print": {
+        "printArea": "기계공사!$A$1:$J$340",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 20,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 9,
+          "evidence": "페이지 나누기 6개, 간격 최빈 20행"
+        },
+        "pageBreakRule": "manual",
+        "evidence": "블록 경계 정렬 6/6, 간격 제각각 {2: 2, 1: 1, 12: 1, 5: 1}"
+      },
+      "autoCheck": {
+        "blocks": 60,
+        "blocksWithContent": 35,
+        "labelsMatched": "272/280",
+        "photoMergesMatched": "34/35",
+        "labelMismatchSample": [
+          [
+            "담당자",
+            591
+          ],
+          [
+            "일  자",
+            591
+          ],
+          [
+            "공  종",
+            591
+          ],
+          [
+            "위  치",
+            591
+          ],
+          [
+            "자재명",
+            591
+          ]
+        ]
+      }
+    },
+    {
+      "name": "타일및석공사",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 17,
+        "blocksWithContent": 17,
+        "blockLengthHistogram": {
+          "10": 16
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "화성 향남 롯데캐슬 시그니처",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 170,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 197
+          },
+          "periodicLabels": [
+            "화성 향남 롯데캐슬 시그니처",
+            "준공사진\n- UNIT 84B㎡ -",
+            "담당자",
+            "일  자",
+            "2026. 10",
+            "공  종",
+            "타일 및 석공사",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO."
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "17/17",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "17/17",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "17/17",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "17/17",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "17/17",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "17/17",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "17/17",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "17/17",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "17/17",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "욕실2(부부욕실)",
+              "욕실1(공용욕실)",
+              "현관"
+            ],
+            "presentInBlocks": "17/17",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "바닥",
+              "벽",
+              "디딤판"
+            ],
+            "presentInBlocks": "17/17",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "포세린타일 :\n W-GRAVEL GREY (600X600)",
+              "자기질타일 : \nHLD675S7201 (300X300)",
+              "포세린타일 : \nW-TRV 61202 \n(600X1200), 세로시공"
+            ],
+            "presentInBlocks": "17/17",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "I{+8}",
+            "examples": [
+              "롯데케미칼",
+              "이노매트리얼",
+              "삼현타일"
+            ],
+            "presentInBlocks": "17/17",
+            "item": 0,
+            "label": "업체명"
+          },
+          {
+            "cell": "K{+4}",
+            "examples": [
+              "\\"
+            ],
+            "presentInBlocks": "1/17",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": "공  종",
+            "labelSource": "같은 행 왼쪽 라벨 — 원본 대조"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "화성 향남 롯데캐슬 시그니처",
+            "presentInBlocks": "17/17",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "준공사진\n- UNIT 84B㎡ -",
+            "presentInBlocks": "17/17",
+            "why": "평형·타입 모양",
+            "item": 0,
+            "uiLabel": "평형·타입 모양",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "2026. 10",
+            "presentInBlocks": "17/17",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "타일 및 석공사",
+            "presentInBlocks": "17/17",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 166,
+          "lastValue": 182,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "16/17",
+            "imagesPerAreaObserved": {
+              "1": 5,
+              "2": 8,
+              "3": 3
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "타일및석공사!$A$1:$J$170",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 20,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 9,
+          "evidence": "페이지 나누기 6개, 간격 최빈 20행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "blocksPerPrintedPage": 2,
+        "evidence": "페이지 나누기 6개 중 6개가 블록 경계, 간격 2블록이 5번"
+      },
+      "autoCheck": {
+        "blocks": 17,
+        "blocksWithContent": 17,
+        "labelsMatched": "136/136",
+        "photoMergesMatched": "17/17",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "전기공사",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 10,
+        "observedBlocks": 51,
+        "blocksWithContent": 34,
+        "blockLengthHistogram": {
+          "10": 50
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "준공사진\n- UNIT 84B㎡ -",
+          "offsetFromBlockStart": 1
+        },
+        "lastUsedRow": 564,
+        "periodEvidence": {
+          "candidateScores": {
+            "10": 423
+          },
+          "periodicLabels": [
+            "준공사진\n- UNIT 84B㎡ -",
+            "2026. 10",
+            "화성 향남 롯데캐슬 시그니처",
+            "담당자",
+            "일  자",
+            "공  종",
+            "전기공사",
+            "위  치",
+            "자재명",
+            "제품명",
+            "업체명",
+            "NO."
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          38.0,
+          38.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          24.0,
+          132.0,
+          24.0,
+          24.0
+        ],
+        "labels": [
+          {
+            "cell": "H{+2}",
+            "text": "담당자",
+            "presentInBlocks": "33/34",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "text": "일  자",
+            "presentInBlocks": "33/34",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "text": "공  종",
+            "presentInBlocks": "33/34",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "text": "위  치",
+            "presentInBlocks": "33/34",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "text": "자재명",
+            "presentInBlocks": "33/34",
+            "item": 0
+          },
+          {
+            "cell": "H{+7}",
+            "text": "제품명",
+            "presentInBlocks": "33/34",
+            "item": 0
+          },
+          {
+            "cell": "H{+8}",
+            "text": "업체명",
+            "presentInBlocks": "33/34",
+            "item": 0
+          },
+          {
+            "cell": "H{+9}",
+            "text": "NO.",
+            "presentInBlocks": "33/34",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "I{+2}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "33/34",
+            "item": 0,
+            "label": "담당자"
+          },
+          {
+            "cell": "I{+5}",
+            "examples": [
+              "주방/식당",
+              "욕실2(부부욕실)",
+              "욕실1(공용욕실)"
+            ],
+            "presentInBlocks": "33/34",
+            "item": 0,
+            "label": "위  치"
+          },
+          {
+            "cell": "I{+6}",
+            "examples": [
+              "네트워크스위치",
+              "스위치",
+              "욕실등"
+            ],
+            "presentInBlocks": "33/34",
+            "item": 0,
+            "label": "자재명"
+          },
+          {
+            "cell": "I{+7}",
+            "examples": [
+              "롯데건설\n네트워크 스위치",
+              "롯데건설 배선기구",
+              "LED 10W\n(Ø115 X H37)"
+            ],
+            "presentInBlocks": "33/34",
+            "item": 0,
+            "label": "제품명"
+          },
+          {
+            "cell": "I{+8}",
+            "examples": [
+              "롯데건설 OEM",
+              "이브이시스",
+              "위너스"
+            ],
+            "presentInBlocks": "32/34",
+            "item": 0,
+            "label": "업체명"
+          },
+          {
+            "cell": "G{+0}",
+            "examples": [
+              "ㅊ"
+            ],
+            "presentInBlocks": "1/34",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에 남은 한두 글자·기호(작업 잔여물로 보임) — 라벨 없음",
+            "labelKind": "strayChar"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "화성 향남 롯데캐슬 시그니처",
+            "presentInBlocks": "33/34",
+            "why": "원본 파일명과 겹치는 현장명",
+            "item": 0,
+            "uiLabel": "원본 파일명과 겹치는 현장명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "준공사진\n- UNIT 84B㎡ -",
+            "presentInBlocks": "34/34",
+            "why": "평형·타입 모양",
+            "item": 0,
+            "uiLabel": "평형·타입 모양",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+3}",
+            "example": "2026. 10",
+            "presentInBlocks": "33/34",
+            "why": "왼쪽 칸이 라벨(일  자)인 값",
+            "item": 0,
+            "label": "일  자",
+            "uiLabel": "일  자",
+            "scope": "document"
+          },
+          {
+            "cell": "I{+4}",
+            "example": "전기공사",
+            "presentInBlocks": "33/34",
+            "why": "왼쪽 칸이 라벨(공  종)인 값",
+            "item": 0,
+            "label": "공  종",
+            "uiLabel": "공  종",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": {
+          "cell": "I{+9}",
+          "kind": "chain",
+          "firstFormula": "I10+1",
+          "firstValue": 183,
+          "lastValue": 215,
+          "sheetOffset": null,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+9}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "23/33",
+            "imagesPerAreaObserved": {
+              "1": 20,
+              "2": 1,
+              "3": 2
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": true,
+          "cells": [
+            "I564"
+          ]
+        }
+      },
+      "print": {
+        "printArea": "전기공사!$A$1:$J$330",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 51,
+        "blocksWithContent": 34,
+        "labelsMatched": "264/272",
+        "photoMergesMatched": "33/34",
+        "labelMismatchSample": [
+          [
+            "담당자",
+            501
+          ],
+          [
+            "일  자",
+            501
+          ],
+          [
+            "공  종",
+            501
+          ],
+          [
+            "위  치",
+            501
+          ],
+          [
+            "자재명",
+            501
+          ]
+        ]
+      }
+    }
+  ],
+  "blockSheetsShareLayout": true,
+  "exceptions": [],
+  "keepImages": [],
+  "decisionsPending": [],
+  "keepImagesRule": "표지·목차의 그림 중 표시 크기 300×150px 이하만 남김(로고 추정). 큰 그림은 현장 사진·조감도로 보고 지움. 블록 시트 그림은 모두 지움",
+  "autoVerifyIssues": [],
+  "schemaVersion": "v0.6-D13",
+  "headerSiteNamePlaceholder": false
+}

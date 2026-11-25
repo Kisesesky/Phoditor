@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- [QA 수정 2026-11-24] 콘텐츠 보안 정책: 로컬 스크립트만 실행, 사진은 로컬 파일·data URL만 -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file: blob:; font-src 'self' file: data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <title>사진첩 에디터</title>
+  <style>
+    /* [UI 개편 2026-11-25] 문서 편집 프로그램 형태: 도구 막대 · 사진 패널 · 쪽 캔버스 · 속성 패널 · 상태 막대 */
+    @font-face { font-family: 'Pretendard'; src: url('./fonts/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; }
+    @font-face { font-family: 'Pretendard'; src: url('./fonts/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; }
+    @font-face { font-family: 'Pretendard'; src: url('./fonts/Pretendard-SemiBold.woff2') format('woff2'); font-weight: 600; }
+    @font-face { font-family: 'Pretendard'; src: url('./fonts/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; }
+
+    :root {
+      --bg: #FFFFFF;
+      --chrome: #F6F6F7;
+      --chrome-2: #EFEFF1;
+      --canvas: #E6E7EA;
+      --line: #E2E2E6;
+      --line-strong: #CFD0D6;
+      --ink: #1C1D21;
+      --ink-2: #4A4B52;
+      --ink-muted: #85868E;
+      --accent: #2563EB;
+      --accent-hover: #1D4FD7;
+      --accent-soft: #EBF1FE;
+      --accent-ring: rgba(37, 99, 235, 0.28);
+      --danger: #D92D20;
+      --danger-soft: #FEF0EF;
+      --ok: #12805C;
+      --warn: #B54708;
+      --warn-soft: #FFF6E5;
+      --radius: 7px;
+      --radius-lg: 12px;
+      --sidebar-w: 268px;
+      --inspector-w: 292px;
+      --toolbar-h: 52px;
+      --status-h: 38px;
+      --shadow-page: 0 1px 2px rgba(16, 24, 40, 0.10), 0 4px 18px rgba(16, 24, 40, 0.10);
+      --shadow-pop: 0 10px 30px rgba(16, 24, 40, 0.16), 0 2px 6px rgba(16, 24, 40, 0.08);
+      /* 하위 호환 이름 */
+      --bg-subtle: var(--chrome);
+      --bg-hover: var(--chrome-2);
+      --border: var(--line);
+      --warn-bg: var(--warn-soft);
+      --warn-border: #F5D08A;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0; width: 100%; height: 100%;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+      font-size: 13px; color: var(--ink); background: var(--chrome);
+      overflow: hidden; -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums;
+    }
+    svg.i { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+    /* --- 버튼 --- */
+    button {
+      font-family: inherit; font-size: 12.5px; cursor: pointer; border-radius: var(--radius);
+      border: 1px solid var(--line-strong); background: var(--bg); color: var(--ink);
+      padding: 6px 11px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background .12s, border-color .12s, color .12s, box-shadow .12s;
+    }
+    button:hover:not(:disabled) { background: var(--chrome-2); }
+    button:active:not(:disabled) { transform: translateY(0.5px); }
+    button:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent-ring); }
+    button:disabled { opacity: .42; cursor: default; }
+    button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+    button.primary:hover:not(:disabled) { background: var(--accent-hover); }
+    button.danger { color: var(--danger); border-color: #F4C7C3; }
+    button.danger:hover:not(:disabled) { background: var(--danger-soft); }
+    button.ghost { border-color: transparent; background: transparent; }
+    button.ghost:hover:not(:disabled) { background: rgba(0,0,0,.055); }
+    button.ghost.on { background: var(--accent-soft); color: var(--accent); }
+    input[type=text], input[type=password], select, textarea {
+      font-family: inherit; font-size: 13px; color: var(--ink); background: #fff;
+      border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 7px 9px; outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring); }
+
+    .view { display: none; width: 100%; height: 100%; }
+    .view.active { display: flex; }
+
+    /* ===== 시작 화면 (양식 고르기) ===== */
+    #catalogView { flex-direction: column; background: var(--chrome); }
+    .start-bar { height: var(--toolbar-h); flex: none; display: flex; align-items: center; padding: 0 20px 0 84px; -webkit-app-region: drag; border-bottom: 1px solid var(--line); background: var(--chrome); }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; }
+    .brand-mark { width: 26px; height: 26px; border-radius: 7px; background: linear-gradient(135deg, #3B82F6, #1D4ED8); display: grid; place-items: center; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.2); }
+    .brand-mark svg { width: 15px; height: 15px; stroke: #fff; }
+    .start-main { flex: 1; overflow: auto; }
+    .start-inner { max-width: 1080px; margin: 0 auto; padding: 44px 40px 60px; }
+    .start-inner h1 { font-size: 26px; letter-spacing: -0.02em; margin: 0 0 6px; }
+    .start-inner .lead { color: var(--ink-muted); margin: 0 0 28px; font-size: 14px; }
+    .section-label { font-size: 12px; font-weight: 600; color: var(--ink-muted); text-transform: none; margin: 0 0 10px; letter-spacing: .01em; }
+    .type-tabs { display: inline-flex; background: var(--chrome-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; margin-bottom: 26px; }
+    .type-btn { border: none; background: transparent; padding: 8px 18px; font-size: 13.5px; font-weight: 500; color: var(--ink-2); border-radius: 8px; }
+    .type-btn:hover:not(:disabled) { background: rgba(255,255,255,.6); }
+    .type-btn.selected { background: #fff; color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(16,24,40,.08), 0 0 0 1px rgba(16,24,40,.04); }
+    .type-btn .cnt { font-size: 11px; color: var(--ink-muted); margin-left: 4px; font-weight: 500; }
+    .company-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 14px; }
+    .company-card {
+      display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0; padding: 0; text-align: left; overflow: hidden;
+      border: 1px solid var(--line); border-radius: var(--radius-lg); background: #fff; min-height: 168px;
+      box-shadow: 0 1px 2px rgba(16,24,40,.04); transition: border-color .15s, box-shadow .15s, transform .15s;
+    }
+    .company-card:hover:not(.empty) { border-color: var(--accent); box-shadow: 0 6px 20px rgba(37,99,235,.12); transform: translateY(-1px); background: #fff; }
+    .company-card .card-art { height: 92px; display: grid; place-items: center; background: var(--chrome); border-bottom: 1px solid var(--line); position: relative; }
+    .company-card .mono { width: 46px; height: 58px; border-radius: 4px; background: #fff; box-shadow: 0 1px 3px rgba(16,24,40,.16); display: grid; place-items: center; font-weight: 700; font-size: 17px; color: #fff; position: relative; overflow: hidden; }
+    .company-card .mono::after { content: ''; position: absolute; left: 7px; right: 7px; bottom: 9px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.55); box-shadow: 0 -6px 0 rgba(255,255,255,.35); }
+    .company-card .card-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; }
+    .company-name { font-size: 15px; font-weight: 650; }
+    .company-meta { font-size: 12px; color: var(--ink-muted); }
+    .company-card .open-hint { margin-top: 6px; font-size: 12px; color: var(--accent); font-weight: 600; opacity: 0; transition: opacity .15s; }
+    .company-card:hover .open-hint { opacity: 1; }
+    .company-card.empty { cursor: default; background: transparent; border-style: dashed; box-shadow: none; }
+    .company-card.empty .card-art { background: transparent; }
+    .company-card.empty .mono { background: var(--chrome-2) !important; color: var(--ink-muted); box-shadow: none; }
+    .company-card.empty .company-name { color: var(--ink-muted); }
+
+    /* ===== 편집 화면 ===== */
+    #editorView { flex-direction: column; }
+    .app-toolbar {
+      height: var(--toolbar-h); flex: none; display: flex; align-items: center; gap: 10px;
+      padding: 0 12px 0 84px; background: var(--chrome); border-bottom: 1px solid var(--line); -webkit-app-region: drag;
+    }
+    .app-toolbar button, .app-toolbar input, .app-toolbar .no-drag { -webkit-app-region: no-drag; }
+    .doc-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .doc-titles { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+    .doc-kicker { font-size: 11px; color: var(--ink-muted); white-space: nowrap; }
+    #editorTitle { font-size: 13.5px; font-weight: 650; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+    .tb-sep { width: 1px; height: 22px; background: var(--line-strong); margin: 0 4px; flex: none; }
+    .tb-group { display: flex; align-items: center; gap: 2px; }
+    .tb-btn { flex-direction: column; gap: 2px; padding: 4px 8px; min-width: 52px; border-color: transparent; background: transparent; font-size: 10.5px; color: var(--ink-2); }
+    .tb-btn svg.i { width: 18px; height: 18px; }
+    .tb-btn:hover:not(:disabled) { background: rgba(0,0,0,.055); }
+    .tb-btn.on { background: var(--accent-soft); color: var(--accent); }
+    .tb-btn.danger { color: var(--danger); border-color: transparent; }
+    .tb-btn.danger:hover:not(:disabled) { background: var(--danger-soft); }
+    .tb-spacer { flex: 1; }
+    #exportBtn { padding: 7px 14px; font-size: 13px; }
+
+    .workspace { flex: 1; display: flex; min-height: 0; }
+
+    /* 사진 패널 */
+    .sidebar { width: var(--sidebar-w); flex: none; display: flex; flex-direction: column; background: var(--chrome); border-right: 1px solid var(--line); min-height: 0; }
+    .panel-head { padding: 12px 12px 10px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--line); }
+    .seg { display: flex; background: var(--chrome-2); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+    .seg button { flex: 1; border: none; background: transparent; padding: 5px 8px; font-size: 12px; color: var(--ink-2); border-radius: 6px; }
+    .seg button.active { background: #fff; color: var(--ink); font-weight: 600; box-shadow: 0 1px 2px rgba(16,24,40,.1); }
+    .source-tab-btn.active { background: #fff; }
+    .sidebar-header { display: flex; flex-direction: column; gap: 8px; }
+    .sidebar-title { display: flex; align-items: center; justify-content: space-between; font-weight: 600; font-size: 12px; color: var(--ink-2); }
+    .sidebar-actions { display: flex; gap: 6px; }
+    .sidebar-actions button { flex: 1; padding: 6px 8px; }
+    .folder-path { font-size: 11px; color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; direction: rtl; text-align: left; }
+    .mybox-notice { font-size: 11px; color: var(--ink-muted); }
+    .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: var(--ink-2); background: var(--chrome-2); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+    .photo-grid { flex: 1; overflow: auto; padding: 10px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; align-content: start; }
+    .photo-empty { grid-column: 1 / -1; text-align: center; color: var(--ink-muted); padding: 36px 10px; font-size: 12px; line-height: 1.6; }
+    .photo-empty .big { display: block; margin: 0 auto 10px; width: 36px; height: 36px; color: var(--line-strong); }
+    .photo-item { background: #fff; border: 1px solid var(--line); border-radius: 9px; padding: 5px; cursor: grab; display: flex; flex-direction: column; gap: 5px; position: relative; user-select: none; min-width: 0; transition: border-color .12s, box-shadow .12s; }
+    .photo-item:hover { border-color: var(--accent); box-shadow: 0 2px 8px rgba(37,99,235,.12); }
+    .photo-thumb-wrap { width: 100%; aspect-ratio: 4 / 3; background: var(--chrome-2); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .photo-thumb-wrap img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .photo-name { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink-2); padding: 0 2px; }
+    .conv-badge { position: absolute; top: 9px; right: 9px; background: rgba(37,99,235,.92); color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+    .used-badge { position: absolute; top: 9px; left: 9px; background: rgba(18,128,92,.92); color: #fff; font-size: 9.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px; }
+    .photo-card-actions { display: flex; gap: 4px; }
+    .photo-card-actions button { flex: 1; min-width: 0; font-size: 10.5px; padding: 3px 4px; border-color: var(--line); }
+    .crop-badge { position: absolute; top: 9px; left: 9px; background: rgba(18,128,92,.92); color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 4px; }
+    .cache-badge { position: absolute; bottom: 44px; left: 9px; background: rgba(28,29,33,.7); color: #fff; font-size: 9px; padding: 1px 5px; border-radius: 4px; }
+    .mybox-folder-item { grid-column: 1 / -1; justify-content: flex-start; padding: 8px 10px; background: #fff; border: 1px solid var(--line); font-weight: 600; color: var(--ink); text-align: left; }
+    .mybox-folder-item:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .mybox-error-box { grid-column: 1 / -1; background: var(--warn-soft); border: 1px solid var(--warn-border); border-radius: var(--radius); padding: 12px; font-size: 12px; color: #7A4F00; display: flex; flex-direction: column; gap: 8px; line-height: 1.45; }
+
+    /* 쪽 캔버스 */
+    .canvas-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--canvas); }
+    .grid-viewport { flex: 1; overflow: auto; padding: 28px 32px 60px; display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .sheet-paper { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .pv-page-holder { display: flex; flex-direction: column; align-items: center; margin-bottom: 26px; }
+    .pv-page { position: relative; background: #fff; box-shadow: var(--shadow-page); border-radius: 2px; overflow: visible; color: #000; font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', sans-serif; }
+    .pv-page-label { margin-top: 8px; font-size: 11px; color: var(--ink-muted); }
+    .pv-area { position: absolute; }
+    .pv-content { position: absolute; }
+    .pv-hf { position: absolute; display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: center; color: #000; pointer-events: none; white-space: pre; line-height: 1.15; }
+    .pv-hf-L { text-align: left; } .pv-hf-C { text-align: center; } .pv-hf-R { text-align: right; }
+    .pv-footer { align-items: end; }
+    .pv-drawing { position: absolute; pointer-events: none; box-sizing: border-box; }
+    .pv-shape { overflow: hidden; padding: 4px 6px; line-height: 1.2; }
+
+    table.pv-grid { border-collapse: collapse; table-layout: fixed; }
+    table.pv-grid td { padding: 0 2px; overflow: hidden; white-space: nowrap; font-size: 14.667px; line-height: 1.15; vertical-align: bottom; position: relative; border: none; }
+    table.pv-grid.show-grid td { box-shadow: inset -1px -1px 0 #E1E3E8; }
+    table.pv-grid td.wrap { white-space: pre-wrap; word-break: break-all; }
+    table.pv-grid td.editable-cell { cursor: text; }
+    table.pv-grid td.editable-cell:hover { background-image: linear-gradient(rgba(37,99,235,.07), rgba(37,99,235,.07)); box-shadow: inset 0 0 0 1px rgba(37,99,235,.45); }
+    table.pv-grid td.selected-cell { box-shadow: inset 0 0 0 2px var(--accent) !important; background-image: linear-gradient(rgba(37,99,235,.08), rgba(37,99,235,.08)); }
+    table.pv-grid td.field-cell { background-image: linear-gradient(rgba(37,99,235,.045), rgba(37,99,235,.045)); }
+    .cover-hint { color: rgba(37,99,235,.55); font-style: italic; font-weight: 400; pointer-events: none; }
+    table.pv-grid td.photo-area-cell { padding: 0; vertical-align: top; position: relative; }
+    table.pv-grid td.photo-area-cell > .photo-area-box { position: absolute; inset: 0; }
+    .block-outline { position: absolute; pointer-events: none; border: 2px solid transparent; border-radius: 2px; z-index: 4; }
+    .block-outline.selected { border-color: var(--accent); background: rgba(37,99,235,.025); }
+    .block-outline .tag { position: absolute; top: -2px; left: -6px; transform: translateX(-100%); zoom: var(--ui-zoom, 1); background: var(--accent); color: #fff; font: 600 11px 'Pretendard', sans-serif; padding: 3px 8px; border-radius: 5px; white-space: nowrap; display: none; }
+    .block-outline.selected .tag { display: block; }
+
+    .cell-editor-input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 100%; border: none; outline: 2px solid var(--accent); padding: 1px 2px; font: inherit; color: inherit; background: #fff; resize: none; z-index: 6; box-sizing: border-box; text-align: inherit; }
+
+    /* 사진 자리 */
+    .photo-area-box { width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; }
+    .photo-area-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #8B8E99; background: repeating-linear-gradient(45deg, #FAFAFB, #FAFAFB 8px, #F4F5F7 8px, #F4F5F7 16px); border: 1.5px dashed #C6C8D0; border-radius: 3px; margin: 3px; cursor: pointer; text-align: center; font-family: 'Pretendard', sans-serif; }
+    .photo-area-empty > * { zoom: var(--ui-zoom, 1); }
+    .photo-area-empty strong { font-size: 13px; color: #5D606B; }
+    .photo-area-empty span { font-size: 11.5px; line-height: 1.45; }
+    .photo-area-empty:hover, .photo-area-empty.drag-over { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+    .photo-area-empty.selected { border-color: var(--accent); border-style: solid; background: var(--accent-soft); }
+    .photo-area-toolbar { position: absolute; top: 4px; left: 4px; z-index: 5; display: flex; gap: 4px; zoom: var(--ui-zoom, 1); opacity: 0; transition: opacity .12s; }
+    .photo-area-box:hover .photo-area-toolbar { opacity: 1; }
+    .photo-area-toolbar button { font-size: 11px; padding: 2px 8px; background: rgba(255,255,255,.95); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+    .photo-slots-grid { flex: 1; display: grid; width: 100%; height: 100%; gap: 2px; }
+    .photo-slot { position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; padding: 4px; }
+    .photo-slot.selected-slot { box-shadow: inset 0 0 0 2.5px var(--accent); background: rgba(37,99,235,.05); }
+    .photo-slot.drag-over { background: #DCE8FF; box-shadow: inset 0 0 0 2px var(--accent); }
+    .photo-slot img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+    .slot-placeholder { font: 12px 'Pretendard', sans-serif; color: #8B8E99; text-align: center; pointer-events: none; zoom: var(--ui-zoom, 1); border: 1.5px dashed #C6C8D0; border-radius: 4px; padding: 10px 14px; background: #FAFAFB; }
+    .slot-remove-btn { position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; padding: 0; border-radius: 50%; background: rgba(28,29,33,.78); color: #fff; border: none; font-size: 13px; line-height: 1; zoom: var(--ui-zoom, 1); opacity: 0; transition: opacity .12s; z-index: 3; }
+    .slot-actions { position: absolute; bottom: 4px; right: 4px; display: flex; gap: 4px; z-index: 3; zoom: var(--ui-zoom, 1); opacity: 0; transition: opacity .12s; }
+    .photo-slot:hover .slot-remove-btn, .photo-slot:hover .slot-actions, .photo-slot.selected-slot .slot-remove-btn, .photo-slot.selected-slot .slot-actions { opacity: 1; }
+    .slot-actions button { font-size: 11px; padding: 2px 9px; background: rgba(255,255,255,.96); box-shadow: 0 1px 3px rgba(0,0,0,.14); }
+    .slot-conv-tag { position: absolute; top: 4px; left: 4px; background: rgba(37,99,235,.9); color: #fff; font: 700 10px 'Pretendard', sans-serif; padding: 1px 6px; border-radius: 4px; zoom: var(--ui-zoom, 1); }
+
+    /* 속성 패널 */
+    .inspector { width: var(--inspector-w); flex: none; background: #fff; border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+    .insp-head { padding: 14px 16px 10px; border-bottom: 1px solid var(--line); }
+    .insp-kicker { font-size: 11px; color: var(--ink-muted); font-weight: 600; letter-spacing: .02em; }
+    .insp-title { font-size: 15px; font-weight: 700; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .insp-body { flex: 1; overflow: auto; padding: 6px 0 20px; }
+    .insp-sec { padding: 12px 16px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 9px; }
+    .insp-sec:last-child { border-bottom: none; }
+    .insp-sec h4 { margin: 0; font-size: 11.5px; color: var(--ink-muted); font-weight: 650; letter-spacing: .02em; }
+    .insp-row { display: flex; align-items: center; gap: 8px; }
+    .insp-row > label { width: 64px; flex: none; font-size: 12px; color: var(--ink-2); }
+    .insp-row > .grow { flex: 1; min-width: 0; }
+    .insp-sec select, .insp-sec input[type=text], .insp-sec textarea { width: 100%; }
+    .insp-sec textarea { min-height: 64px; resize: vertical; line-height: 1.4; }
+    .insp-note { font-size: 11.5px; color: var(--ink-muted); line-height: 1.5; }
+    .insp-note.warn { color: var(--warn); background: var(--warn-soft); border: 1px solid #F5D08A; border-radius: var(--radius); padding: 8px 10px; }
+    .insp-kv { display: grid; grid-template-columns: 78px 1fr; gap: 5px 8px; font-size: 12px; }
+    .insp-kv dt { color: var(--ink-muted); } .insp-kv dd { margin: 0; color: var(--ink); min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .insp-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .insp-actions button { flex: 1 1 auto; }
+    .layout-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .layout-pick button { flex-direction: column; padding: 7px 4px; font-size: 11px; gap: 5px; }
+    .layout-pick button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+    .lp-ico { display: grid; gap: 2px; width: 30px; height: 22px; }
+    .lp-ico i { background: currentColor; opacity: .35; border-radius: 1.5px; }
+    .font-preview { font-size: 16px; padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--chrome); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .font-map-row { display: grid; grid-template-columns: 16px 1fr; align-items: center; gap: 4px 6px; font-size: 12px; padding: 6px 0; border-top: 1px dashed var(--line); }
+    .font-map-row .from { grid-column: 1 / -1; font-weight: 600; color: var(--ink); word-break: break-all; }
+    .font-map-row .from.missing { color: var(--warn); }
+    .font-map-row select { padding: 5px 6px; font-size: 12px; }
+    .seg-sm { display: flex; border: 1px solid var(--line-strong); border-radius: var(--radius); overflow: hidden; }
+    .seg-sm button { flex: 1; border: none; border-radius: 0; padding: 5px 6px; font-size: 12px; }
+    .seg-sm button + button { border-left: 1px solid var(--line-strong); }
+    .seg-sm button.on { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+
+    /* 상태 막대 + 시트 탭 */
+    .statusbar { height: var(--status-h); flex: none; display: flex; align-items: stretch; background: var(--chrome); border-top: 1px solid var(--line); }
+    .sheet-tabs-bar { flex: 1; display: flex; align-items: stretch; gap: 0; overflow-x: auto; min-width: 0; padding-left: 8px; }
+    .sheet-tab { display: flex; align-items: center; gap: 6px; padding: 0 12px; font-size: 12.5px; color: var(--ink-2); cursor: pointer; border-right: 1px solid var(--line); white-space: nowrap; user-select: none; position: relative; }
+    .sheet-tab:hover { background: var(--chrome-2); }
+    .sheet-tab.active { background: #fff; color: var(--ink); font-weight: 600; box-shadow: inset 0 2px 0 var(--accent); }
+    .sheet-tab .role-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--line-strong); }
+    .sheet-tab.active .role-dot { background: var(--accent); }
+    .sheet-tab-del { border: none; background: transparent; padding: 0 2px; font-size: 14px; line-height: 1; color: var(--ink-muted); opacity: 0; }
+    .sheet-tab:hover .sheet-tab-del { opacity: 1; }
+    .sheet-tab-del:hover { color: var(--danger); background: transparent; }
+    .sheet-tab-rename { font: inherit; padding: 2px 5px; border: 1px solid var(--accent); border-radius: 4px; outline: none; min-width: 4em; }
+    .sheet-add-btn { border: none; background: transparent; padding: 0 12px; font-size: 16px; color: var(--ink-2); border-radius: 0; }
+    .status-right { display: flex; align-items: center; gap: 10px; padding: 0 10px; flex: none; font-size: 12px; color: var(--ink-2); border-left: 1px solid var(--line); }
+    .status-right .badge { background: transparent; border-color: transparent; padding: 0; font-size: 12px; color: var(--ink-2); }
+    .zoom-ctl { display: flex; align-items: center; gap: 2px; }
+    .zoom-ctl button { padding: 3px 6px; border-color: transparent; background: transparent; font-size: 12px; min-width: 26px; }
+    .zoom-ctl button:hover { background: rgba(0,0,0,.06); }
+    #zoomLabel { min-width: 52px; }
+    .font-banner { display: none; align-items: center; gap: 6px; color: var(--warn); background: var(--warn-soft); border: 1px solid #F5D08A; border-radius: 999px; padding: 2px 10px 2px 8px; font-size: 11.5px; cursor: pointer; max-width: 260px; }
+    .font-banner.visible { display: inline-flex; }
+    .font-banner span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #dismissFontBannerBtn { display: none; }
+
+    /* 모달 */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(16,18,24,.38); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 100; }
+    .modal-backdrop.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 14px; box-shadow: var(--shadow-pop); padding: 20px 22px; width: 460px; max-width: 94vw; }
+    .modal-box h3 { margin: 0 0 14px; font-size: 16px; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+    .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .form-row label { font-size: 12px; font-weight: 600; color: var(--ink-2); }
+    .layout-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .layout-opt-btn { flex-direction: column; align-items: flex-start; padding: 10px; gap: 2px; text-align: left; }
+    .layout-opt-btn span { font-size: 11px; color: var(--ink-muted); }
+
+    /* [기능 추가 2026-11-25] */
+    .app-toolbar button { white-space: nowrap; flex: none; }
+    .doc-kicker { max-width: 230px; overflow: hidden; text-overflow: ellipsis; }
+    @media (max-width: 1420px) {
+      .tb-btn { font-size: 0; min-width: 36px; padding: 7px 8px; gap: 0; }
+      .tb-btn svg.i { width: 19px; height: 19px; }
+      #saveBtn { font-size: 0; gap: 0; }
+      .tb-sep { margin: 0 2px; }
+    }
+    .icon-btn { padding: 6px 7px; }
+    .photo-tools { display: flex; gap: 6px; align-items: center; }
+    .photo-tools button { font-size: 11.5px; padding: 4px 8px; border: 1px solid var(--line); background: #fff; }
+    .photo-tools button.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+    .photo-tools select { flex: 1; padding: 4px 6px; font-size: 11.5px; }
+    .photo-zoom-btn { position: absolute; top: 9px; right: 9px; width: 24px; height: 24px; padding: 0; border-radius: 6px; background: rgba(28,29,33,.72); color: #fff; border: none; font-size: 13px; opacity: 0; z-index: 2; }
+    .photo-item:hover .photo-zoom-btn { opacity: 1; }
+    .photo-item:hover .conv-badge { opacity: 0; }
+    .recover-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--warn-soft); border: 1px solid #F5D08A; border-radius: 12px; padding: 12px 16px; margin-bottom: 22px; color: #7A4F00; }
+    .recover-banner .insp-actions { flex: none; }
+    .recent-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .recent-head h2 { font-size: 15px; margin: 0; }
+    .recent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; margin-bottom: 34px; }
+    .recent-card { flex-direction: column; align-items: flex-start; gap: 3px; padding: 12px 14px; border-radius: 10px; border-color: var(--line); text-align: left; }
+    .recent-card:hover { border-color: var(--accent); }
+    .recent-title { font-weight: 650; font-size: 13.5px; }
+    .recent-meta { font-size: 11.5px; color: var(--ink-muted); }
+    .check-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin-top: 6px; }
+    .paste-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; }
+    .paste-col { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; color: var(--ink-muted); }
+    .paste-col span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .suggest-box { position: fixed; z-index: 300; background: #fff; border: 1px solid var(--line-strong); border-radius: 8px; box-shadow: var(--shadow-pop); padding: 4px; max-height: 240px; overflow: auto; font-size: 13px; }
+    .suggest-item { padding: 6px 10px; border-radius: 5px; cursor: pointer; white-space: nowrap; }
+    .suggest-item:hover, .suggest-item.on { background: var(--accent-soft); color: var(--accent); }
+    .lightbox { background: rgba(10,10,12,.86); flex-direction: column; gap: 12px; }
+    .lightbox-img { max-width: 86vw; max-height: 80vh; object-fit: contain; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,.4); background: #222; }
+    .lightbox-cap { color: #EEE; font-size: 13px; }
+    .lb-nav { position: fixed; top: 50%; transform: translateY(-50%); width: 46px; height: 64px; font-size: 30px; background: rgba(255,255,255,.12); color: #fff; border: none; }
+    .lb-prev { left: 24px; } .lb-next { right: 24px; }
+    .lb-close { position: fixed; top: 20px; right: 24px; background: rgba(255,255,255,.14); color: #fff; border: none; }
+
+    .toast { position: fixed; left: 50%; bottom: 58px; transform: translateX(-50%) translateY(10px); background: rgba(28,29,33,.92); color: #fff; padding: 9px 16px; border-radius: 10px; font-size: 12.5px; opacity: 0; pointer-events: none; transition: opacity .18s, transform .18s; z-index: 200; max-width: 70vw; box-shadow: var(--shadow-pop); }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+
+    /* Stage 2: Crop Modal */
+    .crop-modal-box {
+      width: 780px;
+      max-width: 94vw;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .crop-stage-wrap {
+      flex: 1;
+      min-height: 320px;
+      max-height: 62vh;
+      background: #1E1E1E;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      user-select: none;
+      padding: 12px;
+    }
+    .crop-stage {
+      position: relative;
+      display: inline-block;
+      line-height: 0;
+      cursor: crosshair;
+    }
+    .crop-stage img {
+      display: block;
+      max-width: 720px;
+      max-height: 56vh;
+      pointer-events: none;
+      user-select: none;
+    }
+    .crop-selection {
+      position: absolute;
+      border: 2px solid #2F6FED;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.48);
+      cursor: move;
+      box-sizing: border-box;
+    }
+    .crop-handle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #FFFFFF;
+      border: 2px solid #2F6FED;
+      border-radius: 2px;
+    }
+    .crop-handle.nw { top: -5px; left: -5px; cursor: nwse-resize; }
+    .crop-handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
+    .crop-handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+    .crop-handle.se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+    .crop-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    /* Stage 2: Settings Modal */
+    .settings-help {
+      font-size: 11px;
+      color: var(--ink-muted);
+      line-height: 1.5;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 10px;
+      margin-bottom: 12px;
+    }
+    .test-result-box {
+      display: none;
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      font-size: 12px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .test-result-box.ok {
+      display: block;
+      background: #EDF9F0;
+      border: 1px solid #A6DFB5;
+      color: #166534;
+    }
+    .test-result-box.err {
+      display: block;
+      background: #FFF2F2;
+      border: 1px solid #F2C6C7;
+      color: #991B1B;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- 화면 1: 양식 고르기 -->
+  <div id="catalogView" class="view active">
+    <div class="start-bar">
+      <div class="brand">
+        <div class="brand-mark"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg></div>
+        사진첩 에디터
+      </div>
+    </div>
+    <div class="start-main">
+      <div class="start-inner">
+        <h1>새 사진첩 만들기</h1>
+        <p class="lead">종류와 업체를 고르면 그 회사 양식으로 바로 시작합니다. 원본 엑셀과 사진은 바뀌지 않아요.</p>
+        <div class="section-label">종류</div>
+        <div id="typeTabs" class="type-tabs"></div>
+        <div class="section-label">업체 양식</div>
+        <div id="companyGrid" class="company-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 화면 2: 편집 -->
+  <div id="editorView" class="view">
+    <header class="app-toolbar">
+      <button id="backToCatalogBtn" class="ghost" title="양식 목록으로">
+        <svg class="i" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <div class="doc-head">
+        <div class="doc-titles">
+          <span class="doc-kicker" id="editorKicker">사진첩</span>
+          <span id="editorTitle"></span>
+        </div>
+      </div>
+      <div class="tb-group">
+        <button id="undoBtn" class="ghost icon-btn" title="실행 취소 (⌘Z)"><svg class="i" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button>
+        <button id="redoBtn" class="ghost icon-btn" title="다시 실행 (⇧⌘Z)"><svg class="i" viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/></svg></button>
+      </div>
+      <div class="tb-sep"></div>
+      <div class="tb-group">
+        <button id="addBlockEndBtn" class="tb-btn" title="시트 맨 끝에 블록 추가">
+          <svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="7" rx="1.5"/><path d="M12 14v7M8.5 17.5h7"/></svg>블록 추가
+        </button>
+        <button id="addBlockBelowBtn" class="tb-btn" title="선택한 블록 아래에 추가">
+          <svg class="i" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="6" rx="1.5"/><rect x="4" y="15" width="16" height="6" rx="1.5" stroke-dasharray="2.5 2"/><path d="M12 10.5v3"/></svg>아래에 추가
+        </button>
+        <button id="deleteBlockBtn" class="tb-btn danger" title="선택한 블록 삭제">
+          <svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>블록 삭제
+        </button>
+      </div>
+      <div class="tb-sep"></div>
+      <div class="tb-group">
+        <button id="autoFillBtn" class="tb-btn" title="사진 폴더의 사진을 빈 자리에 차례로 넣기">
+          <svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><path d="M17 14v6M14 17h6"/></svg>사진 채우기
+        </button>
+        <button id="pasteTableBtn" class="tb-btn" title="엑셀에서 복사한 목록으로 칸 채우기">
+          <svg class="i" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8 10h8M8 14h8M8 18h5"/></svg>표 붙여넣기
+        </button>
+      </div>
+      <div class="tb-sep"></div>
+      <div class="tb-group">
+        <button id="editRepeatedBtn" class="tb-btn" title="머리 행·반복값 한꺼번에 입력">
+          <svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><path d="M17 15l2 2 3-4"/></svg>반복값
+        </button>
+        <button id="fontPanelBtn" class="tb-btn" title="글꼴 바꾸기">
+          <svg class="i" viewBox="0 0 24 24"><path d="M4 20l6-16h1l6 16M6.5 14h9"/><path d="M19 9v11"/></svg>글꼴
+        </button>
+        <button id="gridToggleBtn" class="tb-btn" title="화면에만 칸 격자 보이기">
+          <svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 10h16M4 15h16M10 4v16M15 4v16"/></svg>격자
+        </button>
+      </div>
+      <div class="tb-spacer"></div>
+      <input id="siteNameInput" type="text" placeholder="현장명" style="display:none; width: 200px;" />
+      <button id="saveBtn" class="ghost" title="작업 저장 (⌘S)">
+        <svg class="i" viewBox="0 0 24 24"><path d="M5 3h11l3 3v13a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M7 3v5h8V3M7 21v-7h10v7"/></svg>저장
+      </button>
+      <button id="openSettingsBtn" class="ghost" title="MYBOX 설정">
+        <svg class="i" viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 01-.6-8.96A6 6 0 0118 8a4 4 0 01-1 7.87"/><path d="M12 12v8M9 17l3 3 3-3"/></svg>
+      </button>
+      <button id="exportBtn" class="primary">
+        <svg class="i" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5"/><path d="M5 19h14"/></svg>엑셀로 내보내기
+      </button>
+      <span id="templateStatusBadge" hidden></span>
+      <span id="blankStatusBadge" hidden></span>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="panel-head">
+          <div class="seg">
+            <button id="sourceTabLocal" class="source-tab-btn active">내 컴퓨터</button>
+            <button id="sourceTabMybox" class="source-tab-btn">MYBOX</button>
+          </div>
+          <div id="localControls" class="sidebar-header">
+            <div class="sidebar-title">
+              <span>사진</span>
+              <span id="photoCountBadge" class="badge">0장</span>
+            </div>
+            <div class="sidebar-actions">
+              <button id="selectFolderBtn" class="primary">
+                <svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>폴더 열기
+              </button>
+              <button id="refreshFolderBtn" title="새로고침" style="flex: 0 0 auto;" disabled>
+                <svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-2.3 5.7M20 5v6h-6"/></svg>
+              </button>
+            </div>
+            <div id="folderPathText" class="folder-path">폴더를 열어 주세요</div>
+            <div class="photo-tools">
+              <button id="photoFilterBtn" class="ghost" title="아직 넣지 않은 사진만 보기">안 넣은 것만</button>
+              <select id="photoSortSel" title="사진 순서">
+                <option value="name">이름순</option>
+                <option value="time">찍은 시간순</option>
+              </select>
+            </div>
+          </div>
+          <div id="myboxControls" class="sidebar-header" style="display:none;">
+            <div class="sidebar-title">
+              <span>MYBOX</span>
+              <span id="myboxCountBadge" class="badge">0장</span>
+            </div>
+            <div class="sidebar-actions">
+              <button id="myboxUpBtn" disabled>↑ 위로</button>
+              <button id="myboxRefreshBtn">새로고침</button>
+              <button id="myboxSettingsBtn">설정</button>
+            </div>
+            <div id="myboxPathText" class="folder-path">/ (루트)</div>
+            <div class="mybox-notice">암호 폴더·공유받은 폴더는 열 수 없어요</div>
+          </div>
+        </div>
+        <div id="photoGrid" class="photo-grid">
+          <div class="photo-empty">
+            <svg class="i big" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 9"/></svg>
+            [폴더 열기]로 사진 폴더를 고르세요.<br/>JPG · PNG · HEIC · WEBP · TIFF
+          </div>
+        </div>
+      </aside>
+
+      <main class="canvas-wrap">
+        <div id="gridViewport" class="grid-viewport"></div>
+      </main>
+
+      <aside id="inspector" class="inspector">
+        <div class="insp-head">
+          <div id="inspKicker" class="insp-kicker">문서</div>
+          <div id="inspTitle" class="insp-title"></div>
+        </div>
+        <div id="inspBody" class="insp-body"></div>
+      </aside>
+    </div>
+
+    <footer class="statusbar">
+      <div id="sheetTabsBar" class="sheet-tabs-bar"></div>
+      <div class="status-right">
+        <div id="fontBanner" class="font-banner" title="없는 글꼴 — 눌러서 글꼴 설정 보기">
+          <svg class="i" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M12 9v4M12 17h.01M10.3 3.9L2.4 18a2 2 0 001.7 3h15.8a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+          <span id="fontBannerText"></span>
+          <button id="dismissFontBannerBtn">닫기</button>
+        </div>
+        <span id="pageCountText"></span>
+        <span id="sizeEstimateBadge" class="badge">예상 용량 계산 중</span>
+        <div class="zoom-ctl">
+          <button id="zoomOutBtn" title="축소">−</button>
+          <button id="zoomLabel" title="쪽 너비에 맞추기">맞춤</button>
+          <button id="zoomInBtn" title="확대">+</button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Layout Picker Modal -->
+  <div id="layoutModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h3>사진 영역 레이아웃 선택 (열×행)</h3>
+      <div class="layout-options">
+        <button class="layout-opt-btn" data-layout="1x1">
+          <strong>1장 · 1×1</strong><span>기본값 (단독 1장)</span>
+        </button>
+        <button class="layout-opt-btn" data-layout="1x2">
+          <strong>2장 · 1×2 (위아래)</strong><span>2장 기본값</span>
+        </button>
+        <button class="layout-opt-btn" data-layout="2x1">
+          <strong>2장 · 2×1 (좌우)</strong><span>나란히 2장</span>
+        </button>
+        <button class="layout-opt-btn" data-layout="1x3">
+          <strong>3장 · 1×3 (위아래)</strong><span>3장 기본값</span>
+        </button>
+        <button class="layout-opt-btn" data-layout="3x1">
+          <strong>3장 · 3×1 (좌우)</strong><span>가로 3장</span>
+        </button>
+        <button class="layout-opt-btn" data-layout="2x2">
+          <strong>4장 · 2×2</strong><span>2열 × 2행 격자</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelLayoutBtn">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repeated Values Modal -->
+  <div id="repeatedModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h3>반복값 일괄 입력</h3>
+      <div id="repeatedFormBody"></div>
+      <div class="modal-footer">
+        <button id="cancelRepeatedBtn">취소</button>
+        <button id="saveRepeatedBtn" class="primary">적용</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Sheet Modal -->
+  <div id="addSheetModal" class="modal-backdrop">
+    <div class="modal-box">
+      <h3>새 블록 시트(탭) 추가</h3>
+      <div class="form-row">
+        <label for="newSheetNameInput">시트 이름 (예: 59㎡A)</label>
+        <input id="newSheetNameInput" type="text" placeholder="59㎡A" />
+      </div>
+      <div class="modal-footer">
+        <button id="cancelAddSheetBtn">취소</button>
+        <button id="confirmAddSheetBtn" class="primary">추가</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Stage 2 A: Pre-placement Crop Modal -->
+  <div id="cropModal" class="modal-backdrop">
+    <div class="modal-box crop-modal-box">
+      <h3>사진 크롭 (자유 비율)</h3>
+      <div class="crop-stage-wrap">
+        <div id="cropStage" class="crop-stage">
+          <img id="cropImage" alt="크롭 대상 이미지" />
+          <div id="cropSelection" class="crop-selection" style="display:none;">
+            <div class="crop-handle nw" data-handle="nw"></div>
+            <div class="crop-handle ne" data-handle="ne"></div>
+            <div class="crop-handle sw" data-handle="sw"></div>
+            <div class="crop-handle se" data-handle="se"></div>
+          </div>
+        </div>
+      </div>
+      <div class="crop-meta-bar">
+        <span id="cropInfoText">이미지 위에서 자유 비율로 드래그해 자를 영역을 지정하세요.</span>
+        <button id="cropSelectAllBtn">전체 선택</button>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelCropBtn">취소</button>
+        <button id="confirmCropBtn" class="primary">확인 (크롭본 생성)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 2 B: MYBOX Settings Modal -->
+  <div id="settingsModal" class="modal-backdrop">
+    <div class="modal-box" style="width: 440px;">
+      <h3>MYBOX 설정 (PAT 인증)</h3>
+      <div class="settings-help">
+        <strong>PAT 발급 경로:</strong> MYBOX 웹 → 설정 → 계정 및 개인 액세스 토큰 관리 → 토큰 생성<br/>
+        토큰은 Electron <code>safeStorage</code>로 암호화 저장되며 평문 저장·로그 출력을 하지 않습니다.
+      </div>
+      <div class="form-row">
+        <label>현재 상태: <span id="myboxTokenStatusText" style="font-weight:400; color:var(--ink-muted);">확인 중...</span></label>
+      </div>
+      <div class="form-row">
+        <label for="myboxTokenInput">개인 액세스 토큰 (PAT)</label>
+        <input id="myboxTokenInput" type="password" placeholder="MYBOX PAT를 붙여넣으세요" autocomplete="off" />
+      </div>
+      <div id="myboxTestResult" class="test-result-box"></div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <div style="display:flex; gap:6px;">
+          <button id="testMyboxBtn">연결 테스트</button>
+          <button id="clearMyboxBtn" class="danger">토큰 삭제</button>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button id="closeSettingsBtn">닫기</button>
+          <button id="saveMyboxBtn" class="primary">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="./pageview.js"></script>
+  <script src="./renderer.js"></script>
+</body>
+</html>

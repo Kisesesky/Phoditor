@@ -1,0 +1,1894 @@
+{
+  "id": "공용홀_롯데",
+  "version": 1,
+  "status": "auto-verified",
+  "verified": false,
+  "type": "공용홀",
+  "company": "롯데",
+  "source": {
+    "json": "공용홀_롯데.json",
+    "file": "화성 향남 롯데캐슬 시그니처/공용홀/준공사진첩_화성 향남 롯데캐슬 시그니처_공용홀 외관.xlsx"
+  },
+  "sheets": [
+    {
+      "name": "갑지",
+      "state": "visible",
+      "role": "cover",
+      "coverFieldCandidates": [
+        {
+          "cell": "K4",
+          "current": "대외비"
+        },
+        {
+          "cell": "E17",
+          "current": "화성 향남 롯데캐슬 시그니처"
+        },
+        {
+          "cell": "J20",
+          "current": "공용홀 준공사진"
+        }
+      ],
+      "coverNote": "글자 14pt 이상 텍스트를 후보로 뽑음(현장명·타입·제목 등). 어느 칸을 입력받을지 확인 필요",
+      "keepImages": [
+        "J51:N54"
+      ],
+      "coverFields": [
+        {
+          "cell": "E17",
+          "kind": "siteName",
+          "current": "화성 향남 롯데캐슬 시그니처"
+        }
+      ],
+      "coverFieldsNote": "후보 중 현장명·타입·날짜로 보이는 셀만 자동 확정. 나머지 후보는 고정 제목으로 보고 라벨로 둔다"
+    },
+    {
+      "name": "1.외관",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 5,
+        "rows": 24,
+        "observedBlocks": 22,
+        "blocksWithContent": 22,
+        "blockLengthHistogram": {
+          "24": 11,
+          "25": 10
+        },
+        "anchorLabel": {
+          "column": "D",
+          "text": "IMAGE",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 541,
+        "periodEvidence": {
+          "candidateScores": {
+            "24": 212,
+            "25": 3
+          },
+          "periodicLabels": [
+            "IMAGE",
+            "NO.",
+            "■ 위치",
+            "외관",
+            "■ 공종",
+            "■ 품목",
+            "■ 사양",
+            "■ 업체명",
+            "롯데건설 OEM",
+            "■ 모델명",
+            "싸인 (측면)",
+            "외관 조경"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          30.0,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          5.5
+        ],
+        "labels": [
+          {
+            "cell": "D{+0}",
+            "text": "IMAGE",
+            "presentInBlocks": "22/22",
+            "item": 0
+          },
+          {
+            "cell": "K{+0}",
+            "text": "NO.",
+            "presentInBlocks": "22/22",
+            "item": 0
+          },
+          {
+            "cell": "K{+2}",
+            "text": "■ 위치",
+            "presentInBlocks": "22/22",
+            "item": 0
+          },
+          {
+            "cell": "K{+3}",
+            "text": "■ 공종",
+            "presentInBlocks": "22/22",
+            "item": 0
+          },
+          {
+            "cell": "K{+4}",
+            "text": "■ 품목",
+            "presentInBlocks": "22/22",
+            "item": 0
+          },
+          {
+            "cell": "K{+5}",
+            "text": "■ 사양",
+            "presentInBlocks": "22/22",
+            "item": 0
+          },
+          {
+            "cell": "K{+6}",
+            "text": "■ 업체명",
+            "presentInBlocks": "22/22",
+            "item": 0
+          },
+          {
+            "cell": "K{+7}",
+            "text": "■ 모델명",
+            "presentInBlocks": "22/22",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "L{+3}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "22/22",
+            "item": 0,
+            "label": "■ 공종"
+          },
+          {
+            "cell": "L{+4}",
+            "examples": [
+              "싸인 (측면)",
+              "외관 조경",
+              "주차장"
+            ],
+            "presentInBlocks": "22/22",
+            "item": 0,
+            "label": "■ 품목"
+          },
+          {
+            "cell": "L{+5}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "22/22",
+            "item": 0,
+            "label": "■ 사양"
+          },
+          {
+            "cell": "L{+7}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "22/22",
+            "item": 0,
+            "label": "■ 모델명"
+          },
+          {
+            "cell": "K{+9}",
+            "examples": [
+              "* PAINT : NA0815 (KCC), HD0032 (KCC)"
+            ],
+            "presentInBlocks": "4/22",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+11}",
+            "examples": [
+              "*ETC : KAL ZINC_WHITE (주신기업)"
+            ],
+            "presentInBlocks": "4/22",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+12}",
+            "examples": [
+              "ARTE ZINC_KAL ZINX NOIR (주신기업)"
+            ],
+            "presentInBlocks": "4/22",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "L{+2}",
+            "example": "외관",
+            "presentInBlocks": "22/22",
+            "why": "왼쪽 칸이 라벨(■ 위치)인 값",
+            "item": 0,
+            "label": "■ 위치",
+            "uiLabel": "■ 위치",
+            "scope": "sheet"
+          },
+          {
+            "cell": "L{+6}",
+            "example": "롯데건설 OEM",
+            "presentInBlocks": "22/22",
+            "why": "왼쪽 칸이 라벨(■ 업체명)인 값",
+            "item": 0,
+            "label": "■ 업체명",
+            "uiLabel": "■ 업체명",
+            "scope": "document"
+          }
+        ],
+        "numbering": {
+          "cell": "M{+0}",
+          "kind": "rowFormula",
+          "firstFormula": "INT((ROW(M5)-4)/24)+1",
+          "firstValue": 1,
+          "lastValue": 22,
+          "sheetOffset": 1,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "D{+2}:G{+21}",
+            "approxWidthPx": 483,
+            "blocksWithImage": "22/22",
+            "imagesPerAreaObserved": {
+              "1": 8,
+              "2": 14
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 1,
+        "footer": {
+          "present": false,
+          "cells": []
+        },
+        "lengthMix": {
+          "mainLength": 24,
+          "distribution": {
+            "24": 11,
+            "25": 10
+          },
+          "oddBlocks": [
+            [
+              29,
+              25
+            ],
+            [
+              78,
+              25
+            ],
+            [
+              127,
+              25
+            ],
+            [
+              176,
+              25
+            ],
+            [
+              225,
+              25
+            ]
+          ],
+          "heightSamples": [
+            {
+              "blockStart": 29,
+              "length": 25,
+              "heights": [
+                30.0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                5.5,
+                5.5
+              ]
+            },
+            {
+              "blockStart": 78,
+              "length": 25,
+              "heights": [
+                30.0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                5.5,
+                5.5
+              ]
+            }
+          ],
+          "mainHeights": [
+            30.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            5.5
+          ]
+        },
+        "headerFields": [
+          {
+            "cell": "G3",
+            "label": "일자 (머리 행)",
+            "scope": "document"
+          },
+          {
+            "cell": "L3",
+            "label": "현장명 (머리 행)",
+            "scope": "document"
+          }
+        ],
+        "headerFieldsNote": "블록 위 머리 행 값(빈 양식에서 비움). 2026-11-25 인쇄 비교에서 앱이 채울 곳이 없어 추가 — 반복값 일괄 입력 창에서 입력"
+      },
+      "print": {
+        "printArea": "'1.외관'!$B$2:$O$542",
+        "printTitles": "'1.외관'!$2:$3",
+        "fitToPage": true,
+        "scale": "78",
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 49,
+          "breaksPerBlock": 0.49,
+          "firstBreakOffset": 23,
+          "evidence": "페이지 나누기 10개, 간격 최빈 49행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "evidence": "블록 경계와 맞는 나누기 0/10",
+        "blocksPerPrintedPage": 2,
+        "pageTopSpacerHeights": [
+          5.5
+        ],
+        "pageBreakNote": "원본 나누기가 2블록마다 있고(블록 마지막 5.5pt 행 뒤), 둘째 쪽부터 맨 위에 5.5pt 빈 행이 1개 있다 — 2026-11-25 원본 대조(print-compare-20261125)"
+      },
+      "autoCheck": {
+        "blocks": 22,
+        "blocksWithContent": 22,
+        "labelsMatched": "176/176",
+        "photoMergesMatched": "22/22",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "2.공용홀1층",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 5,
+        "rows": 24,
+        "observedBlocks": 128,
+        "blocksWithContent": 128,
+        "blockLengthHistogram": {
+          "25": 124,
+          "24": 3
+        },
+        "anchorLabel": {
+          "column": "D",
+          "text": "IMAGE",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 3199,
+        "periodEvidence": {
+          "candidateScores": {
+            "25": 1321
+          },
+          "periodicLabels": [
+            "IMAGE",
+            "NO.",
+            "■ 위치",
+            "공용홀 1층",
+            "■ 공종",
+            "■ 품목",
+            "■ 사양",
+            "■ 업체명",
+            "롯데건설 OEM",
+            "■ 모델명",
+            "*ETC : 천장 / 광바리솔",
+            "공용홀 (싸인)"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          30.0,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          5.5,
+          30.0
+        ],
+        "labels": [
+          {
+            "cell": "D{+0}",
+            "text": "IMAGE",
+            "presentInBlocks": "128/128",
+            "item": 0
+          },
+          {
+            "cell": "K{+0}",
+            "text": "NO.",
+            "presentInBlocks": "128/128",
+            "item": 0
+          },
+          {
+            "cell": "K{+2}",
+            "text": "■ 위치",
+            "presentInBlocks": "128/128",
+            "item": 0
+          },
+          {
+            "cell": "K{+3}",
+            "text": "■ 공종",
+            "presentInBlocks": "128/128",
+            "item": 0
+          },
+          {
+            "cell": "K{+4}",
+            "text": "■ 품목",
+            "presentInBlocks": "128/128",
+            "item": 0
+          },
+          {
+            "cell": "K{+5}",
+            "text": "■ 사양",
+            "presentInBlocks": "128/128",
+            "item": 0
+          },
+          {
+            "cell": "K{+6}",
+            "text": "■ 업체명",
+            "presentInBlocks": "128/128",
+            "item": 0
+          },
+          {
+            "cell": "K{+7}",
+            "text": "■ 모델명",
+            "presentInBlocks": "128/128",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "L{+3}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "128/128",
+            "item": 0,
+            "label": "■ 공종"
+          },
+          {
+            "cell": "L{+4}",
+            "examples": [
+              "공용홀 (싸인)",
+              "공용홀 (세대모형)",
+              "인포메이션"
+            ],
+            "presentInBlocks": "128/128",
+            "item": 0,
+            "label": "■ 품목"
+          },
+          {
+            "cell": "L{+5}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "128/128",
+            "item": 0,
+            "label": "■ 사양"
+          },
+          {
+            "cell": "L{+7}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "128/128",
+            "item": 0,
+            "label": "■ 모델명"
+          },
+          {
+            "cell": "K{+9}",
+            "examples": [
+              "*SHEET :  시트 ML 89 (LX Z:IN)",
+              "*WALL COVERING : 방염벽지 FDF008-03 (LX Z:IN)",
+              "*WALL COVERING : 방염벽지 F82476-28 (LX Z:IN)"
+            ],
+            "presentInBlocks": "85/128",
+            "item": 0,
+            "label": "■ 모델명"
+          },
+          {
+            "cell": "K{+11}",
+            "examples": [
+              "*HARDWARE : 레버락 6900 SS (유진금속)",
+              "* VINYL TILE : PS 7044 (우성 F&C)",
+              "*WALL COVERING : 방염벽지 FPR049-1 (LX Z:IN)"
+            ],
+            "presentInBlocks": "61/128",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+13}",
+            "examples": [
+              "*ETC : 텍스",
+              "*BOARD : 에디톤 월맥스 EML2103 네추럴 콘크리트",
+              "*SHEET : 솔리드 시트 KS434 (KCC)"
+            ],
+            "presentInBlocks": "31/128",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+10}",
+            "examples": [
+              "*HARDWARE : GS 161 브론즈 HL (유진금속)",
+              "플레인 화이트 (포미코리아)",
+              "*PAINT / HC0078"
+            ],
+            "presentInBlocks": "20/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+12}",
+            "examples": [
+              "WMG PRECIOUS COMITE (이노매트리얼)",
+              "*GLASS : 벽 / 브론즈경",
+              "*WALL COVERING : 방염벽지 FPR049-2 (LX Z:IN)"
+            ],
+            "presentInBlocks": "24/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+14}",
+            "examples": [
+              "*STONE : 마천석버너 30T (이노매트리얼)",
+              "*ETC :  더스트매트 EC-25 Brown (엘스코리아)",
+              "방염벽지 F8175-01 (LX Z:IN)"
+            ],
+            "presentInBlocks": "22/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+15}",
+            "examples": [
+              "*TILE : WMG-MARE DARK (이노매트리얼)",
+              "[타공1.6cm간격, NO.935 TEAK]",
+              "DL-L5610LB (대림바스)"
+            ],
+            "presentInBlocks": "9/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+16}",
+            "examples": [
+              "*METAL : JW-302 (재원금속)",
+              "*CARPET : 타일카펫 NE02 (EEWON)",
+              "*ARTIFICIAL MARBLE : 카디즈 CD760 (롯데케미칼)"
+            ],
+            "presentInBlocks": "16/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+17}",
+            "examples": [
+              "*METAL : JW-302 (재원금속)",
+              "*GLASS : 파티션 : 투명 강화유리",
+              "*GLASS : 은경"
+            ],
+            "presentInBlocks": "9/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+18}",
+            "examples": [
+              "*GLASS : 도어 / 브론즈 강화유리",
+              "*METAL : 재료분리대 JW-302 유사컬러",
+              "*METAL : JW-302 (재원금속)"
+            ],
+            "presentInBlocks": "10/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+19}",
+            "examples": [
+              "*HARDWARE : GS 161 브론즈 HL (유진금속)",
+              "*GLASS : 도어 / 브로즌 강화유리",
+              "*GLASS : 투명 강화유리"
+            ],
+            "presentInBlocks": "7/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+20}",
+            "examples": [
+              "*ETC : 천장 / 광바리솔"
+            ],
+            "presentInBlocks": "4/128",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "L{+2}",
+            "example": "공용홀 1층",
+            "presentInBlocks": "128/128",
+            "why": "왼쪽 칸이 라벨(■ 위치)인 값",
+            "item": 0,
+            "label": "■ 위치",
+            "uiLabel": "■ 위치",
+            "scope": "sheet"
+          },
+          {
+            "cell": "L{+6}",
+            "example": "롯데건설 OEM",
+            "presentInBlocks": "128/128",
+            "why": "왼쪽 칸이 라벨(■ 업체명)인 값",
+            "item": 0,
+            "label": "■ 업체명",
+            "uiLabel": "■ 업체명",
+            "scope": "document"
+          }
+        ],
+        "numbering": {
+          "cell": "M{+0}",
+          "kind": "rowFormula",
+          "firstFormula": "INT((ROW(M5)-4)/24)+23",
+          "firstValue": 23,
+          "lastValue": 155,
+          "sheetOffset": 23,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "D{+2}:G{+21}",
+            "approxWidthPx": 483,
+            "blocksWithImage": "127/128",
+            "imagesPerAreaObserved": {
+              "1": 42,
+              "2": 74,
+              "3": 10,
+              "4": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        },
+        "lengthMix": {
+          "mainLength": 25,
+          "distribution": {
+            "24": 3,
+            "25": 124
+          },
+          "oddBlocks": [
+            [
+              5,
+              24
+            ],
+            [
+              54,
+              24
+            ],
+            [
+              103,
+              24
+            ]
+          ],
+          "heightSamples": [
+            {
+              "blockStart": 5,
+              "length": 24,
+              "heights": [
+                30.0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                5.5
+              ]
+            },
+            {
+              "blockStart": 54,
+              "length": 24,
+              "heights": [
+                30.0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                5.5
+              ]
+            }
+          ],
+          "mainHeights": [
+            30.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            5.5,
+            30.0
+          ]
+        },
+        "rowsNote": "2026-11-25 원본 대조: 다른 시트와 같은 24행 블록(마지막 5.5pt 행 포함). 25행 블록 124개는 쪽 맨 위 5.5pt 빈 행이 붙어 보인 것",
+        "headerFields": [
+          {
+            "cell": "G3",
+            "label": "일자 (머리 행)",
+            "scope": "document"
+          },
+          {
+            "cell": "L3",
+            "label": "현장명 (머리 행)",
+            "scope": "document"
+          }
+        ],
+        "headerFieldsNote": "블록 위 머리 행 값(빈 양식에서 비움). 2026-11-25 인쇄 비교에서 앱이 채울 곳이 없어 추가 — 반복값 일괄 입력 창에서 입력"
+      },
+      "print": {
+        "printArea": "'2.공용홀1층'!$B$2:$O$3200",
+        "printTitles": "'2.공용홀1층'!$2:$3",
+        "fitToPage": true,
+        "scale": "78",
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 50,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 22,
+          "evidence": "페이지 나누기 63개, 간격 최빈 50행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "evidence": "블록 경계와 맞는 나누기 0/63",
+        "blocksPerPrintedPage": 2,
+        "pageBreakNote": "원본 나누기가 2블록마다 있고(블록 마지막 5.5pt 행 뒤), 둘째 쪽부터 맨 위에 5.5pt 빈 행이 1개 있다 — 2026-11-25 원본 대조(print-compare-20261125)",
+        "pageTopSpacerHeights": [
+          5.5
+        ]
+      },
+      "autoCheck": {
+        "blocks": 128,
+        "blocksWithContent": 128,
+        "labelsMatched": "1024/1024",
+        "photoMergesMatched": "128/128",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "3.공용홀2층",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 5,
+        "rows": 24,
+        "observedBlocks": 44,
+        "blocksWithContent": 44,
+        "blockLengthHistogram": {
+          "24": 22,
+          "25": 21
+        },
+        "anchorLabel": {
+          "column": "D",
+          "text": "IMAGE",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 1080,
+        "periodEvidence": {
+          "candidateScores": {
+            "24": 445,
+            "25": 6,
+            "122": 4,
+            "26": 3
+          },
+          "periodicLabels": [
+            "IMAGE",
+            "NO.",
+            "■ 위치",
+            "공용홀 2층",
+            "■ 공종",
+            "■ 품목",
+            "■ 사양",
+            "■ 업체명",
+            "롯데건설 OEM",
+            "■ 모델명",
+            "대피공간",
+            "공용홀 (이형세대모형)"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          30.0,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          5.5
+        ],
+        "labels": [
+          {
+            "cell": "D{+0}",
+            "text": "IMAGE",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "K{+0}",
+            "text": "NO.",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "K{+2}",
+            "text": "■ 위치",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "K{+3}",
+            "text": "■ 공종",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "K{+4}",
+            "text": "■ 품목",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "K{+5}",
+            "text": "■ 사양",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "K{+6}",
+            "text": "■ 업체명",
+            "presentInBlocks": "44/44",
+            "item": 0
+          },
+          {
+            "cell": "K{+7}",
+            "text": "■ 모델명",
+            "presentInBlocks": "44/44",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "L{+3}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "■ 공종"
+          },
+          {
+            "cell": "L{+4}",
+            "examples": [
+              "대피공간",
+              "공용홀 (이형세대모형)",
+              "공용홀"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "■ 품목"
+          },
+          {
+            "cell": "L{+5}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "■ 사양"
+          },
+          {
+            "cell": "L{+7}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "44/44",
+            "item": 0,
+            "label": "■ 모델명"
+          },
+          {
+            "cell": "K{+9}",
+            "examples": [
+              "*BOARD : 에디톤 월맥스EML2102",
+              "*SHEET : 솔리드 시트 KS476 (KCC)",
+              "*WALL COVERING : 방염벽지 FPR049-1 (LX Z:IN)"
+            ],
+            "presentInBlocks": "27/44",
+            "item": 0,
+            "label": "■ 모델명"
+          },
+          {
+            "cell": "K{+10}",
+            "examples": [
+              "EML3102트라버틴 샌드(LX Z:IN)",
+              "방염벽지 F8175-01 (LX Z:IN)"
+            ],
+            "presentInBlocks": "10/44",
+            "item": 0,
+            "label": "■ 모델명"
+          },
+          {
+            "cell": "K{+11}",
+            "examples": [
+              "*HARDWARE : 레버락 6900 SS (유진금속)",
+              "*ETC : 텍스, 칼라강판",
+              "*VINYL TILE : PS 7044 (우성 F&C)"
+            ],
+            "presentInBlocks": "11/44",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+12}",
+            "examples": [
+              "*METAL : JW-302 (재원금속)",
+              "*CARPET : 롤카펫 1688-B (우성 F&C)"
+            ],
+            "presentInBlocks": "10/44",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+13}",
+            "examples": [
+              "재료분리대 JW-302 유사컬러"
+            ],
+            "presentInBlocks": "6/44",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+14}",
+            "examples": [
+              "*METAL : 재료분리대 JW-302 유사컬러"
+            ],
+            "presentInBlocks": "4/44",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+15}",
+            "examples": [
+              "*ETC : 광바리솔"
+            ],
+            "presentInBlocks": "6/44",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "L{+2}",
+            "example": "공용홀 2층",
+            "presentInBlocks": "44/44",
+            "why": "왼쪽 칸이 라벨(■ 위치)인 값",
+            "item": 0,
+            "label": "■ 위치",
+            "uiLabel": "■ 위치",
+            "scope": "sheet"
+          },
+          {
+            "cell": "L{+6}",
+            "example": "롯데건설 OEM",
+            "presentInBlocks": "44/44",
+            "why": "왼쪽 칸이 라벨(■ 업체명)인 값",
+            "item": 0,
+            "label": "■ 업체명",
+            "uiLabel": "■ 업체명",
+            "scope": "document"
+          }
+        ],
+        "numbering": {
+          "cell": "M{+0}",
+          "kind": "rowFormula",
+          "firstFormula": "INT((ROW(M5)-4)/24)+156",
+          "firstValue": 156,
+          "lastValue": 199,
+          "sheetOffset": 156,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "D{+2}:G{+21}",
+            "approxWidthPx": 483,
+            "blocksWithImage": "44/44",
+            "imagesPerAreaObserved": {
+              "1": 11,
+              "2": 32,
+              "4": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 1,
+        "footer": {
+          "present": false,
+          "cells": []
+        },
+        "lengthMix": {
+          "mainLength": 24,
+          "distribution": {
+            "24": 22,
+            "25": 21
+          },
+          "oddBlocks": [
+            [
+              29,
+              25
+            ],
+            [
+              78,
+              25
+            ],
+            [
+              127,
+              25
+            ],
+            [
+              176,
+              25
+            ],
+            [
+              225,
+              25
+            ]
+          ],
+          "heightSamples": [
+            {
+              "blockStart": 29,
+              "length": 25,
+              "heights": [
+                30.0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                5.5,
+                5.5
+              ]
+            },
+            {
+              "blockStart": 78,
+              "length": 25,
+              "heights": [
+                30.0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                5.5,
+                5.5
+              ]
+            }
+          ],
+          "mainHeights": [
+            30.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            5.5
+          ]
+        },
+        "headerFields": [
+          {
+            "cell": "G3",
+            "label": "일자 (머리 행)",
+            "scope": "document"
+          },
+          {
+            "cell": "L3",
+            "label": "현장명 (머리 행)",
+            "scope": "document"
+          }
+        ],
+        "headerFieldsNote": "블록 위 머리 행 값(빈 양식에서 비움). 2026-11-25 인쇄 비교에서 앱이 채울 곳이 없어 추가 — 반복값 일괄 입력 창에서 입력"
+      },
+      "print": {
+        "printArea": "'3.공용홀2층'!$B$2:$O$1081",
+        "printTitles": "'3.공용홀2층'!$2:$3",
+        "fitToPage": true,
+        "scale": "78",
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 49,
+          "breaksPerBlock": 0.49,
+          "firstBreakOffset": 23,
+          "evidence": "페이지 나누기 21개, 간격 최빈 49행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "evidence": "블록 경계와 맞는 나누기 0/21",
+        "blocksPerPrintedPage": 2,
+        "pageTopSpacerHeights": [
+          5.5
+        ],
+        "pageBreakNote": "원본 나누기가 2블록마다 있고(블록 마지막 5.5pt 행 뒤), 둘째 쪽부터 맨 위에 5.5pt 빈 행이 1개 있다 — 2026-11-25 원본 대조(print-compare-20261125)"
+      },
+      "autoCheck": {
+        "blocks": 44,
+        "blocksWithContent": 44,
+        "labelsMatched": "352/352",
+        "photoMergesMatched": "44/44",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "4.공용홀3층",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 5,
+        "rows": 24,
+        "observedBlocks": 32,
+        "blocksWithContent": 32,
+        "blockLengthHistogram": {
+          "24": 16,
+          "25": 15
+        },
+        "anchorLabel": {
+          "column": "D",
+          "text": "IMAGE",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 786,
+        "periodEvidence": {
+          "candidateScores": {
+            "24": 316
+          },
+          "periodicLabels": [
+            "IMAGE",
+            "NO.",
+            "■ 위치",
+            "공용홀 3층",
+            "■ 공종",
+            "■ 품목",
+            "■ 사양",
+            "■ 업체명",
+            "롯데건설 OEM",
+            "■ 모델명",
+            "외부테라스",
+            "남자화장실"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          30.0,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          18.5,
+          5.5
+        ],
+        "labels": [
+          {
+            "cell": "D{+0}",
+            "text": "IMAGE",
+            "presentInBlocks": "32/32",
+            "item": 0
+          },
+          {
+            "cell": "K{+0}",
+            "text": "NO.",
+            "presentInBlocks": "32/32",
+            "item": 0
+          },
+          {
+            "cell": "K{+2}",
+            "text": "■ 위치",
+            "presentInBlocks": "32/32",
+            "item": 0
+          },
+          {
+            "cell": "K{+3}",
+            "text": "■ 공종",
+            "presentInBlocks": "32/32",
+            "item": 0
+          },
+          {
+            "cell": "K{+4}",
+            "text": "■ 품목",
+            "presentInBlocks": "32/32",
+            "item": 0
+          },
+          {
+            "cell": "K{+5}",
+            "text": "■ 사양",
+            "presentInBlocks": "32/32",
+            "item": 0
+          },
+          {
+            "cell": "K{+6}",
+            "text": "■ 업체명",
+            "presentInBlocks": "32/32",
+            "item": 0
+          },
+          {
+            "cell": "K{+7}",
+            "text": "■ 모델명",
+            "presentInBlocks": "32/32",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "L{+3}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "32/32",
+            "item": 0,
+            "label": "■ 공종"
+          },
+          {
+            "cell": "L{+4}",
+            "examples": [
+              "외부테라스",
+              "남자화장실",
+              "여자화장실"
+            ],
+            "presentInBlocks": "32/32",
+            "item": 0,
+            "label": "■ 품목"
+          },
+          {
+            "cell": "L{+5}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "32/32",
+            "item": 0,
+            "label": "■ 사양"
+          },
+          {
+            "cell": "L{+7}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "32/32",
+            "item": 0,
+            "label": "■ 모델명"
+          },
+          {
+            "cell": "K{+9}",
+            "examples": [
+              "*WALL COVERING : 방염벽지 F8175-01 (LX Z:IN)",
+              "*SHEET : 시트 ML 89 (LX Z:IN)",
+              "*WALL COVERING : 방염벽지 F82476-28 (LX Z:IN)"
+            ],
+            "presentInBlocks": "29/32",
+            "item": 0,
+            "label": "■ 모델명"
+          },
+          {
+            "cell": "K{+11}",
+            "examples": [
+              "*VINYL TILE : PS 7044 (우성 F&C)",
+              "*HARDWARE : 레버락 6900 SS (유진금속)",
+              "*TILE : GGQ8974, SWD 카디프 G (타일베네)"
+            ],
+            "presentInBlocks": "22/32",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+12}",
+            "examples": [
+              "CL-347 (대림바스)",
+              "KCB-4550 (계림)"
+            ],
+            "presentInBlocks": "4/32",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+13}",
+            "examples": [
+              "*ETC : 텍스",
+              "*GLASS : 투명 강화유리"
+            ],
+            "presentInBlocks": "4/32",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          },
+          {
+            "cell": "K{+14}",
+            "examples": [
+              "*GLASS : 은경"
+            ],
+            "presentInBlocks": "2/32",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에서 같은 행 왼쪽·위쪽 표 머리글에 라벨이 없음 (자유 입력 칸, 예: 자재 사양 줄)",
+            "labelKind": "freeTextNoLabel"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "L{+2}",
+            "example": "공용홀 3층",
+            "presentInBlocks": "32/32",
+            "why": "왼쪽 칸이 라벨(■ 위치)인 값",
+            "item": 0,
+            "label": "■ 위치",
+            "uiLabel": "■ 위치",
+            "scope": "sheet"
+          },
+          {
+            "cell": "L{+6}",
+            "example": "롯데건설 OEM",
+            "presentInBlocks": "32/32",
+            "why": "왼쪽 칸이 라벨(■ 업체명)인 값",
+            "item": 0,
+            "label": "■ 업체명",
+            "uiLabel": "■ 업체명",
+            "scope": "document"
+          }
+        ],
+        "numbering": {
+          "cell": "M{+0}",
+          "kind": "rowFormula",
+          "firstFormula": "INT((ROW(M5)-4)/24)+200",
+          "firstValue": 200,
+          "lastValue": 231,
+          "sheetOffset": 200,
+          "scope": "document"
+        },
+        "photoAreas": [
+          {
+            "area": "D{+2}:G{+21}",
+            "approxWidthPx": 483,
+            "blocksWithImage": "32/32",
+            "imagesPerAreaObserved": {
+              "1": 14,
+              "2": 18
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 1,
+        "footer": {
+          "present": false,
+          "cells": []
+        },
+        "lengthMix": {
+          "mainLength": 24,
+          "distribution": {
+            "24": 16,
+            "25": 15
+          },
+          "oddBlocks": [
+            [
+              29,
+              25
+            ],
+            [
+              78,
+              25
+            ],
+            [
+              127,
+              25
+            ],
+            [
+              176,
+              25
+            ],
+            [
+              225,
+              25
+            ]
+          ],
+          "heightSamples": [
+            {
+              "blockStart": 29,
+              "length": 25,
+              "heights": [
+                30.0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                5.5,
+                5.5
+              ]
+            },
+            {
+              "blockStart": 78,
+              "length": 25,
+              "heights": [
+                30.0,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                5.5,
+                5.5
+              ]
+            }
+          ],
+          "mainHeights": [
+            30.0,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            5.5
+          ]
+        },
+        "headerFields": [
+          {
+            "cell": "G3",
+            "label": "일자 (머리 행)",
+            "scope": "document"
+          },
+          {
+            "cell": "L3",
+            "label": "현장명 (머리 행)",
+            "scope": "document"
+          }
+        ],
+        "headerFieldsNote": "블록 위 머리 행 값(빈 양식에서 비움). 2026-11-25 인쇄 비교에서 앱이 채울 곳이 없어 추가 — 반복값 일괄 입력 창에서 입력"
+      },
+      "print": {
+        "printArea": "'4.공용홀3층'!$B$2:$O$787",
+        "printTitles": "'4.공용홀3층'!$2:$3",
+        "fitToPage": true,
+        "scale": "78",
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 49,
+          "breaksPerBlock": 0.49,
+          "firstBreakOffset": 23,
+          "evidence": "페이지 나누기 15개, 간격 최빈 49행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "evidence": "블록 경계와 맞는 나누기 0/15",
+        "blocksPerPrintedPage": 2,
+        "pageTopSpacerHeights": [
+          5.5
+        ],
+        "pageBreakNote": "원본 나누기가 2블록마다 있고(블록 마지막 5.5pt 행 뒤), 둘째 쪽부터 맨 위에 5.5pt 빈 행이 1개 있다 — 2026-11-25 원본 대조(print-compare-20261125)"
+      },
+      "autoCheck": {
+        "blocks": 32,
+        "blocksWithContent": 32,
+        "labelsMatched": "256/256",
+        "photoMergesMatched": "32/32",
+        "labelMismatchSample": []
+      }
+    }
+  ],
+  "blockSheetsShareLayout": false,
+  "exceptions": [],
+  "keepImages": [
+    {
+      "sheet": "갑지",
+      "anchor": "J51:N54",
+      "displayPx": [
+        258,
+        61
+      ],
+      "why": "작은 그림(로고·서명 추정)"
+    }
+  ],
+  "decisionsPending": [],
+  "keepImagesRule": "표지·목차의 그림 중 표시 크기 300×150px 이하만 남김(로고 추정). 큰 그림은 현장 사진·조감도로 보고 지움. 블록 시트 그림은 모두 지움",
+  "autoVerifyIssues": [],
+  "schemaVersion": "v0.6-D13",
+  "headerSiteNamePlaceholder": false
+}

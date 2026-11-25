@@ -1,0 +1,747 @@
+{
+  "id": "공용홀_수자인",
+  "version": 1,
+  "status": "auto-verified",
+  "verified": false,
+  "type": "공용홀",
+  "company": "수자인",
+  "source": {
+    "json": "공용홀_수자인.json",
+    "file": "평택고덕 한양 수자인/견본주택/공용홀 평택 고덕 한양수자인 견본주택 _준공사진첩.xlsx"
+  },
+  "sheets": [
+    {
+      "name": "COVER",
+      "state": "visible",
+      "role": "cover",
+      "coverFieldCandidates": [
+        {
+          "cell": "A9",
+          "current": "평택 고덕 한양 수자인"
+        },
+        {
+          "cell": "A11",
+          "current": "준공 사진첩"
+        },
+        {
+          "cell": "D15",
+          "current": "견본주택"
+        }
+      ],
+      "coverNote": "글자 14pt 이상 텍스트를 후보로 뽑음(현장명·타입·제목 등). 어느 칸을 입력받을지 확인 필요",
+      "keepImages": [
+        "D6",
+        "D28:F29"
+      ],
+      "coverFields": [
+        {
+          "cell": "A9",
+          "kind": "siteName",
+          "current": "평택 고덕 한양 수자인"
+        }
+      ],
+      "coverFieldsNote": "후보 중 현장명·타입·날짜로 보이는 셀만 자동 확정. 나머지 후보는 고정 제목으로 보고 라벨로 둔다"
+    },
+    {
+      "name": "외관",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 34,
+        "blocksWithContent": 34,
+        "blockLengthHistogram": {
+          "7": 33
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "평형",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 238,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 299
+          },
+          "periodicLabels": [
+            "평형",
+            "평택 고덕 한양 \n수자인",
+            "부위",
+            "외관",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "비상계단"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "평형",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "34/34",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "비상계단",
+              "정면",
+              "우측면"
+            ],
+            "presentInBlocks": "34/34",
+            "item": 0,
+            "label": "품목"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "평택 고덕 한양 \n수자인",
+            "presentInBlocks": "34/34",
+            "why": "왼쪽 칸이 라벨(평형)인 값",
+            "item": 0,
+            "label": "평형",
+            "uiLabel": "평형",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "외관",
+            "presentInBlocks": "34/34",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 438,
+            "blocksWithImage": "34/34",
+            "imagesPerAreaObserved": {
+              "1": 31,
+              "2": 3
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "외관!$A$1:$I$238",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": "97",
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 34,
+        "blocksWithContent": 34,
+        "labelsMatched": "238/238",
+        "photoMergesMatched": "34/34",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "공용홀",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 162,
+        "blocksWithContent": 162,
+        "blockLengthHistogram": {
+          "7": 161
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "평형",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 1134,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 1473
+          },
+          "periodicLabels": [
+            "평형",
+            "평택 고덕 한양 \n수자인",
+            "부위",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "공용홀 1F",
+            "공용홀 2F",
+            "세대단지모형 상세",
+            "욕실부스 상세"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "평형",
+            "presentInBlocks": "162/162",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "162/162",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "162/162",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "162/162",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "162/162",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "162/162",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "162/162",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+1}",
+            "examples": [
+              "공용홀 1F",
+              "공용홀 2F"
+            ],
+            "presentInBlocks": "162/162",
+            "item": 0,
+            "label": "부위"
+          },
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "세대단지모형 상세",
+              "욕실부스 상세",
+              "서버실 전경"
+            ],
+            "presentInBlocks": "162/162",
+            "item": 0,
+            "label": "품목"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "평택 고덕 한양 \n수자인",
+            "presentInBlocks": "162/162",
+            "why": "왼쪽 칸이 라벨(평형)인 값",
+            "item": 0,
+            "label": "평형",
+            "uiLabel": "평형",
+            "scope": "document"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 438,
+            "blocksWithImage": "81/162",
+            "imagesPerAreaObserved": {
+              "1": 74,
+              "2": 6,
+              "3": 1
+            },
+            "confidence": "low",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "공용홀!$A$1:$I$1134",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": "97",
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 162,
+        "blocksWithContent": 162,
+        "labelsMatched": "1134/1134",
+        "photoMergesMatched": "162/162",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "화장실",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 26,
+        "blocksWithContent": 26,
+        "blockLengthHistogram": {
+          "7": 25
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "평형",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 182,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 225
+          },
+          "periodicLabels": [
+            "평형",
+            "평택 고덕 한양 \n수자인",
+            "부위",
+            "화장실",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "평형",
+            "presentInBlocks": "26/26",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "26/26",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "26/26",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "26/26",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "26/26",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "26/26",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "26/26",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "남자화장실\n소변기",
+              "입구 전경",
+              "입구 사인"
+            ],
+            "presentInBlocks": "26/26",
+            "item": 0,
+            "label": "품목"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "평택 고덕 한양 \n수자인",
+            "presentInBlocks": "26/26",
+            "why": "왼쪽 칸이 라벨(평형)인 값",
+            "item": 0,
+            "label": "평형",
+            "uiLabel": "평형",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "화장실",
+            "presentInBlocks": "26/26",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 438,
+            "blocksWithImage": "25/26",
+            "imagesPerAreaObserved": {
+              "1": 23,
+              "2": 2
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "화장실!$A$1:$I$182",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": "97",
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 26,
+        "blocksWithContent": 26,
+        "labelsMatched": "182/182",
+        "photoMergesMatched": "26/26",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "사무실",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 24,
+        "blocksWithContent": 24,
+        "blockLengthHistogram": {
+          "7": 23
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "평형",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 168,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 207
+          },
+          "periodicLabels": [
+            "평형",
+            "평택 고덕 한양 \n수자인",
+            "부위",
+            "분양사무실",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "평형",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "24/24",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "소장실 전경",
+              "문서고 전경",
+              "창고 전경"
+            ],
+            "presentInBlocks": "24/24",
+            "item": 0,
+            "label": "품목"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "평택 고덕 한양 \n수자인",
+            "presentInBlocks": "24/24",
+            "why": "왼쪽 칸이 라벨(평형)인 값",
+            "item": 0,
+            "label": "평형",
+            "uiLabel": "평형",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "분양사무실",
+            "presentInBlocks": "24/24",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 438,
+            "blocksWithImage": "16/24",
+            "imagesPerAreaObserved": {
+              "1": 10,
+              "2": 6
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "사무실!$A$1:$I$168",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": "94",
+        "paperSize": "0",
+        "pageBreaks": null,
+        "pageBreakRule": "manual",
+        "evidence": "블록 경계와 맞는 나누기 1/1"
+      },
+      "autoCheck": {
+        "blocks": 24,
+        "blocksWithContent": 24,
+        "labelsMatched": "168/168",
+        "photoMergesMatched": "24/24",
+        "labelMismatchSample": []
+      }
+    }
+  ],
+  "blockSheetsShareLayout": true,
+  "exceptions": [],
+  "keepImages": [
+    {
+      "sheet": "COVER",
+      "anchor": "D6",
+      "displayPx": [
+        187,
+        51
+      ],
+      "why": "작은 그림(로고·서명 추정)"
+    },
+    {
+      "sheet": "COVER",
+      "anchor": "D28:F29",
+      "displayPx": [
+        183,
+        54
+      ],
+      "why": "작은 그림(로고·서명 추정)"
+    }
+  ],
+  "decisionsPending": [],
+  "keepImagesRule": "표지·목차의 그림 중 표시 크기 300×150px 이하만 남김(로고 추정). 큰 그림은 현장 사진·조감도로 보고 지움. 블록 시트 그림은 모두 지움",
+  "autoVerifyIssues": [],
+  "schemaVersion": "v0.6-D13",
+  "headerSiteNamePlaceholder": false
+}

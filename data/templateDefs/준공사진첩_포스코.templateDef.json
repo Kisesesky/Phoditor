@@ -1,0 +1,3470 @@
+{
+  "id": "준공사진첩_포스코",
+  "version": 1,
+  "status": "auto-verified",
+  "verified": false,
+  "type": "준공사진첩",
+  "company": "포스코",
+  "source": {
+    "json": "준공사진첩_포스코.json",
+    "file": "대구 포스코 더샵 동인센트리체/준공사진첩[수정]/대구 포스코 더샵 동인센트리체_84B㎡_준공사진첩.xlsx"
+  },
+  "sheets": [
+    {
+      "name": "표지",
+      "state": "visible",
+      "role": "cover",
+      "coverFieldCandidates": [
+        {
+          "cell": "C15",
+          "current": "더샵 동인센트리체_84B㎡ 단위세대"
+        }
+      ],
+      "coverNote": "글자 14pt 이상 텍스트를 후보로 뽑음(현장명·타입·제목 등). 어느 칸을 입력받을지 확인 필요",
+      "keepImages": [],
+      "coverFields": [
+        {
+          "cell": "C15",
+          "kind": "siteName",
+          "current": "더샵 동인센트리체_84B㎡ 단위세대"
+        }
+      ],
+      "coverFieldsNote": "후보 중 현장명·타입·날짜로 보이는 셀만 자동 확정. 나머지 후보는 고정 제목으로 보고 라벨로 둔다"
+    },
+    {
+      "name": "세대입구",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 7,
+        "blocksWithContent": 7,
+        "blockLengthHistogram": {
+          "7": 6
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 49,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 54
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "세대입구",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          43.5,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "7/7",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "7/7",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "7/7",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "7/7",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "7/7",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "7/7",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "7/7",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "입구전경",
+              "세대 타이틀",
+              "세대 아이소"
+            ],
+            "presentInBlocks": "7/7",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "방화도어",
+              "PIDL-7055F"
+            ],
+            "presentInBlocks": "7/7",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "포스코 DX"
+            ],
+            "presentInBlocks": "7/7",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "베이스 : \nNCS S7005 Y20R \n\n문양 : \nNCS S8005 Y20R",
+              "지문인식, \nPush & Pull type"
+            ],
+            "presentInBlocks": "7/7",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "7/7",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "7/7",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "세대입구",
+            "presentInBlocks": "7/7",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "7/7",
+            "imagesPerAreaObserved": {
+              "1": 4,
+              "2": 3
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "세대입구!$A$1:$I$49",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 14,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 6,
+          "evidence": "페이지 나누기 3개, 간격 최빈 14행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "blocksPerPrintedPage": 2,
+        "evidence": "페이지 나누기 3개 중 3개가 블록 경계, 간격 2블록이 2번"
+      },
+      "autoCheck": {
+        "blocks": 7,
+        "blocksWithContent": 7,
+        "labelsMatched": "49/49",
+        "photoMergesMatched": "7/7",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "현관",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 34,
+        "blocksWithContent": 34,
+        "blockLengthHistogram": {
+          "7": 33
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 238,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 298
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "현관",
+            "현관 창고",
+            "아린 (MH지원)"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          43.5,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "34/34",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "34/34",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+1}",
+            "examples": [
+              "현관",
+              "현관 창고"
+            ],
+            "presentInBlocks": "34/34",
+            "item": 0,
+            "label": "부위"
+          },
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "전경-1",
+              "전경-2",
+              "천장"
+            ],
+            "presentInBlocks": "34/34",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "9028-1",
+              "GLA 60 SHOOM"
+            ],
+            "presentInBlocks": "34/34",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "아린 (MH지원)",
+              "LX"
+            ],
+            "presentInBlocks": "33/34",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "친환경 벽지",
+              "PVC 몰딩 위 백색시트"
+            ],
+            "presentInBlocks": "34/34",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "34/34",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "34/34",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "33/34",
+            "imagesPerAreaObserved": {
+              "1": 25,
+              "2": 7,
+              "3": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "현관!$A$1:$I$238",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 14,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 6,
+          "evidence": "페이지 나누기 3개, 간격 최빈 14행"
+        },
+        "pageBreakRule": "manual",
+        "evidence": "블록 경계 정렬 3/3, 간격 제각각 {2: 1, 4: 1}"
+      },
+      "autoCheck": {
+        "blocks": 34,
+        "blocksWithContent": 34,
+        "labelsMatched": "238/238",
+        "photoMergesMatched": "34/34",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "복도",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 12,
+        "blocksWithContent": 12,
+        "blockLengthHistogram": {
+          "7": 11
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 84,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 99
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "복도",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "12/12",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "전경-1",
+              "전경-2",
+              "전경-3"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "9028-1",
+              "KCC / S0203-C9\n 컬러기준"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "신한",
+              "포스코DX"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "친환경 벽지",
+              "PVC 몰딩 위 백색시트"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "12/12",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "복도",
+            "presentInBlocks": "12/12",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "11/12",
+            "imagesPerAreaObserved": {
+              "1": 11
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "복도!$A$1:$I$84",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 12,
+        "blocksWithContent": 12,
+        "labelsMatched": "84/84",
+        "photoMergesMatched": "12/12",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "거실",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 27,
+        "blocksWithContent": 27,
+        "blockLengthHistogram": {
+          "7": 26
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 189,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 237
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "거실",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "POP"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "27/27",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "27/27",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "27/27",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "27/27",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "27/27",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "27/27",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "27/27",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "POP",
+              "전시용품",
+              "전경-1"
+            ],
+            "presentInBlocks": "27/27",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "9028-1",
+              "KCC / S0203-C9\n 컬러기준"
+            ],
+            "presentInBlocks": "27/27",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "포스코DX",
+              "신한"
+            ],
+            "presentInBlocks": "27/27",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "친환경 벽지",
+              "PVC 몰딩 위 백색시트"
+            ],
+            "presentInBlocks": "27/27",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "27/27",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "27/27",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "거실",
+            "presentInBlocks": "27/27",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "26/27",
+            "imagesPerAreaObserved": {
+              "1": 18,
+              "2": 5,
+              "3": 3
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "거실!$A$1:$I$189",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 27,
+        "blocksWithContent": 27,
+        "labelsMatched": "189/189",
+        "photoMergesMatched": "27/27",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "주방",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 49,
+        "blocksWithContent": 49,
+        "blockLengthHistogram": {
+          "7": 48
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 343,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 436
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "주방",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "내부 상세",
+            "전시용품"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "49/49",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "49/49",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "49/49",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "49/49",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "49/49",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "49/49",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "49/49",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "POP",
+              "내부 상세",
+              "전시용품"
+            ],
+            "presentInBlocks": "49/49",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "DOOR: 하이브리드 \n슈퍼무광 도장\nL찬넬: AL\nBODY: LPM",
+              "비스포크냉장고"
+            ],
+            "presentInBlocks": "49/49",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "넵스 (MH지원)",
+              "삼성"
+            ],
+            "presentInBlocks": "49/49",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "도면 참조\nDOOR: 하이브리드 \n슈퍼무광 도장\n(LX / YEK61-SR 컬러 기준, 동등이상)\n\nL찬넬: AL찬넬 (일광 / IK-W77 컬러 기준, 동등이상)\n\nBODY: LPM \n(ICC / A051 동등이상)",
+              "1도어 냉동 : RZ34C7(9/8)65AP \n\n1도어 냉장 : RR40C7(9/8)95AP\n\n1도어 김치 : RQ34C7(9/8)45AP \n\n(색상:새틴 베이지)"
+            ],
+            "presentInBlocks": "49/49",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "49/49",
+            "item": 0,
+            "label": "비고"
+          },
+          {
+            "cell": "A{+0}",
+            "examples": [
+              "통신단자함"
+            ],
+            "presentInBlocks": "1/49",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "사진 영역 안에 직접 쓴 글자 — 라벨 없음",
+            "labelKind": "textInPhotoArea"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "49/49",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "주방",
+            "presentInBlocks": "49/49",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "43/49",
+            "imagesPerAreaObserved": {
+              "1": 24,
+              "2": 15,
+              "3": 4
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "주방!$A$1:$I$343",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 14,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 6,
+          "evidence": "페이지 나누기 21개, 간격 최빈 14행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "blocksPerPrintedPage": 2,
+        "evidence": "페이지 나누기 21개 중 21개가 블록 경계, 간격 2블록이 19번"
+      },
+      "autoCheck": {
+        "blocks": 49,
+        "blocksWithContent": 49,
+        "labelsMatched": "343/343",
+        "photoMergesMatched": "49/49",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "발코니2",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 20,
+        "blocksWithContent": 20,
+        "blockLengthHistogram": {
+          "7": 19
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 140,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 171
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "발코니2",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "20/20",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "입구전경",
+              "ABS 도어",
+              "도어록"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "DHP-10054 PC/NH",
+              "PO-014"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "대흥건철",
+              "다다"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "수성 페인트 \n(KCC / NA101 \n동등이상)",
+              "벽붙이 수전"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "20/20",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "발코니2",
+            "presentInBlocks": "20/20",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "18/20",
+            "imagesPerAreaObserved": {
+              "1": 11,
+              "2": 6,
+              "3": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "발코니2!$A$1:$I$140",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 20,
+        "blocksWithContent": 20,
+        "labelsMatched": "140/140",
+        "photoMergesMatched": "20/20",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "안방",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 35,
+        "blocksWithContent": 35,
+        "blockLengthHistogram": {
+          "7": 34
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 245,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 308
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "안방",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "파우더장 내부 상세"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "35/35",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "POP",
+              "파우더장 내부 상세",
+              "문틀 상세"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "창호 : 목창호 \n마감 : SHEET",
+              "DHP-10054 PC/NH"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "대흥건철",
+              "넵스 (MH지원)"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "지정 시트래핑 \n(KCC / CPD21-M7)",
+              "친환경 벽지"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "35/35",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "안방",
+            "presentInBlocks": "35/35",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "31/35",
+            "imagesPerAreaObserved": {
+              "1": 25,
+              "2": 6
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "안방!$A$1:$I$245",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 35,
+        "blocksWithContent": 35,
+        "labelsMatched": "245/245",
+        "photoMergesMatched": "35/35",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "대형 드레스룸",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 20,
+        "blocksWithContent": 20,
+        "blockLengthHistogram": {
+          "7": 19
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 140,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 158
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "시스템 선반",
+            "선반 : LPM",
+            "리바트 (MH지원)"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          43.5,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "20/20",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "20/20",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "시스템 선반",
+              "도어",
+              "도어 상세"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "선반 : LPM",
+              "DOOR : 하이브리드 \n슈퍼무광 도장\n손잡이 : AL\nBODY : LPM"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "리바트 (MH지원)",
+              "신한"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "도면참조 \n\n선반: LPM (샤트데코 LPM C58-156 동등이상)\n\n프레임 : KCC / F3317 (Metallic Gold Silver)",
+              "친환경 벽지"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "20/20",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "20/20",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "대형 드레스룸 \n(유상 : 안방 파우더장 / 대형 드레스룸)",
+            "presentInBlocks": "20/20",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "14/20",
+            "imagesPerAreaObserved": {
+              "1": 10,
+              "2": 3,
+              "3": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        },
+        "rowHeightsNote": "[PDF 비교 수정 2026-11-25] 원본 블록 20개 중 가장 흔한 행 높이(7개). 이전 값 [44,44,44,77,30,152,32]는 첫 블록 하나만의 높이라 쪽 수가 200→204로 늘었다."
+      },
+      "print": {
+        "printArea": "'대형 드레스룸'!$A$1:$I$140",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 20,
+        "blocksWithContent": 20,
+        "labelsMatched": "140/140",
+        "photoMergesMatched": "20/20",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "발코니1",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 13,
+        "blocksWithContent": 13,
+        "blockLengthHistogram": {
+          "7": 12
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 91,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 108
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "발코니1",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "13/13",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "POP",
+              "입구전경",
+              "PVC 창호 상세"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "KCC / YS4019-C9",
+              "ED800"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "씨넷",
+              "다다"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "수성 페인트 \n(KCC / NA101 \n동등이상)",
+              "창호 : 건축사항 \n\n마감 : 지정 시트래핑"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "13/13",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "발코니1",
+            "presentInBlocks": "13/13",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "13/13",
+            "imagesPerAreaObserved": {
+              "1": 8,
+              "2": 5
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "발코니1!$A$1:$I$91",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": "99",
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 13,
+        "blocksWithContent": 13,
+        "labelsMatched": "91/91",
+        "photoMergesMatched": "13/13",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "하향식 피난구",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 12,
+        "blocksWithContent": 12,
+        "blockLengthHistogram": {
+          "7": 11
+        },
+        "anchorLabel": {
+          "column": "H",
+          "text": "하향식 피난구",
+          "offsetFromBlockStart": 1
+        },
+        "lastUsedRow": 84,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 99
+          },
+          "periodicLabels": [
+            "하향식 피난구",
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "12/12",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "12/12",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "도어",
+              "문틀 상세",
+              "도어록"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "방화도어",
+              "DHP-10054 PC/NH\n(방화도어용)"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "대흥건철",
+              "태영"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "수성 페인트 \n(KCC / NA101 \n동등이상)",
+              "도어 : 건축사항 \n지정도장마감 \n(KCC / NA101 동등이상)"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "12/12",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "12/12",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "하향식 피난구",
+            "presentInBlocks": "12/12",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "12/12",
+            "imagesPerAreaObserved": {
+              "1": 6,
+              "2": 6
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "'하향식 피난구'!$A$1:$I$84",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 12,
+        "blocksWithContent": 12,
+        "labelsMatched": "84/84",
+        "photoMergesMatched": "12/12",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "실외기실",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 13,
+        "blocksWithContent": 13,
+        "blockLengthHistogram": {
+          "7": 12
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 91,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 108
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "실외기실",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "13/13",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "13/13",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "POP",
+              "도어",
+              "문틀 상세"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "방화도어",
+              "DHP-10054 PC/NH\n(방화도어용)"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "대흥건철",
+              "태영"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "수성 페인트 \n(KCC / NA101 \n동등이상)",
+              "도어 : 건축사항 \n지정도장마감 \n(KCC / NA101 동등이상)"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "13/13",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "13/13",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "실외기실",
+            "presentInBlocks": "13/13",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "12/13",
+            "imagesPerAreaObserved": {
+              "1": 7,
+              "2": 5
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "실외기실!$A$1:$I$91",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 13,
+        "blocksWithContent": 13,
+        "labelsMatched": "91/91",
+        "photoMergesMatched": "13/13",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "욕실2 (부부)",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 38,
+        "blocksWithContent": 38,
+        "blockLengthHistogram": {
+          "7": 37
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 266,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 329
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "부위",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "더샵 \n동인센트리체_84B㎡",
+            "욕실2 (부부)"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "38/38",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "38/38",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "38/38",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "38/38",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "38/38",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "38/38",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "38/38",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "POP",
+              "욕실 상부장 내부",
+              "입구전경"
+            ],
+            "presentInBlocks": "38/38",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "EGBM 60TB21GB\n(가로결)",
+              "DOOR: 은경+AL 엣지\nBODY: PS위 전사"
+            ],
+            "presentInBlocks": "38/38",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "한국타일",
+              "롯데"
+            ],
+            "presentInBlocks": "38/38",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "외산타일\n(300*300)\n(줄눈 : MAPEI 울트라칼라플러스 / 111)",
+              "인조대리석"
+            ],
+            "presentInBlocks": "38/38",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "38/38",
+            "item": 0,
+            "label": "비고"
+          },
+          {
+            "cell": "A{+0}",
+            "examples": [
+              "벽시트"
+            ],
+            "presentInBlocks": "1/38",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "사진 영역 안에 직접 쓴 글자 — 라벨 없음",
+            "labelKind": "textInPhotoArea"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "38/38",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "욕실2 (부부)",
+            "presentInBlocks": "38/38",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "28/38",
+            "imagesPerAreaObserved": {
+              "1": 23,
+              "2": 4,
+              "3": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "'욕실2 (부부)'!$A$1:$I$266",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 38,
+        "blocksWithContent": 38,
+        "labelsMatched": "266/266",
+        "photoMergesMatched": "38/38",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "침실2",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 24,
+        "blocksWithContent": 24,
+        "blockLengthHistogram": {
+          "7": 23
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 168,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 207
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "침실2",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "24/24",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "24/24",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "전시용품",
+              "입구전경",
+              "문틀상세"
+            ],
+            "presentInBlocks": "24/24",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "창호 : 목창호 \n마감 : SHEET",
+              "9028-1"
+            ],
+            "presentInBlocks": "24/24",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "신한",
+              "LG"
+            ],
+            "presentInBlocks": "24/24",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "친환경 벽지",
+              "지정 시트래핑 \n(KCC / CPD21-M7)"
+            ],
+            "presentInBlocks": "24/24",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "24/24",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "24/24",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "침실2",
+            "presentInBlocks": "24/24",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "24/24",
+            "imagesPerAreaObserved": {
+              "1": 18,
+              "2": 6
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "침실2!$A$1:$I$168",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 24,
+        "blocksWithContent": 24,
+        "labelsMatched": "168/168",
+        "photoMergesMatched": "24/24",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "침실1",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 33,
+        "blocksWithContent": 33,
+        "blockLengthHistogram": {
+          "7": 32
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 231,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 290
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "침실1",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "전시용품"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "33/33",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "33/33",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "33/33",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "33/33",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "33/33",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "33/33",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "33/33",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "붙박이장 내부 상세 \n(유상 : 침실1 붙박이장)",
+              "전시용품",
+              "POP"
+            ],
+            "presentInBlocks": "33/33",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "창호 : 목창호 \n마감 : SHEET",
+              "9028-1"
+            ],
+            "presentInBlocks": "33/33",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "신한",
+              "LG"
+            ],
+            "presentInBlocks": "33/33",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "친환경 벽지",
+              "지정 시트래핑 \n(KCC / CPD21-M7)"
+            ],
+            "presentInBlocks": "33/33",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "33/33",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "33/33",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "침실1",
+            "presentInBlocks": "33/33",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "31/33",
+            "imagesPerAreaObserved": {
+              "1": 21,
+              "2": 10
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "침실1!$A$1:$I$231",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 33,
+        "blocksWithContent": 33,
+        "labelsMatched": "231/231",
+        "photoMergesMatched": "33/33",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "케어룸",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 19,
+        "blocksWithContent": 19,
+        "blockLengthHistogram": {
+          "7": 18
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 133,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 166
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "더샵 \n동인센트리체_84B㎡",
+            "부위",
+            "케어룸",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "넵스 (MH지원)",
+            "파우더장 내부 상세"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "19/19",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "19/19",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "19/19",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "19/19",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "19/19",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "19/19",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "19/19",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "파우더장 내부 상세",
+              "입구전경",
+              "문틀상세"
+            ],
+            "presentInBlocks": "19/19",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "DOOR: 하이브리드 \n슈퍼무광 도장\nBODY: LPM",
+              "창호 : 목창호 \n마감 : SHEET"
+            ],
+            "presentInBlocks": "19/19",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "넵스 (MH지원)",
+              "신한"
+            ],
+            "presentInBlocks": "19/19",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "도면 참조  \nDOOR: 하이브리드 \n슈퍼무광 도장 \n(LX / YEK61-SR \n컬러 기준, 동등이상)\n\n라운드경 : 누드 프레임 은경\n\nBODY: LPM\n(ICC / A017 동등이상)",
+              "지정 시트래핑 \n(KCC / CPD21-M7)"
+            ],
+            "presentInBlocks": "19/19",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "19/19",
+            "item": 0,
+            "label": "비고"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "19/19",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "케어룸",
+            "presentInBlocks": "19/19",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "11/19",
+            "imagesPerAreaObserved": {
+              "1": 8,
+              "2": 3
+            },
+            "confidence": "low",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "케어룸!$A$1:$I$133",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 14,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 6,
+          "evidence": "페이지 나누기 8개, 간격 최빈 14행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "blocksPerPrintedPage": 2,
+        "evidence": "페이지 나누기 8개 중 8개가 블록 경계, 간격 2블록이 6번"
+      },
+      "autoCheck": {
+        "blocks": 19,
+        "blocksWithContent": 19,
+        "labelsMatched": "133/133",
+        "photoMergesMatched": "19/19",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "욕실1 (공용)",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "observedBlocks": 35,
+        "blocksWithContent": 35,
+        "blockLengthHistogram": {
+          "7": 34
+        },
+        "anchorLabel": {
+          "column": "G",
+          "text": "프로젝트명",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 245,
+        "periodEvidence": {
+          "candidateScores": {
+            "7": 302
+          },
+          "periodicLabels": [
+            "프로젝트명",
+            "부위",
+            "품목",
+            "품명",
+            "업체",
+            "사양",
+            "비고",
+            "더샵 \n동인센트리체_84B㎡",
+            "욕실1 (공용)"
+          ]
+        },
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          44.0,
+          130.0,
+          32.0
+        ],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "프로젝트명",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "부위",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "품목",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품명",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "업체",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "사양",
+            "presentInBlocks": "35/35",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "presentInBlocks": "35/35",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+2}",
+            "examples": [
+              "POP",
+              "욕실 상부장 내부",
+              "입구전경"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "품목"
+          },
+          {
+            "cell": "H{+3}",
+            "examples": [
+              "-",
+              "RML 60LN01M",
+              "창호 : 목창호 \n마감 : SHEET"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "품명"
+          },
+          {
+            "cell": "H{+4}",
+            "examples": [
+              "-",
+              "한국타일",
+              "엠아이리빙"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "업체"
+          },
+          {
+            "cell": "H{+5}",
+            "examples": [
+              "-",
+              "외산타일\n(300*300)\n(줄눈 : MAPEI 울트라칼라플러스 / 110)",
+              "지정 시트래핑 \n(KCC / CPD21-M7)"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "사양"
+          },
+          {
+            "cell": "H{+6}",
+            "examples": [
+              "-"
+            ],
+            "presentInBlocks": "35/35",
+            "item": 0,
+            "label": "비고"
+          },
+          {
+            "cell": "A{+0}",
+            "examples": [
+              "벽시트"
+            ],
+            "presentInBlocks": "1/35",
+            "kind": "freeText",
+            "addedBy": "0단계 화면 확인: 블록마다 위치·유무가 달라 처음 판별에서 빠졌던 글자 칸(자재 사양 줄 등)",
+            "item": 0,
+            "label": null,
+            "labelNote": "사진 영역 안에 직접 쓴 글자 — 라벨 없음",
+            "labelKind": "textInPhotoArea"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "H{+0}",
+            "example": "더샵 \n동인센트리체_84B㎡",
+            "presentInBlocks": "35/35",
+            "why": "왼쪽 칸이 라벨(프로젝트명)인 값",
+            "item": 0,
+            "label": "프로젝트명",
+            "uiLabel": "프로젝트명",
+            "scope": "document"
+          },
+          {
+            "cell": "H{+1}",
+            "example": "욕실1 (공용)",
+            "presentInBlocks": "35/35",
+            "why": "왼쪽 칸이 라벨(부위)인 값",
+            "item": 0,
+            "label": "부위",
+            "uiLabel": "부위",
+            "scope": "sheet"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "approxWidthPx": 420,
+            "blocksWithImage": "26/35",
+            "imagesPerAreaObserved": {
+              "1": 21,
+              "2": 4,
+              "3": 1
+            },
+            "confidence": "medium",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "'욕실1 (공용)'!$A$1:$I$245",
+        "printTitles": null,
+        "fitToPage": true,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": null,
+        "pageBreakRule": "none"
+      },
+      "autoCheck": {
+        "blocks": 35,
+        "blocksWithContent": 35,
+        "labelsMatched": "245/245",
+        "photoMergesMatched": "35/35",
+        "labelMismatchSample": []
+      }
+    }
+  ],
+  "blockSheetsShareLayout": true,
+  "exceptions": [],
+  "keepImages": [],
+  "decisionsPending": [],
+  "keepImagesRule": "표지·목차의 그림 중 표시 크기 300×150px 이하만 남김(로고 추정). 큰 그림은 현장 사진·조감도로 보고 지움. 블록 시트 그림은 모두 지움",
+  "autoVerifyIssues": [],
+  "schemaVersion": "v0.6-D13",
+  "headerSiteNamePlaceholder": true
+}

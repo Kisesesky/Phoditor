@@ -1,0 +1,344 @@
+{
+  "id": "준공사진첩_아크로",
+  "version": 1,
+  "status": "auto-verified",
+  "verified": false,
+  "type": "준공사진첩",
+  "company": "아크로",
+  "source": {
+    "json": "준공사진첩_아크로.json",
+    "file": "아크로 여의도 더원/준공사진첩/아크로 여의도 더원 커뮤니티 준공사진첩.xlsx"
+  },
+  "sheets": [
+    {
+      "name": "표지",
+      "state": "visible",
+      "role": "cover",
+      "coverFieldCandidates": [
+        {
+          "cell": "A10",
+          "current": "\n아크로 여의도 더원\n커뮤니티 시설"
+        }
+      ],
+      "coverNote": "글자 14pt 이상 텍스트를 후보로 뽑음(현장명·타입·제목 등). 어느 칸을 입력받을지 확인 필요",
+      "keepImages": [
+        "C3:F10"
+      ],
+      "coverFields": [
+        {
+          "cell": "A10",
+          "kind": "siteName",
+          "current": "\n아크로 여의도 더원\n커뮤니티 시설"
+        }
+      ],
+      "coverFieldsNote": "후보 중 현장명·타입·날짜로 보이는 셀만 자동 확정. 나머지 후보는 고정 제목으로 보고 라벨로 둔다"
+    },
+    {
+      "name": "CONTENTS",
+      "state": "visible",
+      "role": "toc",
+      "keepImages": []
+    },
+    {
+      "name": "지상_1F",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 12,
+        "observedBlocks": 19,
+        "blocksWithContent": 6,
+        "blockLengthHistogram": {
+          "12": 18
+        },
+        "anchorLabel": {
+          "column": "A",
+          "text": "지상 1F",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 228,
+        "periodEvidence": {
+          "candidateScores": {
+            "12": 34,
+            "6": 19
+          },
+          "periodicLabels": [
+            "전경 (지상 1F 우편물수취함실#1)",
+            "전경 (지상 1F 로비#2)",
+            "전경 (지상 1F 우편물수취함실#2)",
+            "전경 (여의도 더원)",
+            "전경 (지상 1F 로비#1)",
+            "전경 (방풍실#4)"
+          ]
+        },
+        "itemsPerBlock": 2,
+        "itemRowOffset": 6,
+        "rowHeights": [
+          17.0,
+          8.0,
+          162.75,
+          16.5,
+          8.0,
+          162.75
+        ],
+        "labels": [],
+        "values": [
+          {
+            "cell": "A{+5}",
+            "merged": "A{+5}:C{+5}",
+            "meaning": "사진 1 캡션",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에 라벨 셀 없음 — 수동 정의의 의미: 사진 1 캡션",
+            "labelKind": "noLabelInOriginal"
+          },
+          {
+            "cell": "A{+11}",
+            "merged": "A{+11}:C{+11}",
+            "meaning": "사진 2 캡션",
+            "item": 1,
+            "label": null,
+            "labelNote": "원본에 라벨 셀 없음 — 수동 정의의 의미: 사진 2 캡션",
+            "labelKind": "noLabelInOriginal"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "A{+0}",
+            "example": "지하 1F",
+            "why": "쪽 머리글의 층 이름(시트마다 같음)",
+            "item": null,
+            "uiLabel": "쪽 머리글의 층 이름(시트마다 같음)",
+            "scope": "document"
+          },
+          {
+            "cell": "C{+0}",
+            "example": "ACRO Yeouido The One",
+            "why": "쪽 머리글의 현장명",
+            "item": null,
+            "uiLabel": "쪽 머리글의 현장명",
+            "scope": "document"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+1}:C{+4}",
+            "merged": false,
+            "confidence": "medium",
+            "note": "가로 사진 1장, 또는 세로 사진 2장을 A열·C열에 나눠 배치(예: A26:A29 + C26:C29)",
+            "item": 0,
+            "maxPhotos": 4
+          },
+          {
+            "area": "A{+7}:C{+10}",
+            "merged": false,
+            "confidence": "medium",
+            "item": 1,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "page",
+        "addUnitNote": "블록 추가·삭제는 한 쪽(12행, 항목 2개) 단위. 새 쪽은 항목 2개가 모두 빈 상태로 생기고, 일부만 채워도 쪽은 그대로 남는다.",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        },
+        "anchorLabelNote": "예전 기준('전경 (지상 1F 우편물수취함실#1)')은 블록 6개만 잡혔다. 실제는 지하_1F와 같은 12행 블록 19개 — 2026-11-25 원본 대조(print-compare-20261125)"
+      },
+      "print": {
+        "printArea": "지상_1F!$A$1:$C$228",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 12,
+          "breaksPerBlock": 0.5,
+          "firstBreakOffset": 0,
+          "evidence": "페이지 나누기 18개, 간격 최빈 12행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "blocksPerPrintedPage": 1,
+        "evidence": "페이지 나누기 18개 중 18개가 블록 경계, 간격 1블록이 17번"
+      },
+      "manualOverride": "사진이 병합 셀이 아니라 자동 판별 실패 → 원본 셀·이미지 위치를 보고 수동 정의 (지하_1F 1~24행 기준)",
+      "autoCheck": {
+        "blocks": 19,
+        "blocksWithContent": 19,
+        "labelsMatched": "0/0",
+        "photoMergesMatched": "병합 아님(수동 정의)",
+        "labelMismatchSample": []
+      }
+    },
+    {
+      "name": "지하_1F",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 12,
+        "observedBlocks": 78,
+        "blocksWithContent": 78,
+        "blockLengthHistogram": {
+          "12": 77
+        },
+        "anchorLabel": {
+          "column": "A",
+          "text": "지하 1F",
+          "offsetFromBlockStart": 0
+        },
+        "lastUsedRow": 936,
+        "periodEvidence": {
+          "candidateScores": {
+            "12": 153,
+            "6": 44
+          },
+          "periodicLabels": [
+            "지하 1F",
+            "아크로 여의도 더원"
+          ]
+        },
+        "itemsPerBlock": 2,
+        "itemRowOffset": 6,
+        "rowHeights": [
+          25.0,
+          162.75,
+          17.0,
+          8.0,
+          162.75,
+          17.0,
+          8.0,
+          162.75,
+          16.5,
+          8.0,
+          162.75,
+          17.0
+        ],
+        "labels": [],
+        "values": [
+          {
+            "cell": "A{+5}",
+            "merged": "A{+5}:C{+5}",
+            "meaning": "사진 1 캡션",
+            "item": 0,
+            "label": null,
+            "labelNote": "원본에 라벨 셀 없음 — 수동 정의의 의미: 사진 1 캡션",
+            "labelKind": "noLabelInOriginal"
+          },
+          {
+            "cell": "A{+11}",
+            "merged": "A{+11}:C{+11}",
+            "meaning": "사진 2 캡션",
+            "item": 1,
+            "label": null,
+            "labelNote": "원본에 라벨 셀 없음 — 수동 정의의 의미: 사진 2 캡션",
+            "labelKind": "noLabelInOriginal"
+          }
+        ],
+        "repeatedValues": [
+          {
+            "cell": "A{+0}",
+            "example": "지하 1F",
+            "why": "쪽 머리글의 층 이름(시트마다 같음)",
+            "item": null,
+            "uiLabel": "쪽 머리글의 층 이름(시트마다 같음)",
+            "scope": "document"
+          },
+          {
+            "cell": "C{+0}",
+            "example": "ACRO Yeouido The One",
+            "why": "쪽 머리글의 현장명",
+            "item": null,
+            "uiLabel": "쪽 머리글의 현장명",
+            "scope": "document"
+          }
+        ],
+        "numbering": null,
+        "photoAreas": [
+          {
+            "area": "A{+1}:C{+4}",
+            "merged": false,
+            "confidence": "medium",
+            "note": "가로 사진 1장, 또는 세로 사진 2장을 A열·C열에 나눠 배치(예: A26:A29 + C26:C29)",
+            "item": 0,
+            "maxPhotos": 4
+          },
+          {
+            "area": "A{+7}:C{+10}",
+            "merged": false,
+            "confidence": "medium",
+            "item": 1,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "page",
+        "addUnitNote": "블록 추가·삭제는 한 쪽(12행, 항목 2개) 단위. 새 쪽은 항목 2개가 모두 빈 상태로 생기고, 일부만 채워도 쪽은 그대로 남는다.",
+        "numberingCheck": {
+          "kind": "none",
+          "evidence": "블록 안에 NO·번호·PAGE 라벨 없음"
+        },
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "지하_1F!$A$1:$C$936",
+        "printTitles": null,
+        "fitToPage": null,
+        "scale": null,
+        "paperSize": "9",
+        "pageBreaks": {
+          "breakStep": 12,
+          "breaksPerBlock": 1.0,
+          "firstBreakOffset": 11,
+          "evidence": "페이지 나누기 76개, 간격 최빈 12행"
+        },
+        "pageBreakRule": "everyNBlocks",
+        "blocksPerPrintedPage": 1,
+        "evidence": "페이지 나누기 76개 중 76개가 블록 경계, 간격 1블록이 74번"
+      },
+      "manualOverride": "사진이 병합 셀이 아니라 자동 판별 실패 → 원본 셀·이미지 위치를 보고 수동 정의 (지하_1F 1~24행 기준)",
+      "autoCheck": {
+        "blocks": 78,
+        "blocksWithContent": 78,
+        "labelsMatched": "0/0",
+        "photoMergesMatched": "병합 아님(수동 정의)",
+        "labelMismatchSample": []
+      }
+    }
+  ],
+  "blockSheetsShareLayout": true,
+  "exceptions": [],
+  "keepImages": [
+    {
+      "sheet": "표지",
+      "anchor": "C3:F10",
+      "displayPx": [
+        189,
+        109
+      ],
+      "why": "작은 그림(로고·서명 추정)"
+    }
+  ],
+  "decisionsPending": [],
+  "decisions": [
+    {
+      "date": "2026-11-24",
+      "topic": "블록 추가 단위",
+      "decision": "한 쪽(2항목)씩",
+      "source": "사용자 결정 (처음엔 같은 구조라 함께 적용했고, 2026-11-24 사용자가 확정)"
+    }
+  ],
+  "keepImagesRule": "표지·목차의 그림 중 표시 크기 300×150px 이하만 남김(로고 추정). 큰 그림은 현장 사진·조감도로 보고 지움. 블록 시트 그림은 모두 지움",
+  "autoVerifyIssues": [],
+  "schemaVersion": "v0.6-D13",
+  "headerSiteNamePlaceholder": false
+}

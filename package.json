@@ -1,0 +1,21 @@
+{
+  "name": "template-photo-excel-editor",
+  "version": "0.1.0",
+  "description": "템플릿 사진 엑셀 에디터 (1·2단계 통합 앱, PLAN v0.7 기준)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test:export": "node test-export.js",
+    "test:crop": "node test-crop.js",
+    "test:mybox": "node test-mybox.js",
+    "test:print": "node test-print.js",
+    "test:rename": "node test-rename.js"
+  },
+  "dependencies": {
+    "exceljs": "4.4.0",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0"
+  }
+}

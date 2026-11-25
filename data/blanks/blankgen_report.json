@@ -1,0 +1,2890 @@
+[
+ {
+  "id": "공용홀_기타",
+  "source": "대광로제비앙 모아엘가/공용홀/양주회천 8블럭 대광 로제비앙 공용홀 - 준공사진첩.xlsx",
+  "sheets": [
+   {
+    "sheet": "갑지",
+    "role": "cover",
+    "trimmedAfterRow": 34,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 8,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "사진첩",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 149,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&\"HY울릉도L,굵게\"&14■ 용인 고진역 대광로제비앙 견본주택 외관/공용홀",
+      "blank": "&L&\"HY울릉도L,굵게\"&14■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 262,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 3,
+    "numberCells": {
+     "H1": 1
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/calcChain.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 121,
+   "after": 7
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 36239115,
+   "blank": 35316
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "대광",
+   "로제비앙",
+   "블럭",
+   "양주회천"
+  ]
+ },
+ {
+  "id": "공용홀_대우",
+  "source": "부산 괴정3 대우 푸르지오/공용홀/부산 괴정3구역 푸르지오 준공사진첩_공용홀.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 32,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 32,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "외관",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 21,
+    "whitelistCleared": 4,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddFooter",
+      "original": "&C&\"나눔고딕,보통\"&9 &P&R&\"맑은 고딕,보통\"&10검암역 푸르지오 프라베뉴    ",
+      "blank": "&C&\"나눔고딕,보통\"&9 &P&R&\"맑은 고딕,보통\"&10{{현장명}}    "
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 26,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 4,
+    "numberCells": {}
+   },
+   {
+    "sheet": "1층 공용홀",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 27,
+    "whitelistCleared": 4,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddFooter",
+      "original": "&C&\"나눔고딕,보통\"&9 &P&R&\"맑은 고딕,보통\"&10검암역 푸르지오 프라베뉴    ",
+      "blank": "&C&\"나눔고딕,보통\"&9 &P&R&\"맑은 고딕,보통\"&10{{현장명}}    "
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 36,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 4,
+    "numberCells": {}
+   },
+   {
+    "sheet": "2층 공용홀",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 97,
+    "whitelistCleared": 4,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddFooter",
+      "original": "&C&\"나눔고딕,보통\"&9 &P&R&\"맑은 고딕,보통\"&10검암역 푸르지오 프라베뉴    ",
+      "blank": "&C&\"나눔고딕,보통\"&9 &P&R&\"맑은 고딕,보통\"&10{{현장명}}    "
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 142,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 4,
+    "numberCells": {}
+   },
+   {
+    "sheet": "3층 공용홀",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 32,
+    "whitelistCleared": 4,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddFooter",
+      "original": "&C&\"나눔고딕,보통\"&9 &P&R&\"맑은 고딕,보통\"&10검암역 푸르지오 프라베뉴    ",
+      "blank": "&C&\"나눔고딕,보통\"&9 &P&R&\"맑은 고딕,보통\"&10{{현장명}}    "
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 46,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 4,
+    "numberCells": {}
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/drawings/drawing3.xml",
+   "xl/drawings/drawing4.xml",
+   "xl/drawings/drawing5.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/_rels/externalLink8.xml.rels",
+   "xl/externalLinks/_rels/externalLink9.xml.rels",
+   "xl/externalLinks/externalLink9.xml",
+   "xl/externalLinks/externalLink8.xml",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [
+   "외부 참조·#REF! 정의된 이름 삭제: #REF!"
+  ],
+  "sharedStrings": {
+   "before": 137,
+   "after": 8
+  },
+  "media": [
+   "xl/media/image1.png",
+   "xl/media/image28.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 231735004,
+   "blank": 138908
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "괴정",
+   "구역",
+   "부산",
+   "푸르지오"
+  ]
+ },
+ {
+  "id": "공용홀_롯데",
+  "source": "화성 향남 롯데캐슬 시그니처/공용홀/준공사진첩_화성 향남 롯데캐슬 시그니처_공용홀 외관.xlsx",
+  "sheets": [
+   {
+    "sheet": "갑지",
+    "role": "cover",
+    "trimmedAfterRow": 56,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 56,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "1.외관",
+    "role": "block",
+    "blockStart": 5,
+    "chosenBlock": 5,
+    "keptRows": 24,
+    "removedBlocks": 21,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "G3",
+      "current": "2026.10"
+     },
+     {
+      "cell": "L3",
+      "current": "화성 향남 롯데캐슬 시그니처"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 36,
+    "shapesKept": 0,
+    "lastRow": 28,
+    "cleared": 12,
+    "numberCells": {
+     "M5": 1
+    }
+   },
+   {
+    "sheet": "2.공용홀1층",
+    "role": "block",
+    "blockStart": 5,
+    "chosenBlock": 29,
+    "keptRows": 25,
+    "removedBlocks": 127,
+    "whitelistCleared": 14,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "G3",
+      "current": "2026.10"
+     },
+     {
+      "cell": "L3",
+      "current": "화성 향남 롯데캐슬 시그니처"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 233,
+    "shapesKept": 0,
+    "lastRow": 29,
+    "cleared": 21,
+    "numberCells": {
+     "M29": 2
+    }
+   },
+   {
+    "sheet": "3.공용홀2층",
+    "role": "block",
+    "blockStart": 5,
+    "chosenBlock": 5,
+    "keptRows": 24,
+    "removedBlocks": 43,
+    "whitelistCleared": 11,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "G3",
+      "current": "2026.10"
+     },
+     {
+      "cell": "L3",
+      "current": "화성 향남 롯데캐슬 시그니처"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 79,
+    "shapesKept": 0,
+    "lastRow": 28,
+    "cleared": 16,
+    "numberCells": {
+     "M5": 3
+    }
+   },
+   {
+    "sheet": "4.공용홀3층",
+    "role": "block",
+    "blockStart": 5,
+    "chosenBlock": 5,
+    "keptRows": 24,
+    "removedBlocks": 31,
+    "whitelistCleared": 8,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "G3",
+      "current": "2026.10"
+     },
+     {
+      "cell": "L3",
+      "current": "화성 향남 롯데캐슬 시그니처"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 50,
+    "shapesKept": 0,
+    "lastRow": 28,
+    "cleared": 14,
+    "numberCells": {
+     "M5": 4
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/drawings/drawing3.xml",
+   "xl/drawings/drawing4.xml",
+   "xl/drawings/drawing5.xml",
+   "xl/calcChain.xml",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 228,
+   "after": 15
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 58089446,
+   "blank": 27025
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [
+   [
+    "xl/worksheets/sheet2.xml",
+    "롯데캐슬"
+   ],
+   [
+    "xl/worksheets/sheet3.xml",
+    "롯데캐슬"
+   ],
+   [
+    "xl/worksheets/sheet4.xml",
+    "롯데캐슬"
+   ],
+   [
+    "xl/worksheets/sheet5.xml",
+    "롯데캐슬"
+   ]
+  ],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "롯데캐슬",
+   "시그니처",
+   "향남",
+   "화성"
+  ]
+ },
+ {
+  "id": "공용홀_블루밍",
+  "source": "벽산 블루밍 주촌 더 파크_준공사진첩/준공사진첩/벽산 블루밍 주촌 더 파크 공용홀 준공사진첩.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 46,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 46,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "목차",
+    "role": "toc",
+    "tocHeaderRow": 3,
+    "trimmedAfterRow": 99,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 99,
+    "cleared": 0,
+    "numberCells": {}
+   },
+   {
+    "sheet": "외관",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 11,
+    "whitelistCleared": 6,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 12,
+    "shapesKept": 0,
+    "lastRow": 10,
+    "cleared": 6,
+    "numberCells": {
+     "I10": 1
+    }
+   },
+   {
+    "sheet": "2층",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 60,
+    "whitelistCleared": 9,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 94,
+    "shapesKept": 0,
+    "lastRow": 10,
+    "cleared": 9,
+    "numberCells": {
+     "I10": 2
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing1.xml",
+   "xl/drawings/drawing2.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/calcChain.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 207,
+   "after": 24
+  },
+  "media": [],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 13959360,
+   "blank": 22919
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "벽산",
+   "블루밍",
+   "주촌",
+   "파크"
+  ]
+ },
+ {
+  "id": "공용홀_수자인",
+  "source": "평택고덕 한양 수자인/견본주택/공용홀 평택 고덕 한양수자인 견본주택 _준공사진첩.xlsx",
+  "sheets": [
+   {
+    "sheet": "COVER",
+    "role": "cover",
+    "trimmedAfterRow": 30,
+    "headerFooterSiteText": [],
+    "imagesKept": 2,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 30,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "외관",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 33,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 37,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 3,
+    "numberCells": {}
+   },
+   {
+    "sheet": "공용홀",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 161,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 214,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 3,
+    "numberCells": {}
+   },
+   {
+    "sheet": "화장실",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 25,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 31,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 3,
+    "numberCells": {}
+   },
+   {
+    "sheet": "사무실",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 23,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 30,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 3,
+    "numberCells": {}
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/drawings/drawing3.xml",
+   "xl/drawings/drawing4.xml",
+   "xl/drawings/drawing5.xml",
+   "xl/externalLinks/externalLink10.xml",
+   "xl/externalLinks/externalLink9.xml",
+   "xl/externalLinks/externalLink8.xml",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/_rels/externalLink8.xml.rels",
+   "xl/externalLinks/_rels/externalLink9.xml.rels",
+   "xl/externalLinks/_rels/externalLink10.xml.rels",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 218,
+   "after": 16
+  },
+  "media": [
+   "xl/media/image1.jpeg",
+   "xl/media/image2.jpeg"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 52292369,
+   "blank": 59160
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [
+   [
+    "xl/styles.xml",
+    "평택"
+   ]
+  ],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "고덕",
+   "평택",
+   "한양수자인"
+  ]
+ },
+ {
+  "id": "공용홀_아크로",
+  "source": "아크로 여의도 더원/아크로 드 서초 준공사진첩_공용홀_추가촬영.xlsx",
+  "sheets": [
+   {
+    "sheet": "간지",
+    "role": "cover",
+    "trimmedAfterRow": 47,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 2,
+    "lastRow": 47,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "2F Hall",
+    "role": "block",
+    "blockStart": 2,
+    "chosenBlock": 2,
+    "keptRows": 10,
+    "removedBlocks": 12,
+    "whitelistCleared": 2,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&\"나눔고딕,보통\"&12&K000000아크로 드 서초",
+      "blank": "&L&\"나눔고딕,보통\"&12&K000000{{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 41,
+    "shapesKept": 0,
+    "lastRow": 11,
+    "cleared": 4,
+    "numberCells": {}
+   },
+   {
+    "sheet": "3F Hall",
+    "role": "block",
+    "blockStart": 2,
+    "chosenBlock": 2,
+    "keptRows": 10,
+    "removedBlocks": 21,
+    "whitelistCleared": 2,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&\"나눔고딕,보통\"&12아크로 리츠카운티",
+      "blank": "&L&\"나눔고딕,보통\"&12{{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 71,
+    "shapesKept": 0,
+    "lastRow": 11,
+    "cleared": 3,
+    "numberCells": {}
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/drawings/drawing3.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 28,
+   "after": 6
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 20466669,
+   "blank": 24276
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "서초",
+   "아크로",
+   "추가촬영"
+  ]
+ },
+ {
+  "id": "공용홀_한신더휴",
+  "source": "왕숙 한신더휴 센텀/공용홀/왕숙 한신더휴 센텀 준공사진첩 공용홀.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 39,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 39,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "공용홀",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 8,
+    "removedBlocks": 174,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&\"맑은 고딕 Bold,굵게\"&12&K000000왕숙 한신더휴 센텀 공용홀",
+      "blank": "&L&\"맑은 고딕 Bold,굵게\"&12&K000000{{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 210,
+    "shapesKept": 0,
+    "lastRow": 8,
+    "cleared": 3,
+    "numberCells": {
+     "C1": 1
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/externalLinks/externalLink23.xml",
+   "xl/externalLinks/externalLink22.xml",
+   "xl/externalLinks/externalLink21.xml",
+   "xl/externalLinks/externalLink20.xml",
+   "xl/externalLinks/externalLink19.xml",
+   "xl/externalLinks/externalLink18.xml",
+   "xl/externalLinks/externalLink17.xml",
+   "xl/externalLinks/externalLink16.xml",
+   "xl/externalLinks/externalLink15.xml",
+   "xl/externalLinks/externalLink14.xml",
+   "xl/externalLinks/externalLink13.xml",
+   "xl/externalLinks/externalLink12.xml",
+   "xl/externalLinks/externalLink11.xml",
+   "xl/externalLinks/externalLink10.xml",
+   "xl/externalLinks/externalLink9.xml",
+   "xl/externalLinks/externalLink8.xml",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/calcChain.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/_rels/externalLink8.xml.rels",
+   "xl/externalLinks/_rels/externalLink9.xml.rels",
+   "xl/externalLinks/_rels/externalLink10.xml.rels",
+   "xl/externalLinks/_rels/externalLink11.xml.rels",
+   "xl/externalLinks/_rels/externalLink12.xml.rels",
+   "xl/externalLinks/_rels/externalLink13.xml.rels",
+   "xl/externalLinks/_rels/externalLink14.xml.rels",
+   "xl/externalLinks/_rels/externalLink15.xml.rels",
+   "xl/externalLinks/_rels/externalLink16.xml.rels",
+   "xl/externalLinks/_rels/externalLink17.xml.rels",
+   "xl/externalLinks/_rels/externalLink18.xml.rels",
+   "xl/externalLinks/_rels/externalLink19.xml.rels",
+   "xl/externalLinks/_rels/externalLink20.xml.rels",
+   "xl/externalLinks/_rels/externalLink21.xml.rels",
+   "xl/externalLinks/_rels/externalLink22.xml.rels",
+   "xl/externalLinks/_rels/externalLink23.xml.rels",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 103,
+   "after": 5
+  },
+  "media": [
+   "xl/media/image1.jpeg"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 40421311,
+   "blank": 111485
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "센텀",
+   "왕숙",
+   "한신더휴"
+  ]
+ },
+ {
+  "id": "공용홀_힐스테이트",
+  "source": "용인 힐스테이트 성남메트로블/공용홀/용인 힐스테이트 성남메트로블 견본주택(준공사진첩).xlsx",
+  "sheets": [
+   {
+    "sheet": "갑지",
+    "role": "cover",
+    "trimmedAfterRow": 37,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 37,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "5.준공사진첩",
+    "role": "block",
+    "blockStart": 5,
+    "chosenBlock": 5,
+    "keptRows": 18,
+    "removedBlocks": 240,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "A1",
+      "current": "■ 힐스테이트 성남메트로블 MH "
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 340,
+    "shapesKept": 0,
+    "lastRow": 22,
+    "cleared": 4,
+    "numberCells": {}
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 189,
+   "after": 6
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 343427905,
+   "blank": 62154
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "성남메트로블",
+   "용인",
+   "힐스테이트"
+  ]
+ },
+ {
+  "id": "분양승인첩_기타",
+  "source": "대광로제비앙 모아엘가/분양승인 사진첩/대광건설 대광로제비앙 모아엘가_84A (분양승인사진첩).xlsx",
+  "sheets": [
+   {
+    "sheet": "갑지",
+    "role": "cover",
+    "trimmedAfterRow": 34,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 8,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84㎡A",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 377,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&\"HY울릉도L,굵게\"&14■ 용인 고진역 대광로제비앙 단위세대 84㎡A TYPE",
+      "blank": "&L&\"HY울릉도L,굵게\"&14■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 611,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 4,
+    "numberCells": {
+     "H1": 1
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/calcChain.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 348,
+   "after": 7
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 117143646,
+   "blank": 79012
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "대광건설",
+   "대광로제비앙",
+   "모아엘가"
+  ]
+ },
+ {
+  "id": "분양승인첩_롯데",
+  "source": "화성 향남 롯데캐슬 시그니처/수정파일/화성 향남 롯데캐슬 시그니처_분양승인사진첩_84C.xlsx",
+  "sheets": [
+   {
+    "sheet": "갑지",
+    "role": "cover",
+    "trimmedAfterRow": 46,
+    "cfRemoved": [
+     [
+      "duplicateValues"
+     ],
+     [
+      "duplicateValues"
+     ]
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 46,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84C_간지",
+    "role": "cover",
+    "trimmedAfterRow": 46,
+    "cfRemoved": [
+     [
+      "duplicateValues"
+     ],
+     [
+      "duplicateValues"
+     ]
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 46,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84C_목차",
+    "role": "toc",
+    "tocHeaderRow": 3,
+    "trimmedAfterRow": 127,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 127,
+    "cleared": 0,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84C_사진첩",
+    "role": "block",
+    "blockStart": 5,
+    "chosenBlock": 5,
+    "keptRows": 24,
+    "removedBlocks": 150,
+    "whitelistCleared": 8,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "E3",
+      "current": "84㎡C"
+     },
+     {
+      "cell": "G3",
+      "current": "2026.1"
+     },
+     {
+      "cell": "L3",
+      "current": "화성 향남 롯데캐슬 시그니처"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 241,
+    "shapesKept": 0,
+    "lastRow": 28,
+    "cleared": 23,
+    "numberCells": {
+     "M5": 1
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing3.xml",
+   "xl/worksheets/sheet5.xml",
+   "xl/calcChain.xml",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 585,
+   "after": 30
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 56511358,
+   "blank": 27038
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [
+   [
+    "xl/styles.xml",
+    "롯데캐슬"
+   ],
+   [
+    "xl/worksheets/sheet4.xml",
+    "롯데캐슬"
+   ]
+  ],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "롯데캐슬",
+   "시그니처",
+   "향남",
+   "화성"
+  ]
+ },
+ {
+  "id": "분양승인첩_수자인",
+  "source": "평택고덕 한양 수자인/분양승인 사진첩/260413-평택 고덕 한양 수자인 분양승인사진첩_84A.xlsx",
+  "sheets": [
+   {
+    "sheet": "84A㎡ 갑지",
+    "role": "cover",
+    "trimmedAfterRow": 46,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 30,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "속지",
+    "role": "cover",
+    "trimmedAfterRow": 46,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 46,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "현관,복도,팬트리",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 22,
+    "whitelistCleared": 11,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "평택 고덕 한양 수자인 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 65,
+    "shapesKept": 0,
+    "lastRow": 24,
+    "cleared": 12,
+    "numberCells": {
+     "P3": 1
+    }
+   },
+   {
+    "sheet": "거실,주방,팬트리,발코니2",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 43,
+    "whitelistCleared": 12,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "평택 고덕 한양 수자인 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 142,
+    "shapesKept": 0,
+    "lastRow": 24,
+    "cleared": 13,
+    "numberCells": {
+     "P3": 2
+    }
+   },
+   {
+    "sheet": "침실1,발코니,대피공간,실외기실,드레스룸",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 25,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "평택 고덕 한양 수자인 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 85,
+    "shapesKept": 1,
+    "lastRow": 24,
+    "cleared": 13,
+    "numberCells": {
+     "P3": 3
+    }
+   },
+   {
+    "sheet": "침실2,침실3",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 18,
+    "whitelistCleared": 12,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "평택 고덕 한양 수자인 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 59,
+    "shapesKept": 0,
+    "lastRow": 24,
+    "cleared": 13,
+    "numberCells": {
+     "P3": 4
+    }
+   },
+   {
+    "sheet": "욕실1,2",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 24,
+    "whitelistCleared": 11,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "평택 고덕 한양 수자인 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 60,
+    "shapesKept": 0,
+    "lastRow": 24,
+    "cleared": 12,
+    "numberCells": {
+     "P3": 5
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/drawings/drawing3.xml",
+   "xl/drawings/drawing5.xml",
+   "xl/drawings/drawing6.xml",
+   "xl/calcChain.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 321,
+   "after": 36
+  },
+  "media": [
+   "xl/media/image1.jpeg"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 37225527,
+   "blank": 46889
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "고덕",
+   "수자인",
+   "평택",
+   "한양"
+  ]
+ },
+ {
+  "id": "분양승인첩_하늘채",
+  "source": "상주 북천 하늘채 파크원/분양승인 사진첩/260423-상주 북천 하늘채 파크원 분양승인사진첩_84B.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 22,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 22,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "표지(84B)",
+    "role": "cover",
+    "trimmedAfterRow": 22,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 22,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "사진(84B)",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 27,
+    "removedBlocks": 96,
+    "whitelistCleared": 2,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "A2",
+      "current": " PROJECT: 상주 북천 하늘채 파크원"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 407,
+    "shapesKept": 0,
+    "lastRow": 29,
+    "cleared": 3,
+    "numberCells": {}
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing3.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 53,
+   "after": 1
+  },
+  "media": [
+   "xl/media/image1.jpeg",
+   "xl/media/image409.jpeg"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 162411534,
+   "blank": 454410
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "북천",
+   "상주",
+   "파크원",
+   "하늘채"
+  ]
+ },
+ {
+  "id": "분양승인첩_한신더휴",
+  "source": "창원 한신더휴 메가센텀/분양승인 사진첩/창원 한신더휴 메가센텀 분양승인 사진첩 84A.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 39,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 39,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84㎡A",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 8,
+    "removedBlocks": 257,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 317,
+    "shapesKept": 0,
+    "lastRow": 8,
+    "cleared": 5,
+    "numberCells": {
+     "C1": 1
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/externalLinks/externalLink23.xml",
+   "xl/externalLinks/externalLink22.xml",
+   "xl/externalLinks/externalLink21.xml",
+   "xl/externalLinks/externalLink20.xml",
+   "xl/externalLinks/externalLink19.xml",
+   "xl/externalLinks/externalLink18.xml",
+   "xl/externalLinks/externalLink17.xml",
+   "xl/externalLinks/externalLink16.xml",
+   "xl/externalLinks/externalLink15.xml",
+   "xl/externalLinks/externalLink14.xml",
+   "xl/externalLinks/externalLink13.xml",
+   "xl/externalLinks/externalLink12.xml",
+   "xl/externalLinks/externalLink11.xml",
+   "xl/externalLinks/externalLink10.xml",
+   "xl/externalLinks/externalLink9.xml",
+   "xl/externalLinks/externalLink8.xml",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/calcChain.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/_rels/externalLink8.xml.rels",
+   "xl/externalLinks/_rels/externalLink9.xml.rels",
+   "xl/externalLinks/_rels/externalLink10.xml.rels",
+   "xl/externalLinks/_rels/externalLink11.xml.rels",
+   "xl/externalLinks/_rels/externalLink12.xml.rels",
+   "xl/externalLinks/_rels/externalLink13.xml.rels",
+   "xl/externalLinks/_rels/externalLink14.xml.rels",
+   "xl/externalLinks/_rels/externalLink15.xml.rels",
+   "xl/externalLinks/_rels/externalLink16.xml.rels",
+   "xl/externalLinks/_rels/externalLink17.xml.rels",
+   "xl/externalLinks/_rels/externalLink18.xml.rels",
+   "xl/externalLinks/_rels/externalLink19.xml.rels",
+   "xl/externalLinks/_rels/externalLink20.xml.rels",
+   "xl/externalLinks/_rels/externalLink21.xml.rels",
+   "xl/externalLinks/_rels/externalLink22.xml.rels",
+   "xl/externalLinks/_rels/externalLink23.xml.rels",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 152,
+   "after": 5
+  },
+  "media": [
+   "xl/media/image1.jpeg"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 260584107,
+   "blank": 111602
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "메가센텀",
+   "창원",
+   "한신더휴"
+  ]
+ },
+ {
+  "id": "준공사진첩_기타",
+  "source": "대광로제비앙 모아엘가/준공사진첩/양주회천 8블럭 대광 로제비앙 모아엘가_84A (준공사진첩).xlsx",
+  "sheets": [
+   {
+    "sheet": "갑지",
+    "role": "cover",
+    "trimmedAfterRow": 34,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 8,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84㎡A",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 379,
+    "whitelistCleared": 3,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&\"HY울릉도L,굵게\"&14■ 용인 고진역 대광로제비앙 단위세대 84㎡A TYPE",
+      "blank": "&L&\"HY울릉도L,굵게\"&14■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 622,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 8,
+    "numberCells": {
+     "H1": 1
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/calcChain.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 512,
+   "after": 7
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 121495157,
+   "blank": 36255
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "대광",
+   "로제비앙",
+   "모아엘가",
+   "블럭",
+   "양주회천"
+  ]
+ },
+ {
+  "id": "준공사진첩_롯데",
+  "source": "화성 향남 롯데캐슬 시그니처/준공사진첩/화성 향남 롯데캐슬 시그니처_준공사진첩_84B.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 46,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 46,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "목차",
+    "role": "toc",
+    "tocHeaderRow": 3,
+    "trimmedAfterRow": 144,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 144,
+    "cleared": 0,
+    "numberCells": {}
+   },
+   {
+    "sheet": "공간별전경",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 43,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 147,
+    "shapesKept": 0,
+    "lastRow": 10,
+    "cleared": 10,
+    "numberCells": {
+     "I10": 1
+    }
+   },
+   {
+    "sheet": "가구공사",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 43,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 93,
+    "shapesKept": 1,
+    "lastRow": 10,
+    "cleared": 11,
+    "numberCells": {
+     "I10": 2
+    }
+   },
+   {
+    "sheet": "창호및목공사",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 17,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 36,
+    "shapesKept": 1,
+    "lastRow": 10,
+    "cleared": 11,
+    "numberCells": {
+     "I10": 3
+    }
+   },
+   {
+    "sheet": "유리및금속공사",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 8,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 21,
+    "shapesKept": 1,
+    "lastRow": 10,
+    "cleared": 10,
+    "numberCells": {
+     "I10": 4
+    }
+   },
+   {
+    "sheet": "수장공사",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 18,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 29,
+    "shapesKept": 0,
+    "lastRow": 10,
+    "cleared": 10,
+    "numberCells": {
+     "I10": 5
+    }
+   },
+   {
+    "sheet": "기계공사",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 34,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 60,
+    "shapesKept": 0,
+    "lastRow": 10,
+    "cleared": 12,
+    "numberCells": {
+     "I10": 6
+    }
+   },
+   {
+    "sheet": "타일및석공사",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 16,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 36,
+    "shapesKept": 0,
+    "lastRow": 10,
+    "cleared": 11,
+    "numberCells": {
+     "I10": 7
+    }
+   },
+   {
+    "sheet": "전기공사",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 10,
+    "removedBlocks": 33,
+    "whitelistCleared": 10,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 43,
+    "shapesKept": 0,
+    "lastRow": 10,
+    "cleared": 11,
+    "numberCells": {
+     "I10": 8
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing1.xml",
+   "xl/drawings/drawing5.xml",
+   "xl/drawings/drawing6.xml",
+   "xl/drawings/drawing7.xml",
+   "xl/drawings/drawing8.xml",
+   "xl/calcChain.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 590,
+   "after": 28
+  },
+  "media": [],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 55525131,
+   "blank": 43935
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [
+   [
+    "xl/styles.xml",
+    "롯데캐슬"
+   ],
+   [
+    "xl/styles.xml",
+    "향남"
+   ],
+   [
+    "xl/styles.xml",
+    "화성"
+   ]
+  ],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "롯데캐슬",
+   "시그니처",
+   "향남",
+   "화성"
+  ]
+ },
+ {
+  "id": "준공사진첩_수자인",
+  "source": "평택고덕 한양 수자인/준공사진첩/260428- 평택 고덕 한양 수자인 준공사진첩_84A.xlsx",
+  "sheets": [
+   {
+    "sheet": "84A㎡ 갑지",
+    "role": "cover",
+    "trimmedAfterRow": 46,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 30,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "속지",
+    "role": "cover",
+    "trimmedAfterRow": 45,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 45,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "현관,현관창고,복도,팬트리",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 34,
+    "whitelistCleared": 19,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "풍무역세권 수자인 그라센트 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 101,
+    "shapesKept": 1,
+    "lastRow": 24,
+    "cleared": 21,
+    "numberCells": {
+     "P3": 1
+    }
+   },
+   {
+    "sheet": "거실,주방,다용도실",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 67,
+    "whitelistCleared": 19,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "풍무역세권 수자인 그라센트 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 210,
+    "shapesKept": 0,
+    "lastRow": 24,
+    "cleared": 20,
+    "numberCells": {
+     "P3": 2
+    }
+   },
+   {
+    "sheet": "침실1,발코니1,실외기실,드레스룸",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 47,
+    "whitelistCleared": 19,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "풍무역세권 수자인 그라센트 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 149,
+    "shapesKept": 1,
+    "lastRow": 24,
+    "cleared": 22,
+    "numberCells": {
+     "P3": 3
+    }
+   },
+   {
+    "sheet": "침실2,침실3",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 27,
+    "whitelistCleared": 19,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "풍무역세권 수자인 그라센트 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 89,
+    "shapesKept": 0,
+    "lastRow": 24,
+    "cleared": 20,
+    "numberCells": {
+     "P3": 4
+    }
+   },
+   {
+    "sheet": "욕실1,2",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 38,
+    "whitelistCleared": 19,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "D1",
+      "current": "풍무역세권 수자인 그라센트 [84A]"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 99,
+    "shapesKept": 1,
+    "lastRow": 24,
+    "cleared": 20,
+    "numberCells": {
+     "P3": 5
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing3.xml",
+   "xl/drawings/drawing5.xml",
+   "xl/calcChain.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 673,
+   "after": 54
+  },
+  "media": [
+   "xl/media/image1.jpeg"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 69799893,
+   "blank": 55053
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "고덕",
+   "수자인",
+   "평택",
+   "한양"
+  ]
+ },
+ {
+  "id": "준공사진첩_아크로",
+  "source": "아크로 여의도 더원/준공사진첩/아크로 여의도 더원 커뮤니티 준공사진첩.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 47,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 3,
+    "lastRow": 47,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "CONTENTS",
+    "role": "toc",
+    "tocHeaderRow": null,
+    "trimmedAfterRow": 12,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 2,
+    "lastRow": 12,
+    "cleared": 0,
+    "numberCells": {}
+   },
+   {
+    "sheet": "지상_1F",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 12,
+    "removedBlocks": 18,
+    "whitelistCleared": 4,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 38,
+    "shapesKept": 0,
+    "lastRow": 12,
+    "cleared": 4,
+    "numberCells": {}
+   },
+   {
+    "sheet": "지하_1F",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 12,
+    "removedBlocks": 77,
+    "whitelistCleared": 4,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 200,
+    "shapesKept": 0,
+    "lastRow": 12,
+    "cleared": 4,
+    "numberCells": {}
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing3.xml",
+   "xl/drawings/drawing4.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 99,
+   "after": 4
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 162827052,
+   "blank": 32598
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "더원",
+   "아크로",
+   "여의도",
+   "커뮤니티"
+  ]
+ },
+ {
+  "id": "준공사진첩_포스코",
+  "source": "대구 포스코 더샵 동인센트리체/준공사진첩[수정]/대구 포스코 더샵 동인센트리체_84B㎡_준공사진첩.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 48,
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 48,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "세대입구",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 6,
+    "whitelistCleared": 8,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■{{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 10,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 8,
+    "numberCells": {}
+   },
+   {
+    "sheet": "현관",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 33,
+    "whitelistCleared": 8,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 44,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 8,
+    "numberCells": {}
+   },
+   {
+    "sheet": "복도",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 11,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 12,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "거실",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 26,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 38,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "주방",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 48,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 73,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 8,
+    "numberCells": {}
+   },
+   {
+    "sheet": "발코니2",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 19,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 30,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "안방",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 34,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 43,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "대형 드레스룸",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 19,
+    "rowHeightsFromMode": {
+     "chosen": [
+      44.0,
+      44.0,
+      44.0,
+      77.0,
+      30.0,
+      152.0,
+      32.0
+     ],
+     "mode": [
+      43.5,
+      44.0,
+      44.0,
+      44.0,
+      44.0,
+      130.0,
+      32.0
+     ],
+     "modeCount": 7,
+     "blocks": 20
+    },
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 27,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "발코니1",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 12,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 18,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "하향식 피난구",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 12,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 18,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "실외기실",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 12,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 19,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "욕실2 (부부)",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 37,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 44,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 8,
+    "numberCells": {}
+   },
+   {
+    "sheet": "침실2",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 23,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 30,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "침실1",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 32,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 43,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "케어룸",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 18,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 23,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 7,
+    "numberCells": {}
+   },
+   {
+    "sheet": "욕실1 (공용)",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 7,
+    "removedBlocks": 34,
+    "whitelistCleared": 7,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&K000000■ 더샵 동인센트리체_84B㎡",
+      "blank": "&L&K000000■ {{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 41,
+    "shapesKept": 0,
+    "lastRow": 7,
+    "cleared": 8,
+    "numberCells": {}
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing1.xml",
+   "xl/drawings/drawing2.xml",
+   "xl/drawings/drawing3.xml",
+   "xl/drawings/drawing4.xml",
+   "xl/drawings/drawing5.xml",
+   "xl/drawings/drawing6.xml",
+   "xl/drawings/drawing7.xml",
+   "xl/drawings/drawing8.xml",
+   "xl/drawings/drawing9.xml",
+   "xl/drawings/drawing10.xml",
+   "xl/drawings/drawing11.xml",
+   "xl/drawings/drawing12.xml",
+   "xl/drawings/drawing13.xml",
+   "xl/drawings/drawing14.xml",
+   "xl/drawings/drawing15.xml",
+   "xl/drawings/drawing16.xml",
+   "xl/calcChain.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 424,
+   "after": 9
+  },
+  "media": [],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 104997660,
+   "blank": 46088
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "대구",
+   "더샵",
+   "동인센트리체",
+   "포스코"
+  ]
+ },
+ {
+  "id": "준공사진첩_하늘채",
+  "source": "상주 북천 하늘채 파크원/준공사진첩/상주 북천 하늘채 파크원_117 (준공사진첩).xlsx",
+  "sheets": [
+   {
+    "sheet": "표지(117)",
+    "role": "cover",
+    "trimmedAfterRow": 25,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 25,
+    "cleared": 1,
+    "numberCells": {}
+   },
+   {
+    "sheet": "사진(117)",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 29,
+    "keptRows": 27,
+    "removedBlocks": 107,
+    "whitelistCleared": 4,
+    "labelsFilled": {},
+    "headerValuesCleared": [
+     {
+      "cell": "A2",
+      "current": " PROJECT: 상주 북천 하늘채 파크원"
+     }
+    ],
+    "headerFooterSiteText": [],
+    "imagesKept": 0,
+    "imagesRemoved": 693,
+    "shapesKept": 0,
+    "lastRow": 29,
+    "cleared": 40,
+    "numberCells": {}
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/externalLinks/externalLink9.xml",
+   "xl/externalLinks/externalLink8.xml",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/_rels/externalLink8.xml.rels",
+   "xl/externalLinks/_rels/externalLink9.xml.rels",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [
+   "외부 참조·#REF! 정의된 이름 삭제: [9]Sheet1!$1:$4"
+  ],
+  "sharedStrings": {
+   "before": 384,
+   "after": 7
+  },
+  "media": [
+   "xl/media/image1.jpeg",
+   "xl/media/image680.jpeg"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 191529260,
+   "blank": 456514
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "북천",
+   "상주",
+   "파크원",
+   "하늘채"
+  ]
+ },
+ {
+  "id": "준공사진첩_한신더휴",
+  "source": "왕숙 한신더휴 센텀/창원 한신더휴 메가센텀 준공사진첩 84A.xlsx",
+  "sheets": [
+   {
+    "sheet": "표지",
+    "role": "cover",
+    "trimmedAfterRow": 39,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 39,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84㎡A",
+    "role": "block",
+    "blockStart": 1,
+    "chosenBlock": 1,
+    "keptRows": 8,
+    "removedBlocks": 376,
+    "whitelistCleared": 4,
+    "labelsFilled": {},
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [
+     {
+      "part": "oddHeader",
+      "original": "&L&\"맑은 고딕 Bold,굵게\"&12&K000000창원 한신더휴 메가센텀 84㎡A",
+      "blank": "&L&\"맑은 고딕 Bold,굵게\"&12&K000000{{현장명}}"
+     }
+    ],
+    "imagesKept": 0,
+    "imagesRemoved": 576,
+    "shapesKept": 0,
+    "lastRow": 8,
+    "cleared": 5,
+    "numberCells": {
+     "C1": 1
+    }
+   }
+  ],
+  "removed": [
+   "xl/drawings/drawing2.xml",
+   "xl/externalLinks/externalLink8.xml",
+   "xl/externalLinks/externalLink7.xml",
+   "xl/calcChain.xml",
+   "xl/externalLinks/externalLink6.xml",
+   "xl/externalLinks/externalLink5.xml",
+   "xl/externalLinks/externalLink4.xml",
+   "xl/externalLinks/externalLink3.xml",
+   "xl/externalLinks/_rels/externalLink1.xml.rels",
+   "xl/externalLinks/_rels/externalLink2.xml.rels",
+   "xl/externalLinks/_rels/externalLink3.xml.rels",
+   "xl/externalLinks/_rels/externalLink4.xml.rels",
+   "xl/externalLinks/_rels/externalLink5.xml.rels",
+   "xl/externalLinks/_rels/externalLink6.xml.rels",
+   "xl/externalLinks/_rels/externalLink7.xml.rels",
+   "xl/externalLinks/_rels/externalLink8.xml.rels",
+   "xl/externalLinks/externalLink2.xml",
+   "xl/externalLinks/externalLink1.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 322,
+   "after": 5
+  },
+  "media": [
+   "xl/media/image1.png"
+  ],
+  "shapeSiteText": [],
+  "bytes": {
+   "source": 229100131,
+   "blank": 104302
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "메가센텀",
+   "창원",
+   "한신더휴"
+  ]
+ },
+ {
+  "id": "준공사진첩_힐스테이트",
+  "source": "용인 힐스테이트 성남메트로블/준공사진첩/용인 힐스테이트 성남메트로블 84A(준공사진첩).xlsx",
+  "sheets": [
+   {
+    "sheet": "갑지",
+    "role": "cover",
+    "trimmedAfterRow": 37,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 37,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "차례",
+    "role": "toc",
+    "tocHeaderRow": null,
+    "trimmedAfterRow": 37,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 37,
+    "cleared": 0,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84㎡A갑지",
+    "role": "cover",
+    "trimmedAfterRow": 37,
+    "headerFooterSiteText": [],
+    "imagesKept": 1,
+    "imagesRemoved": 0,
+    "shapesKept": 0,
+    "lastRow": 37,
+    "cleared": 2,
+    "numberCells": {}
+   },
+   {
+    "sheet": "84㎡A사진첩",
+    "role": "block",
+    "blockStart": 3,
+    "chosenBlock": 3,
+    "keptRows": 22,
+    "removedBlocks": 175,
+    "whitelistCleared": 10,
+    "labelsFilled": {
+     "A8": "업체명",
+     "A9": "제품명",
+     "A18": "업체명",
+     "A19": "제품명"
+    },
+    "headerValuesCleared": [],
+    "headerFooterSiteText": [],
+    "imagesKept": 2,
+    "imagesRemoved": 548,
+    "shapesKept": 1,
+    "lastRow": 24,
+    "cleared": 18,
+    "numberCells": {
+     "L3": 1,
+     "N3": 1
+    }
+   }
+  ],
+  "removed": [
+   "xl/calcChain.xml"
+  ],
+  "warnings": [],
+  "sharedStrings": {
+   "before": 396,
+   "after": 12
+  },
+  "media": [
+   "xl/media/image1.png",
+   "xl/media/image284.png",
+   "xl/media/image285.png"
+  ],
+  "shapeSiteText": [
+   {
+    "sheet": "84㎡A사진첩",
+    "original": "힐스테이트 성남메트로블 "
+   }
+  ],
+  "bytes": {
+   "source": 106534357,
+   "blank": 73358
+  },
+  "residueNote": "xl/styles.xml에 남은 글자는 글꼴 이름·셀 스타일 이름이라 화면에 보이지 않음",
+  "siteWordResidue": [],
+  "integrity": [],
+  "siteWords": [
+   "xlsx",
+   "성남메트로블",
+   "용인",
+   "힐스테이트"
+  ]
+ }
+]
