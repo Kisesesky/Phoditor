@@ -386,6 +386,74 @@ ipcMain.handle('project-open', async (_event, filePath) => {
 
 ipcMain.handle('project-recent', () => readRecent().filter((x) => x && x.path && fs.existsSync(x.path)));
 
+// --- [2026-11-26] 내 양식: 자주 쓰는 구성(양식 + 표지·반복값·블록 수·배치, 사진 없음)을 저장해 두고 다시 시작 ---
+function myTemplatesDir() {
+  return path.join(app.getPath('userData'), 'mytemplates');
+}
+function myTemplatePath(id) {
+  if (!/^[a-z0-9-]{6,40}$/.test(String(id || ''))) throw new Error('잘못된 양식 이름');
+  return path.join(myTemplatesDir(), `${id}.json`);
+}
+function stripPhotos(editor) {
+  for (const s of (editor && editor.sheets) || []) {
+    for (const b of s.blocks || []) {
+      for (const pa of Object.values(b.photoAreas || {})) if (pa && Array.isArray(pa.slots)) pa.slots = pa.slots.map(() => null);
+    }
+  }
+  return editor;
+}
+ipcMain.handle('mytemplates-list', () => {
+  const dir = myTemplatesDir();
+  if (!fs.existsSync(dir)) return [];
+  const out = [];
+  for (const f of fs.readdirSync(dir)) {
+    if (!f.endsWith('.json')) continue;
+    try {
+      const d = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf-8'));
+      const base = templateDefCache.get(d.templateId);
+      const blocks = (d.editor.sheets || []).reduce((a, s) => a + ((s.blocks && s.blocks.length) || 0), 0);
+      out.push({ id: d.id, name: d.name, templateId: d.templateId, baseLabel: base ? (base.generic ? base.title : `${base.type} · ${base.company}`) : '(없어진 양식)', missingBase: !base, createdAt: d.createdAt, sheetCount: (d.editor.sheets || []).length, blockCount: blocks });
+    } catch (_) {}
+  }
+  return out.sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+});
+ipcMain.handle('mytemplates-save', (_event, { name, data }) => {
+  const title = String(name || '').trim().slice(0, 60);
+  if (!title) return { ok: false, error: '이름을 넣어 주세요.' };
+  if (!data || !data.editor || !templateDefCache.get(data.templateId)) return { ok: false, error: '양식 정보가 없어요.' };
+  fs.mkdirSync(myTemplatesDir(), { recursive: true });
+  const id = `${Date.now().toString(36)}-${crypto.randomBytes(3).toString('hex')}`;
+  const doc = { format: 'phoditor-mytemplate', version: 1, id, name: title, createdAt: new Date().toISOString(), templateId: data.templateId, templateVersion: data.templateVersion, editor: stripPhotos(data.editor) };
+  fs.writeFileSync(myTemplatePath(id), JSON.stringify(doc));
+  return { ok: true, id };
+});
+ipcMain.handle('mytemplates-read', (_event, id) => {
+  try {
+    return { ok: true, data: JSON.parse(fs.readFileSync(myTemplatePath(id), 'utf-8')) };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+});
+ipcMain.handle('mytemplates-delete', (_event, id) => {
+  try {
+    fs.unlinkSync(myTemplatePath(id));
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+});
+ipcMain.handle('mytemplates-rename', (_event, { id, name }) => {
+  try {
+    const p = myTemplatePath(id);
+    const d = JSON.parse(fs.readFileSync(p, 'utf-8'));
+    d.name = String(name || '').trim().slice(0, 60) || d.name;
+    fs.writeFileSync(p, JSON.stringify(d));
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+});
+
 ipcMain.handle('autosave-write', (_event, data) => {
   try {
     writeJsonAtomic(autosaveFile(), data);
@@ -572,10 +640,18 @@ ipcMain.handle('install-font', async (_event, family) => {
 ipcMain.handle('get-catalog', () => {
   const defs = loadAllTemplateDefs();
   const map = {};
+  // [2026-11-26] 시트별 미리보기 목록(tools/make-cover-thumbs.js가 만든 data/thumbs/index.json)
+  let previews = {};
+  try { previews = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'thumbs', 'index.json'), 'utf-8')) || {}; } catch (_) {}
   for (const d of defs) {
     const firstBlock = d.sheets.find((s) => s.role === 'block');
     map[`${d.type}__${d.company}`] = {
       id: d.id,
+      generic: !!d.generic,
+      title: d.title || null,
+      description: d.description || null,
+      sheetNames: d.sheets.filter((s) => s.role !== 'remove').map((s) => s.name),
+      previews: Array.isArray(previews[d.id]) ? previews[d.id] : null,
       type: d.type,
       company: d.company,
       status: d.status,
@@ -586,10 +662,13 @@ ipcMain.handle('get-catalog', () => {
       hasBlankXlsx: fs.existsSync(path.join(BLANKS_DIR, `${d.id}.xlsx`))
     };
   }
+  // [2026-11-26] 회사에 묶이지 않은 양식(공백 양식)은 따로
+  const generic = defs.filter((d) => d.generic).map((d) => map[`${d.type}__${d.company}`]).filter(Boolean);
   return {
     types: CATALOG_TYPES,
     companies: CATALOG_COMPANIES,
-    available: map
+    available: map,
+    generic
   };
 });
 
@@ -930,6 +1009,37 @@ function getMyboxTokenPath() {
   return path.join(app.getPath('userData'), 'mybox-token.enc');
 }
 
+// [2026-11-26] 토큰 유효 기간: 발급일·일수만 따로 적는다(토큰 값은 넣지 않음)
+function getMyboxMetaPath() {
+  return path.join(app.getPath('userData'), 'mybox-token-meta.json');
+}
+function readMyboxMeta() {
+  try {
+    const m = JSON.parse(fs.readFileSync(getMyboxMetaPath(), 'utf-8'));
+    if (!m || !/^\d{4}-\d{2}-\d{2}$/.test(m.issuedAt) || !(m.days > 0)) return null;
+    return { issuedAt: m.issuedAt, days: Number(m.days) };
+  } catch (_) {
+    return null;
+  }
+}
+function myboxExpiryInfo(meta) {
+  if (!meta) return null;
+  const [y, mo, d] = meta.issuedAt.split('-').map(Number);
+  const exp = new Date(y, mo - 1, d + meta.days);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const daysLeft = Math.round((exp - today) / 86400000);
+  const pad = (n) => String(n).padStart(2, '0');
+  return { ...meta, expiresAt: `${exp.getFullYear()}-${pad(exp.getMonth() + 1)}-${pad(exp.getDate())}`, daysLeft, expired: daysLeft <= 0 };
+}
+function writeMyboxMeta(meta) {
+  if (!meta) {
+    try { fs.unlinkSync(getMyboxMetaPath()); } catch (_) {}
+    return;
+  }
+  fs.writeFileSync(getMyboxMetaPath(), JSON.stringify({ issuedAt: meta.issuedAt, days: meta.days }));
+}
+
 function getMyboxCacheDir() {
   return path.join(app.getPath('userData'), 'mybox-cache');
 }
@@ -960,15 +1070,25 @@ ipcMain.handle('mybox-get-status', () => {
   const client = getMyboxClient();
   return {
     hasToken: client.hasToken(),
-    safeStorageAvailable: safeStorage.isEncryptionAvailable()
+    safeStorageAvailable: safeStorage.isEncryptionAvailable(),
+    expiry: client.hasToken() ? myboxExpiryInfo(readMyboxMeta()) : null
   };
 });
 
-ipcMain.handle('mybox-save-token', (_event, rawToken) => {
+// 기간만 고치기(토큰은 그대로)
+ipcMain.handle('mybox-save-period', (_event, period) => {
+  const meta = period && /^\d{4}-\d{2}-\d{2}$/.test(period.issuedAt) && Number(period.days) > 0 ? { issuedAt: period.issuedAt, days: Number(period.days) } : null;
+  writeMyboxMeta(meta);
+  return { ok: true, expiry: myboxExpiryInfo(meta) };
+});
+
+ipcMain.handle('mybox-save-token', (_event, rawToken, period) => {
   const token = String(rawToken || '').trim();
   if (!token) {
     return { ok: false, error: '토큰을 입력해 주세요.' };
   }
+  const meta = period && /^\d{4}-\d{2}-\d{2}$/.test(period.issuedAt) && Number(period.days) > 0 ? { issuedAt: period.issuedAt, days: Number(period.days) } : null;
+  writeMyboxMeta(meta);
   const client = getMyboxClient();
   client.setToken(token);
 
@@ -991,6 +1111,7 @@ ipcMain.handle('mybox-save-token', (_event, rawToken) => {
 
 ipcMain.handle('mybox-clear-token', () => {
   inMemoryFallbackToken = '';
+  writeMyboxMeta(null);
   const client = getMyboxClient();
   client.setToken('');
   const tokenPath = getMyboxTokenPath();
@@ -1054,6 +1175,7 @@ ipcMain.handle('mybox-list-folder', async (_event, folderId) => {
     };
   }
 
+  const expiry = myboxExpiryInfo(readMyboxMeta());
   try {
     const { folders, files } = await client.listAllResources(folderId || null);
     const enrichedFiles = files.map((f) => {
@@ -1075,12 +1197,14 @@ ipcMain.handle('mybox-list-folder', async (_event, folderId) => {
         thumbUrl
       };
     });
-    return { ok: true, folders, files: enrichedFiles };
+    return { ok: true, folders, files: enrichedFiles, expiry };
   } catch (err) {
+    const expiredAuth = err && err.isAuthError && expiry && expiry.expired;
     return {
       ok: false,
+      expired: Boolean(expiredAuth),
       status: err && err.status ? err.status : 0,
-      message: err && err.message ? err.message : MYBOX_AUTH_ERROR_MSG,
+      message: expiredAuth ? `토큰 기간이 끝났어요(${expiry.expiresAt}). MYBOX에서 새 토큰을 받아 넣어 주세요.` : err && err.message ? err.message : MYBOX_AUTH_ERROR_MSG,
       serverMessage: err && err.serverMessage ? err.serverMessage : '',
       isAuthError: Boolean(err && err.isAuthError)
     };

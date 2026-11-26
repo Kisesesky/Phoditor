@@ -48,6 +48,7 @@ async function goToStart() {
   el.editorView.classList.remove('active');
   el.catalogView.classList.add('active');
   renderStartExtras();
+  renderMyTemplates();
 }
 el.backToCatalogBtn.addEventListener('click', goToStart);
 el.undoBtn.addEventListener('click', undo);
@@ -81,11 +82,44 @@ el.photoFilterBtn.addEventListener('click', () => {
   renderPhotoPanel();
 });
 el.photoSortSel.addEventListener('change', () => {
-  const v = el.photoSortSel.value;
-  if (v === 'name') state.photos.sort((a, b) => a.name.localeCompare(b.name, 'ko', { numeric: true }));
-  else if (v === 'time') state.photos.sort((a, b) => (a.takenAt || 0) - (b.takenAt || 0));
+  photoView.key = el.photoSortSel.value === 'time' ? 'time' : 'name';
+  savePhotoView();
+  applyPhotoSort();
+  syncPhotoViewControls();
   renderPhotoPanel();
 });
+el.photoSortDirBtn.addEventListener('click', () => {
+  photoView.dir = photoView.dir === 'desc' ? 'asc' : 'desc';
+  savePhotoView();
+  applyPhotoSort();
+  syncPhotoViewControls();
+  renderPhotoPanel();
+});
+el.photoColsSeg.addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-cols]');
+  if (!b) return;
+  photoView.cols = Number(b.dataset.cols);
+  savePhotoView();
+  syncPhotoViewControls();
+});
+syncPhotoViewControls();
+// [2026-11-26] 속성 패널 접기/펼치기(기억해 둠). 접으면 캔버스가 넓어져 쪽을 다시 맞춘다
+function setInspectorCollapsed(on) {
+  el.inspector.classList.toggle('collapsed', on);
+  try { localStorage.setItem('phoditor.inspCollapsed', on ? '1' : ''); } catch (_) {}
+  if (state.editor && el.editorView.classList.contains('active')) renderActiveSheet();
+}
+el.inspCollapseBtn.addEventListener('click', () => setInspectorCollapsed(true));
+el.inspExpandBtn.addEventListener('click', () => setInspectorCollapsed(false));
+try { if (localStorage.getItem('phoditor.inspCollapsed')) el.inspector.classList.add('collapsed'); } catch (_) {}
+// MYBOX 토큰 기간
+el.myboxDaysSeg.addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-days]');
+  if (b) setDaysSeg(Number(b.dataset.days));
+});
+el.myboxIssuedInput.addEventListener('input', updateExpiryPreview);
+el.myboxExpiryChip.addEventListener('click', openSettingsModal);
+refreshMyboxStatus();
 // [2026-11-26] 뒤에서 만든 썸네일이 오면 그 사진 카드만 바꾼다
 window.api.onThumbReady(({ path: p, thumbUrl, done, total }) => {
   for (const ph of state.photos) if (ph.path === p && !ph.isCropped) ph.thumbUrl = thumbUrl;
@@ -143,6 +177,7 @@ el.selectFolderBtn.addEventListener('click', async () => {
   if (!res.canceled) {
     state.photoFolder = res.folderPath;
     state.photos = res.photos || [];
+    applyPhotoSort();
     renderPhotoPanel();
   }
 });
@@ -152,6 +187,7 @@ el.refreshFolderBtn.addEventListener('click', async () => {
   const res = await window.api.refreshPhotoFolder(state.photoFolder);
   if (!res.canceled) {
     state.photos = res.photos || [];
+    applyPhotoSort();
     renderPhotoPanel();
     showToast('사진 폴더를 새로고침했습니다.');
   }

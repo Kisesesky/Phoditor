@@ -195,6 +195,7 @@
     table.pv-grid td { padding: 0 2px; overflow: hidden; white-space: nowrap; font-size: 14.667px; line-height: 1.15; vertical-align: bottom; position: relative; border: none; }
     table.pv-grid.show-grid td { box-shadow: inset -1px -1px 0 #E1E3E8; }
     table.pv-grid td.wrap { white-space: pre-wrap; word-break: break-all; }
+    table.pv-grid td .wrap-clip { overflow: hidden; }
     table.pv-grid td.editable-cell { cursor: text; }
     table.pv-grid td.editable-cell:hover { background-image: linear-gradient(rgba(37,99,235,.07), rgba(37,99,235,.07)); box-shadow: inset 0 0 0 1px rgba(37,99,235,.45); }
     table.pv-grid td.selected-cell { box-shadow: inset 0 0 0 2px var(--accent) !important; background-image: linear-gradient(rgba(37,99,235,.08), rgba(37,99,235,.08)); }
@@ -345,6 +346,59 @@
 
     .thumb-wait { font-size: 10.5px; color: var(--ink-muted); animation: pulse 1.2s ease-in-out infinite; }
     @keyframes pulse { 50% { opacity: .45; } }
+    .insp-head { display: flex; align-items: flex-start; gap: 6px; }
+    .insp-head-text { flex: 1; min-width: 0; }
+    .insp-collapse { flex: none; margin: -4px -8px 0 0; }
+    .insp-expand { display: none; }
+    .inspector.collapsed { width: 40px; }
+    .inspector.collapsed > :not(.insp-expand) { display: none; }
+    .inspector.collapsed .insp-expand { display: flex; flex-direction: column; align-items: center; gap: 8px; border: none; border-radius: 0; background: transparent; padding: 14px 0; height: 100%; color: var(--ink-2); font-size: 12px; font-weight: 600; }
+    .inspector.collapsed .insp-expand:hover { background: var(--chrome); color: var(--accent); }
+    .inspector.collapsed .insp-expand span { writing-mode: vertical-rl; letter-spacing: .2em; }
+
+    .scale-val { width: 42px; flex: none; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+    .insp-row input[type=range] { min-width: 0; }
+
+    /* [2026-11-26 요청] 시작 화면 카드: 큰 미리보기·시트 넘겨 보기, 공백 양식·내 양식 */
+    .company-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .company-card { min-height: 0; cursor: pointer; outline: none; }
+    .company-card:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .company-card .card-art { --art-h: 216px; height: var(--art-h); padding: 10px 0 24px; box-sizing: border-box; overflow: hidden; }
+    .company-card .card-art img.cover-thumb { height: auto; width: auto; max-height: calc(var(--art-h) - 34px); max-width: calc(100% - 56px); object-fit: contain; border-radius: 2px; box-shadow: 0 1px 4px rgba(16,24,40,.22); background: #fff; }
+    .company-card .card-body { padding: 8px 12px 10px; gap: 1px; }
+    .company-card .company-name { font-size: 13.5px; }
+    .company-card .company-meta { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .company-card .open-hint { display: none; }
+    .card-kicker { font-size: 10.5px; font-weight: 700; color: var(--accent); letter-spacing: .02em; }
+    .art-cap { position: absolute; left: 0; right: 0; bottom: 4px; text-align: center; font-size: 11px; color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 30px; }
+    .art-nav { position: absolute; top: 50%; transform: translateY(-60%); width: 26px; height: 40px; padding: 0; justify-content: center; font-size: 20px; line-height: 1; border-radius: 8px; border: 1px solid var(--line); background: rgba(255,255,255,.92); color: var(--ink-2); opacity: 0; transition: opacity .12s; }
+    .art-nav.prev { left: 6px; } .art-nav.next { right: 6px; }
+    .company-card:hover .art-nav:not(:disabled), .company-card:focus-within .art-nav:not(:disabled) { opacity: 1; }
+    .art-nav:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+    .art-nav:disabled { opacity: 0 !important; pointer-events: none; }
+    #myTplSection { margin-bottom: 26px; }
+    .my-grid .company-card .card-art { --art-h: 170px; }
+    .card-actions { display: flex; gap: 4px; margin-top: 6px; }
+    .card-actions button { font-size: 11px; padding: 3px 8px; }
+
+    /* [2026-11-26 요청] 사진 보기 열 수 · 정렬 방향 · 토큰 기간 · 속성 패널 접기 */
+    .photo-grid { grid-template-columns: repeat(var(--photo-cols, 2), minmax(0, 1fr)); }
+    .photo-grid[data-cols="3"], .photo-grid[data-cols="4"] { gap: 5px; padding: 8px; }
+    .photo-grid[data-cols="4"] .photo-name, .photo-grid[data-cols="4"] .photo-meta { display: none; }
+    .photo-grid[data-cols="1"] .photo-thumb-wrap { aspect-ratio: 3 / 2; }
+    .photo-tools .sort-dir { flex: none; min-width: 58px; }
+    .tools-label { font-size: 11.5px; color: var(--ink-muted); flex: none; }
+    .cols-seg { flex: 1; }
+    .cols-seg button { flex: 1; font-size: 11.5px; padding: 3px 0; }
+    .expiry-chip { justify-content: flex-start; font-size: 11.5px; padding: 4px 8px; border-radius: 999px; border: 1px solid #A7E3BF; background: #EAF8F0; color: #166534; font-weight: 600; }
+    .expiry-chip.soon { border-color: #F5D08A; background: var(--warn-soft); color: #92400E; }
+    .expiry-chip.expired { border-color: #F3B3B3; background: #FDECEC; color: #B42318; }
+    .expiry-chip.unknown { border-color: var(--line); background: #fff; color: var(--ink-2); font-weight: 500; }
+    .period-pick { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .period-pick .seg button { padding: 4px 10px; white-space: nowrap; flex: none; }
+    .period-pick .issued { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; }
+    .label-sub { font-weight: 400; color: var(--ink-muted); font-size: 11.5px; }
+
     /* [디자인 2026-11-26] 채우기 메뉴 · 쪽 이동 막대 · 빈 종류 · 표지 미리보기 */
     .tb-menu-wrap { position: relative; }
     .tb-menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 60; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow-pop); padding: 5px; min-width: 250px; display: flex; flex-direction: column; gap: 2px; }
@@ -363,7 +417,6 @@
     .rail-item.on small { color: var(--accent); }
     .grid-viewport { flex: 1; min-width: 0; }
     .type-btn.empty-type { opacity: .45; }
-    .company-card .card-art img.cover-thumb { height: 76px; width: auto; border-radius: 2px; box-shadow: 0 1px 4px rgba(16,24,40,.22); background: #fff; }
 
     /* [3순위 2026-11-25] */
     #pdfBtn { font-size: 12.5px; }
@@ -616,13 +669,6 @@
               </button>
             </div>
             <div id="folderPathText" class="folder-path">폴더를 열어 주세요</div>
-            <div class="photo-tools">
-              <button id="photoFilterBtn" class="ghost" title="아직 넣지 않은 사진만 보기">안 넣은 것만</button>
-              <select id="photoSortSel" title="사진 순서">
-                <option value="name">이름순</option>
-                <option value="time">찍은 시간순</option>
-              </select>
-            </div>
           </div>
           <div id="myboxControls" class="sidebar-header" style="display:none;">
             <div class="sidebar-title">
@@ -635,7 +681,22 @@
               <button id="myboxSettingsBtn">설정</button>
             </div>
             <div id="myboxPathText" class="folder-path">/ (루트)</div>
+            <button id="myboxExpiryChip" class="expiry-chip" hidden title="MYBOX 설정 열기"></button>
             <div class="mybox-notice">암호 폴더·공유받은 폴더는 열 수 없어요</div>
+          </div>
+          <div class="photo-tools">
+            <button id="photoFilterBtn" class="ghost" title="아직 넣지 않은 사진만 보기">안 넣은 것만</button>
+            <select id="photoSortSel" title="사진 순서">
+              <option value="name">이름순</option>
+              <option value="time">시간순</option>
+            </select>
+            <button id="photoSortDirBtn" class="ghost sort-dir" title="오름차순 (누르면 내림차순)">↑ 오름</button>
+          </div>
+          <div class="photo-tools">
+            <span class="tools-label">보기</span>
+            <div class="seg cols-seg" id="photoColsSeg" title="한 줄에 보일 사진 수">
+              <button data-cols="1">1열</button><button data-cols="2">2열</button><button data-cols="3">3열</button><button data-cols="4">4열</button>
+            </div>
           </div>
         </div>
         <div id="photoGrid" class="photo-grid">
@@ -652,9 +713,17 @@
       </main>
 
       <aside id="inspector" class="inspector">
+        <button id="inspExpandBtn" class="insp-expand" title="속성 패널 펼치기">
+          <svg class="i" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span>속성</span>
+        </button>
         <div class="insp-head">
-          <div id="inspKicker" class="insp-kicker">문서</div>
-          <div id="inspTitle" class="insp-title"></div>
+          <div class="insp-head-text">
+            <div id="inspKicker" class="insp-kicker">문서</div>
+            <div id="inspTitle" class="insp-title"></div>
+          </div>
+          <button id="inspCollapseBtn" class="ghost icon-btn insp-collapse" title="속성 패널 접기 (캔버스 넓게)">
+            <svg class="i" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
         </div>
         <div id="inspBody" class="insp-body"></div>
       </aside>
@@ -780,6 +849,16 @@
       <div class="form-row">
         <label for="myboxTokenInput">개인 액세스 토큰 (PAT)</label>
         <input id="myboxTokenInput" type="password" placeholder="MYBOX PAT를 붙여넣으세요" autocomplete="off" />
+      </div>
+      <div class="form-row period-row">
+        <label>토큰 유효 기간 <span class="label-sub">(토큰을 만들 때 고른 기간)</span></label>
+        <div class="period-pick">
+          <div class="seg" id="myboxDaysSeg">
+            <button data-days="180">180일</button><button data-days="90" class="active">90일</button><button data-days="60">60일</button><button data-days="30">30일</button>
+          </div>
+          <label class="issued">발급일 <input id="myboxIssuedInput" type="date" /></label>
+        </div>
+        <div id="myboxExpiryPreview" class="insp-note"></div>
       </div>
       <div id="myboxTestResult" class="test-result-box"></div>
       <div class="modal-footer" style="justify-content: space-between;">

@@ -169,6 +169,7 @@ async function applyRestoredEditor(data) {
     if (r && !r.canceled) {
       state.photoFolder = data.photoFolder;
       state.photos = r.photos || [];
+      applyPhotoSort();
     }
   }
   if (missing.length) setTimeout(() => showToast(`원본 사진 ${missing.length}장을 찾을 수 없어요. 옮겼거나 지웠는지 확인해 주세요.`, 5000), 600);

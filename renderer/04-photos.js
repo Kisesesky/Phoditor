@@ -547,6 +547,43 @@ function renderPhotoPanel() {
   if (el.photoCountBadge) el.photoCountBadge.textContent = state.photoFilterUnused ? `${shown} / ${state.photos.length}장` : `${state.photos.length}장`;
 }
 
+// [2026-11-26] 사진 순서: 이름순·시간순 × 오름·내림 (내 컴퓨터·MYBOX 같이), 보기 열 수 1~4
+const photoView = (() => {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem('phoditor.photoView') || '{}') || {}; } catch (_) {}
+  return { key: saved.key === 'time' ? 'time' : 'name', dir: saved.dir === 'desc' ? 'desc' : 'asc', cols: [1, 2, 3, 4].includes(saved.cols) ? saved.cols : 2 };
+})();
+function savePhotoView() {
+  try { localStorage.setItem('phoditor.photoView', JSON.stringify(photoView)); } catch (_) {}
+}
+function photoTimeOf(p) {
+  if (p.takenAt) return p.takenAt;
+  const t = Date.parse(p.modifiedKey || '');
+  return Number.isFinite(t) ? t : 0;
+}
+function sortPhotoList(list) {
+  const sign = photoView.dir === 'desc' ? -1 : 1;
+  const byName = (a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'ko', { numeric: true });
+  list.sort((a, b) => sign * (photoView.key === 'time' ? (photoTimeOf(a) - photoTimeOf(b)) || byName(a, b) : byName(a, b)));
+  return list;
+}
+function applyPhotoSort() {
+  sortPhotoList(state.photos);
+  sortPhotoList(state.mybox.files);
+  const sign = photoView.dir === 'desc' ? -1 : 1;
+  state.mybox.folders.sort((a, b) => sign * String(a.name).localeCompare(String(b.name), 'ko', { numeric: true }));
+}
+function syncPhotoViewControls() {
+  el.photoSortSel.value = photoView.key;
+  el.photoSortDirBtn.textContent = photoView.dir === 'desc' ? '↓ 내림' : '↑ 오름';
+  el.photoSortDirBtn.title = photoView.dir === 'desc'
+    ? `내림차순 (${photoView.key === 'time' ? '최근 것 먼저' : 'ㅎ→ㄱ, 9→1'}) · 누르면 오름차순`
+    : `오름차순 (${photoView.key === 'time' ? '오래된 것 먼저' : 'ㄱ→ㅎ, 1→9'}) · 누르면 내림차순`;
+  el.photoGrid.style.setProperty('--photo-cols', String(photoView.cols));
+  el.photoGrid.dataset.cols = String(photoView.cols);
+  for (const b of el.photoColsSeg.querySelectorAll('button')) b.classList.toggle('active', Number(b.dataset.cols) === photoView.cols);
+}
+
 function renderMyboxPanel() {
   const mb = state.mybox;
   el.myboxCountBadge.textContent = `${mb.files.length}장`;
@@ -573,7 +610,7 @@ function renderMyboxPanel() {
     `;
     const goSettingsBtn = document.createElement('button');
     goSettingsBtn.className = 'primary';
-    goSettingsBtn.textContent = 'MYBOX 설정으로 이동';
+    goSettingsBtn.textContent = mb.error.expired ? '새 토큰 넣기' : 'MYBOX 설정으로 이동';
     goSettingsBtn.addEventListener('click', openSettingsModal);
     errBox.appendChild(goSettingsBtn);
     el.photoGrid.appendChild(errBox);
@@ -598,9 +635,13 @@ function renderMyboxPanel() {
   }
 
   // Image files in the exact same thumbnail grid
+  let shown = 0;
   mb.files.forEach((photo, idx) => {
+    if (state.photoFilterUnused && state.editor && isPhotoUsed(photo)) return;
     el.photoGrid.appendChild(createPhotoCardElement(photo, idx, 'mybox', mb.files));
+    shown++;
   });
+  if (state.photoFilterUnused) el.myboxCountBadge.textContent = `${shown} / ${mb.files.length}장`;
 }
 
 async function loadMyboxCurrentFolder() {
@@ -622,14 +663,18 @@ async function loadMyboxCurrentFolder() {
       message: res.message || 'MYBOX 연결이 안 돼요. 토큰을 다시 확인해줘',
       status: res.status,
       serverMessage: res.serverMessage,
-      isAuthError: res.isAuthError
+      isAuthError: res.isAuthError,
+      expired: res.expired
     };
+    refreshMyboxStatus();
     if (state.photoSource === 'mybox') renderPhotoPanel();
     return;
   }
 
   mb.folders = res.folders || [];
   mb.files = res.files || [];
+  applyPhotoSort();
+  refreshMyboxStatus();
   if (state.photoSource === 'mybox') renderPhotoPanel();
 
   // Background download + local thumbnail generation (sips) for uncached photos (concurrency 3)

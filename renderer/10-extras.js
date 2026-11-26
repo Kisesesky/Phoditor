@@ -33,9 +33,26 @@ function markOverflows(res) {
       const txt = td.textContent.trim();
       if (!txt || !td.dataset.user) continue;
       if (td.dataset.shrink) continue;
+      // [2026-11-26] 직접 입력한 글이 칸보다 길면 칸 안에서 줄을 바꾼다(엑셀에도 "텍스트 줄 바꿈"으로 저장)
+      if (!td.classList.contains('wrap') && !td.dataset.nowrap && td.scrollWidth > td.clientWidth + 2) {
+        td.classList.add('wrap', 'auto-wrap');
+      }
       const wrap = td.classList.contains('wrap');
       let over = false;
-      if (wrap) over = td.scrollHeight > td.clientHeight + 2;
+      if (wrap) {
+        // 표 행은 글이 길면 저절로 커지지만 엑셀 행 높이는 그대로다 → 행 높이만큼만 보여 주고 넘치면 경고
+        let allowed = 0;
+        let tr = td.parentElement;
+        for (let k = 0; k < (td.rowSpan || 1) && tr; k++, tr = tr.nextElementSibling) allowed += parseFloat(tr.style.height) || 0;
+        if (allowed > 0 && !td.querySelector('.cell-editor-input')) {
+          const clip = document.createElement('div');
+          clip.className = 'wrap-clip';
+          clip.style.maxHeight = `${Math.max(1, allowed - 1)}px`;
+          while (td.firstChild) clip.appendChild(td.firstChild);
+          td.appendChild(clip);
+          over = clip.scrollHeight > clip.clientHeight + 2;
+        } else over = td.scrollHeight > td.clientHeight + 2;
+      }
       else if (td.scrollWidth > td.clientWidth + 2) {
         const next = td.nextElementSibling;
         const align = td.style.textAlign || 'left';

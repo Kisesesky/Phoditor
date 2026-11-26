@@ -1,0 +1,167 @@
+{
+  "id": "공백_기본",
+  "version": 1,
+  "status": "draft",
+  "verified": false,
+  "type": "공백",
+  "company": "공백 양식",
+  "generic": true,
+  "title": "공백 양식",
+  "description": "어느 회사 것도 아닌 기본 사진첩. 새 현장이 생기면 여기서 시작해 [내 양식으로 저장]으로 다시 쓸 수 있어요.",
+  "source": {
+    "generatedBy": "tools/make-generic-blank.js"
+  },
+  "blockSheetsShareLayout": true,
+  "exceptions": [],
+  "keepImages": [],
+  "decisionsPending": [],
+  "autoVerifyIssues": [],
+  "schemaVersion": "v0.6-D13",
+  "headerSiteNamePlaceholder": false,
+  "sheets": [
+    {
+      "name": "표지",
+      "state": "visible",
+      "role": "cover",
+      "coverFields": [
+        {
+          "cell": "A8",
+          "kind": "siteName",
+          "current": ""
+        },
+        {
+          "cell": "A14",
+          "kind": "unitType",
+          "current": ""
+        },
+        {
+          "cell": "A30",
+          "kind": "date",
+          "current": ""
+        }
+      ],
+      "print": {
+        "printArea": "'표지'!$A$1:$H$40",
+        "fitToPage": true,
+        "paperSize": "9",
+        "pageBreakRule": "none"
+      }
+    },
+    {
+      "name": "사진",
+      "state": "visible",
+      "role": "block",
+      "block": {
+        "startRow": 1,
+        "rows": 7,
+        "itemsPerBlock": 1,
+        "itemRowOffset": null,
+        "rowHeights": [
+          27.5,
+          27.5,
+          27.5,
+          27.5,
+          195,
+          27.5,
+          27.5
+        ],
+        "repeatedValues": [],
+        "labels": [
+          {
+            "cell": "G{+0}",
+            "text": "NO.",
+            "item": 0
+          },
+          {
+            "cell": "G{+1}",
+            "text": "위치",
+            "item": 0
+          },
+          {
+            "cell": "G{+2}",
+            "text": "공종",
+            "item": 0
+          },
+          {
+            "cell": "G{+3}",
+            "text": "품목",
+            "item": 0
+          },
+          {
+            "cell": "G{+4}",
+            "text": "내용",
+            "item": 0
+          },
+          {
+            "cell": "G{+5}",
+            "text": "일자",
+            "item": 0
+          },
+          {
+            "cell": "G{+6}",
+            "text": "비고",
+            "item": 0
+          }
+        ],
+        "values": [
+          {
+            "cell": "H{+1}",
+            "label": "위치",
+            "item": 0
+          },
+          {
+            "cell": "H{+2}",
+            "label": "공종",
+            "item": 0
+          },
+          {
+            "cell": "H{+3}",
+            "label": "품목",
+            "item": 0
+          },
+          {
+            "cell": "H{+4}",
+            "label": "내용",
+            "item": 0
+          },
+          {
+            "cell": "H{+5}",
+            "label": "일자",
+            "item": 0
+          },
+          {
+            "cell": "H{+6}",
+            "label": "비고",
+            "item": 0
+          }
+        ],
+        "numbering": {
+          "cell": "H{+0}",
+          "kind": "chain",
+          "firstValue": 1,
+          "scope": "sheet"
+        },
+        "photoAreas": [
+          {
+            "area": "A{+0}:F{+6}",
+            "item": 0,
+            "maxPhotos": 4
+          }
+        ],
+        "addUnit": "block",
+        "gapRows": 0,
+        "footer": {
+          "present": false,
+          "cells": []
+        }
+      },
+      "print": {
+        "printArea": "'사진'!$A$1:$H$7",
+        "fitToPage": true,
+        "paperSize": "9",
+        "pageBreakRule": "everyNBlocks",
+        "blocksPerPrintedPage": 2
+      }
+    }
+  ]
+}

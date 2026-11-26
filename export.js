@@ -8,6 +8,7 @@ const JSZip = require('jszip');
 const { restorePrintSettings, sheetPaths, relsPathOf, resolveTarget, drawingRelOf } = require('./printfix');
 const { renameSheetsInZip } = require('./sheetrename');
 const { evaluateSimpleFormulas } = require('./simpleformula');
+const { photoRowOffsets, clampPhotoScale } = require('./docmodel');
 
 // [PDF 비교 수정 2026-11-25] 목차 차례 번호 수식(=B4+1)은 남기고 계산값을 함께 저장한다.
 // (A안 번호 매기기처럼 fullCalcOnLoad는 쓰지 않는다. 계산값이 있으면 Excel이 그대로 보여 준다.)
@@ -847,6 +848,18 @@ function regeneratePageBreaks(ws, layout, starts) {
 
 // --- XML Escape for {{현장명}} replacement ---
 // [글꼴 선택 2026-11-25] 칸별 글꼴. 키: 표지·목차·머리 행은 'B5', 블록 칸은 'B{+3}'(모든 블록의 같은 칸)
+// [2026-11-26] 직접 입력한 글은 칸보다 길면 칸 안에서 줄을 바꾸게 한다(화면의 자동 줄바꿈과 같게).
+// 양식에 원래 있던 글자(값이 그대로인 칸)는 건드리지 않는다.
+function setUserValue(cell, val) {
+  const before = cell.value;
+  cell.value = val;
+  if (val == null || val === '' || typeof val !== 'string') return;
+  if (typeof before === 'string' && before === val) return;
+  const al = cell.alignment || {};
+  if (al.wrapText || al.shrinkToFit) return;
+  cell.style = { ...cell.style, alignment: { ...al, wrapText: true } };
+}
+
 function applyCellFontOverrides(ws, cellFonts, blockStarts) {
   if (!cellFonts) return;
   for (const [key, ov] of Object.entries(cellFonts)) {
@@ -865,7 +878,9 @@ function applyCellFontOverrides(ws, cellFonts, blockStarts) {
       if (ov.size) font.size = ov.size;
       if (ov.bold !== undefined) font.bold = !!ov.bold;
       // 스타일 객체를 칸끼리 같이 쓰므로 새 객체로 바꿔 끼운다
-      const alignment = ov.shrink !== undefined ? { ...(cell.alignment || {}), shrinkToFit: !!ov.shrink, ...(ov.shrink ? { wrapText: false } : {}) } : cell.alignment;
+      let alignment = ov.shrink !== undefined ? { ...(cell.alignment || {}), shrinkToFit: !!ov.shrink, ...(ov.shrink ? { wrapText: false } : {}) } : cell.alignment;
+      // [2026-11-26] 줄바꿈 끔: 그 칸은 줄바꿈 없이(양식에 원래 있던 줄바꿈도 끈다)
+      if (ov.wrap === false && !ov.shrink && alignment && alignment.wrapText) alignment = { ...alignment, wrapText: false };
       cell.style = { ...cell.style, font, ...(alignment ? { alignment } : {}) };
       if (cell.value && typeof cell.value === 'object' && Array.isArray(cell.value.richText)) {
         cell.value = { richText: cell.value.richText.map((r) => ({ ...r, font: { ...(r.font || {}), ...(ov.name ? { name: ov.name } : {}), ...(ov.size ? { size: ov.size } : {}), ...(ov.bold !== undefined ? { bold: !!ov.bold } : {}) } })) };
@@ -1101,7 +1116,7 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
       // Apply edited cells
       unshareFormulas(ws);
       for (const [addr, val] of Object.entries(sState.cells || {})) {
-        ws.getCell(addr).value = val;
+        setUserValue(ws.getCell(addr), val);
       }
       fillSimpleFormulaResults(ws);
       applyCellFontOverrides(ws, sState.cellFonts, null);
@@ -1119,6 +1134,14 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
 
       // Capture block 0 template BEFORE clearing/modifying
       const blockTpl = captureBlockTemplate(ws, startRow, rows);
+      // [2026-11-26] 사진 칸 높이(시트마다): 사진 영역 행만 같은 비율로 늘리거나 줄인다
+      const photoScale = clampPhotoScale(sState.photoScale);
+      if (photoScale !== 1) {
+        const defH = (ws.properties && ws.properties.defaultRowHeight) || 15;
+        for (const rOff of photoRowOffsets(blkDef)) {
+          if (rOff < blockTpl.rowHeights.length) blockTpl.rowHeights[rOff] = Math.round((blockTpl.rowHeights[rOff] || defH) * photoScale * 100) / 100;
+        }
+      }
       const layout = pageLayoutOf(templateDef, sState.sheetDef, rows);
       const { starts, spacerRows, lastRow } = computeBlockStarts(layout, startRow, rows, blockCount);
 
@@ -1157,7 +1180,7 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
             ? `${rv.prefix}${rawVal}`
             : rawVal;
           if (finalVal !== '') {
-            ws.getCell(p.row, p.col).value = finalVal;
+            setUserValue(ws.getCell(p.row, p.col), finalVal);
           }
         }
 
@@ -1170,14 +1193,14 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
             const finalVal = vDef.prefix && rawVal && !String(rawVal).startsWith(vDef.prefix)
               ? `${vDef.prefix}${rawVal}`
               : rawVal;
-            ws.getCell(p.row, p.col).value = finalVal;
+            setUserValue(ws.getCell(p.row, p.col), finalVal);
           }
         }
 
         // Apply any ad-hoc edited cells inside block (keyed by relAddr e.g. "C{+3}")
         for (const [relKey, val] of Object.entries(bData.extraCells || {})) {
           const p = parseRelCell(relKey, bStart);
-          if (p) ws.getCell(p.row, p.col).value = val;
+          if (p) setUserValue(ws.getCell(p.row, p.col), val);
         }
 
         // Apply numbering & totalCell (A안: direct numeric value, NO formula)
@@ -1287,7 +1310,7 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
       // [인쇄 비교 수정 2026-11-25] 블록 위 머리 행 값(현장명·평형·일자)
       for (const hf of blkDef.headerFields || []) {
         const v = sState.headerValues && sState.headerValues[hf.cell];
-        if (v != null && String(v) !== '') ws.getCell(hf.cell).value = v;
+        if (v != null && String(v) !== '') setUserValue(ws.getCell(hf.cell), v);
       }
       // 쪽 맨 위 빈 행(원본 간격 행) 높이
       for (const sp of spacerRows) {

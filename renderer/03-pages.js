@@ -61,6 +61,7 @@ const ptToPx = (pt) => (pt * 96) / 72;
 // 칸 모양: 글꼴·크기·굵게·기울임·밑줄·색·채우기·정렬·줄바꿈 (테두리는 PageView가 그린다)
 function applyCellVisualStyle(td, cm, override) {
   if (override && override.shrink) td.dataset.shrink = '1';
+  if (override && override.wrap === false) td.dataset.nowrap = '1';
   if (!cm) return;
   const ov = override || {};
   const name = ov.name || mappedFontName(cm.fontName);
@@ -81,7 +82,7 @@ function applyCellVisualStyle(td, cm, override) {
     td.style.textAlign = cm.alignH === 'centerContinuous' || cm.alignH === 'distributed' ? 'center' : cm.alignH === 'fill' || cm.alignH === 'justify' ? 'left' : cm.alignH;
   }
   td.style.verticalAlign = cm.alignV === 'top' ? 'top' : cm.alignV === 'middle' || cm.alignV === 'center' || cm.alignV === 'distributed' || cm.alignV === 'justify' ? 'middle' : 'bottom';
-  if (cm.wrap && !ov.shrink) td.classList.add('wrap');
+  if (cm.wrap && !ov.shrink && ov.wrap !== false) td.classList.add('wrap');
   if (cm.indent) td.style.paddingLeft = `${2 + cm.indent * 9}px`;
 }
 
@@ -148,11 +149,16 @@ function buildRowSpecs(sheet, vis) {
   const startRow = blk.startRow || 1;
   for (let r = Math.min(area.r1, startRow); r < startRow; r++) rows.push({ tpl: r, kind: 'hdr' });
   const lay = layoutOf(sheet);
+  // [2026-11-26] 사진 칸 높이: 사진 영역 행만 비율대로
+  const scale = window.DocModel.clampPhotoScale(sheet.photoScale);
+  const photoRows = scale !== 1 ? window.DocModel.photoRowOffsets(blk) : null;
   sheet.blocks.forEach((_b, bIdx) => {
     const newPage = lay.blocksPerPage && bIdx > 0 && bIdx % lay.blocksPerPage === 0;
     if (newPage) lay.spacers.forEach((h, i) => rows.push({ tpl: -1, kind: 'spacer', heightPt: h, breakBefore: i === 0 }));
     for (let rOff = 0; rOff < lay.rows; rOff++) {
-      rows.push({ tpl: startRow + rOff, kind: 'block', bIdx, rOff, breakBefore: !!(newPage && rOff === 0 && !lay.spacers.length) });
+      const spec = { tpl: startRow + rOff, kind: 'block', bIdx, rOff, breakBefore: !!(newPage && rOff === 0 && !lay.spacers.length) };
+      if (photoRows && photoRows.has(rOff)) spec.heightPt = Math.round((vis.rowHeightsPt[spec.tpl - 1] ?? vis.defaultRowHeight) * scale * 100) / 100;
+      rows.push(spec);
     }
   });
   return { rows, cols };
@@ -266,6 +272,17 @@ function renderActiveSheet() {
   if (ctx.after) ctx.after(res);
   markOverflows(res);
   renderPageRail(res, sheet);
+  state.lastPageCount = { sheet: sheet.name, count: res.pages.length };
+  state.splitBlocks = [];
+  if (sheet.role === 'block') {
+    const seen = new Map();
+    res.pages.forEach((pg, pi) => {
+      for (const b of new Set([...pg.table.querySelectorAll('tr[data-b]')].map((t) => +t.dataset.b))) {
+        if (seen.has(b) && !state.splitBlocks.includes(b)) state.splitBlocks.push(b);
+        seen.set(b, pi);
+      }
+    });
+  }
   el.gridViewport.scrollTop = scrollTop;
   updateZoomLabel(zoom);
   if (state.nextEditId) setTimeout(openPendingEdit, 0);

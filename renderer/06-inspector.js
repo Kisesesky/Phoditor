@@ -95,9 +95,86 @@ function cellFontEditor(sheet, key, cm) {
       cb.addEventListener('change', () => apply({ shrink: cb.checked || undefined }));
       return cb;
     })(), ' 칸에 맞게 글자 줄이기 (엑셀 "셀에 맞춤")'),
+    h('label', { class: 'check-row', title: '직접 입력한 글이 칸보다 길면 칸 안에서 다음 줄로 넘깁니다' }, (() => {
+      const cb = h('input', { type: 'checkbox', checked: cur.wrap !== false && !cur.shrink, disabled: !!cur.shrink });
+      cb.addEventListener('change', () => apply({ wrap: cb.checked ? undefined : false }));
+      return cb;
+    })(), ' 긴 글은 칸 안에서 줄바꿈'),
     document.querySelector('td.selected-cell.too-small') ? h('div', { class: 'insp-note warn', text: document.querySelector('td.selected-cell.too-small').title })
       : document.querySelector('td.selected-cell.overflow') ? h('div', { class: 'insp-note warn', text: '이 칸은 글자가 칸보다 길어 인쇄할 때 잘리거나 넘칠 수 있어요. 위 [칸에 맞게 글자 줄이기]를 켜거나 글을 줄여 주세요.' }) : null
   ];
+}
+
+// [2026-11-26] 사진 칸 높이(이 시트의 모든 블록): 사진 영역 행 높이를 60~180%로
+function photoScaleSection(sheet) {
+  if (!sheet || sheet.role !== 'block' || !(sheet.sheetDef.block.photoAreas || []).length) return null;
+  const DM = window.DocModel;
+  const cur = DM.clampPhotoScale(sheet.photoScale);
+  const before = state.lastPageCount && state.lastPageCount.sheet === sheet.name ? state.lastPageCount : null;
+  const setScale = (v) => {
+    const next = DM.clampPhotoScale(v);
+    if (next === DM.clampPhotoScale(sheet.photoScale)) return;
+    recordUndo('사진 칸 높이');
+    if (next === 1) delete sheet.photoScale;
+    else sheet.photoScale = next;
+    renderActiveSheet();
+  };
+  const range = h('input', { type: 'range', min: String(DM.PHOTO_SCALE_MIN * 100), max: String(DM.PHOTO_SCALE_MAX * 100), step: '5', value: String(Math.round(cur * 100)), class: 'grow' });
+  const label = h('span', { class: 'scale-val', text: `${Math.round(cur * 100)}%` });
+  range.addEventListener('input', () => { label.textContent = `${range.value}%`; });
+  range.addEventListener('change', () => setScale(Number(range.value) / 100));
+  const split = state.splitBlocks || [];
+  return sec('사진 칸 높이 (이 시트 전체)',
+    h('div', { class: 'insp-row' },
+      h('button', { class: 'icon-btn', title: '5% 줄이기', disabled: cur <= DM.PHOTO_SCALE_MIN, onclick: () => setScale(cur - 0.05) }, '−'),
+      range,
+      h('button', { class: 'icon-btn', title: '5% 늘리기', disabled: cur >= DM.PHOTO_SCALE_MAX, onclick: () => setScale(cur + 0.05) }, '+'),
+      label),
+    h('div', { class: 'insp-actions' },
+      h('button', { disabled: cur === 1, onclick: () => setScale(1) }, '원래 높이로'),
+      h('button', { title: '쪽 수가 늘지 않는 가장 큰 높이로', onclick: () => fitPhotoScaleToPage(sheet) }, '쪽에 꽉 차게')),
+    split.length && cur !== 1
+      ? h('div', { class: 'insp-note warn', text: `블록 ${split.map((b) => b + 1).join(', ')}이(가) 두 쪽에 걸쳐 잘려요. 높이를 줄이거나 [쪽에 꽉 차게]를 눌러 주세요.` })
+      : h('div', { class: 'insp-note', text: `사진이 들어가는 행만 높이를 바꿔요. 엑셀에도 같은 높이로 들어가요.${before ? ` 지금 이 시트 ${before.count}쪽.` : ''}` }));
+}
+
+// 쪽 수가 원래(100%)보다 늘지 않고, 블록이 쪽에 걸쳐 잘리지 않는 가장 큰 비율을 찾는다
+function fitPhotoScaleToPage(sheet) {
+  const DM = window.DocModel;
+  const vis = state.sheetVisuals[sheet.visualKey];
+  const saved = sheet.photoScale;
+  const measure = (s) => {
+    sheet.photoScale = s;
+    const { rows, cols } = buildRowSpecs(sheet, vis);
+    const colW = cols.map((c) => (vis.hiddenCols.includes(c) ? 0 : window.PageView.colPx(vis.colWidthsCh[c - 1] ?? vis.defaultColWidth, view.mdw)));
+    const specs = rows.map((r) => ({ ...r, heightPx: r.kind !== 'block' && r.kind !== 'spacer' && vis.hiddenRows.includes(r.tpl) ? 0 : ptToPx(r.heightPt ?? (vis.rowHeightsPt[r.tpl - 1] ?? vis.defaultRowHeight)) }));
+    const geo = window.PageView.pageGeometry(vis.page, colW.reduce((a, b) => a + b, 0), specs.reduce((a, r) => a + r.heightPx, 0));
+    const titleIdx = [];
+    if (vis.page.titleRows) specs.forEach((r, i) => { if (r.kind !== 'block' && r.tpl >= vis.page.titleRows[0] && r.tpl <= vis.page.titleRows[1]) titleIdx.push(i); });
+    const pages = window.PageView.paginate(specs, geo.availH / geo.s, titleIdx);
+    const where = new Map();
+    let split = false;
+    pages.forEach((pg, pi) => pg.forEach((i) => {
+      const r = specs[i];
+      if (r.kind !== 'block') return;
+      if (where.has(r.bIdx) && where.get(r.bIdx) !== pi) split = true;
+      where.set(r.bIdx, pi);
+    }));
+    return { count: pages.length, split };
+  };
+  const base = measure(1);
+  let best = DM.PHOTO_SCALE_MIN;
+  for (let s = DM.PHOTO_SCALE_MAX; s >= DM.PHOTO_SCALE_MIN - 1e-9; s = Math.round((s - 0.05) * 100) / 100) {
+    const m = measure(s);
+    if (m.count <= base.count && (!m.split || base.split)) { best = s; break; }
+  }
+  sheet.photoScale = saved;
+  if (DM.clampPhotoScale(best) === DM.clampPhotoScale(saved)) return showToast(`지금 높이(${Math.round(best * 100)}%)가 이미 쪽에 꽉 찬 높이예요.`);
+  recordUndo('사진 칸 높이(쪽에 꽉 차게)');
+  if (best === 1) delete sheet.photoScale;
+  else sheet.photoScale = best;
+  renderActiveSheet();
+  showToast(`사진 칸 높이를 ${Math.round(best * 100)}%로 맞췄어요 (쪽 수 그대로).`);
 }
 
 function layoutPicker(sheetIdx, bIdx, paIdx, curLayout) {
@@ -139,6 +216,8 @@ function documentSections() {
   const notes = Object.values(state.editor.fontMap).map(installNoteFor).filter(Boolean);
   out.push(sec('문서 글꼴 바꾸기', h('div', { class: 'insp-note', text: '이 양식에서 쓰는 글꼴을 다른 글꼴로 한꺼번에 바꿉니다. 내보낸 엑셀에도 그대로 들어가요.' }), ...rows, ...notes,
     missing.size ? h('div', { class: 'insp-note warn', text: `⚠ 표시 글꼴은 이 Mac에 없어서 비슷한 글꼴로 보여요. 다른 글꼴로 바꾸거나, 그 글꼴을 설치해 주세요.` }) : null));
+  out.push(sec('내 양식', h('button', { id: 'saveMyTplBtn', onclick: openSaveMyTemplate }, '내 양식으로 저장…'),
+    h('div', { class: 'insp-note', text: '자주 쓰는 구성(블록 수·배치·표지·반복값)을 저장해 두면 시작 화면에서 바로 다시 시작해요.' })));
   out.push(sec('양식 정보', h('dl', { class: 'insp-kv' },
     h('dt', { text: '종류' }), h('dd', { text: def.type }),
     h('dt', { text: '업체' }), h('dd', { text: def.company }),
@@ -177,11 +256,13 @@ function renderInspector() {
       body.push(sec(null, h('div', { class: 'insp-note', text: '왼쪽 사진 패널에서 사진을 누르거나 이 자리로 끌어 넣으세요.' })));
     }
     if (pa) body.push(sec('배치', layoutPicker(slot.sheetIdx, slot.blockIdx, slot.paIdx, pa.layout)));
+    body.push(photoScaleSection(sheet));
   } else if (area && sheet && area.sheetIdx === state.activeSheetIdx) {
     kicker = `블록 ${area.blockIdx + 1}`;
     title = '사진 영역';
     body.push(sec('배치 고르기', layoutPicker(area.sheetIdx, area.blockIdx, area.paIdx, null),
       h('div', { class: 'insp-note', text: '사진을 바로 끌어 넣으면 1장 배치로 들어가요.' })));
+    body.push(photoScaleSection(sheet));
   } else if (state.selectedCell && sheet && state.selectedCell.sheetIdx === state.activeSheetIdx) {
     const sc = state.selectedCell;
     kicker = sc.rel ? `블록 ${sc.blockIdx + 1} · 칸` : sc.header ? '머리 행 · 칸' : `${sheetLabel(sheet)} · 칸`;
@@ -204,6 +285,7 @@ function renderInspector() {
         h('button', { onclick: duplicateBlock, title: '글자·사진까지 복제' }, '복제'),
         h('button', { class: 'danger', disabled: sheet.blocks.length <= 1, onclick: deleteSelectedBlock }, '삭제')),
         el.editRepeatedBtn.disabled ? null : h('button', { onclick: openRepeatedModal }, '머리 행·반복값 입력…')));
+      body.push(photoScaleSection(sheet));
       body.push(sec('한꺼번에 채우기',
         h('button', { onclick: openAutoFill }, '사진 자동 채우기…'),
         h('button', { onclick: openPasteTable }, '표 붙여넣기 (위치·품목 등)…'),
@@ -232,7 +314,7 @@ function renderInspector() {
   el.inspKicker.textContent = kicker;
   el.inspTitle.textContent = title;
   el.inspBody.innerHTML = '';
-  body.forEach((n) => el.inspBody.appendChild(n));
+  body.forEach((n) => { if (n) el.inspBody.appendChild(n); });
 }
 
 function updateFontChip() {

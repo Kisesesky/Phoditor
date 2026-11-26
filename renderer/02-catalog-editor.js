@@ -43,45 +43,157 @@ function renderCatalog() {
 
   el.companyGrid.innerHTML = '';
   for (const comp of companies) {
-    const key = `${state.selectedType}__${comp}`;
-    const item = available[key];
-    const card = document.createElement('button');
-    card.className = 'company-card' + (item ? '' : ' empty');
-    const color = COMPANY_COLORS[comp] || '#64748B';
-    const art = `<div class="card-art"><div class="mono" style="background:${color}">${comp.slice(0, 1)}</div></div>`;
-    if (item) {
-      const unitLabel = item.addUnit === 'page' ? '쪽마다 2항목' : '블록마다 1항목';
-      card.innerHTML = `${art}
-        <div class="card-body">
-          <div class="company-name">${comp}</div>
-          <div class="company-meta">시트 ${item.sheetCount}개 · ${unitLabel}</div>
-          <div class="open-hint">이 양식으로 시작 →</div>
-        </div>
-      `;
-      card.addEventListener('click', () => openTemplate(item.id));
-    } else {
-      card.setAttribute('aria-disabled', 'true');
-      card.innerHTML = `${art}
-        <div class="card-body">
-          <div class="company-name">${comp}</div>
-          <div class="company-meta">양식 준비 중</div>
-        </div>
-      `;
-      card.addEventListener('click', () => {
-        showToast('아직 이 조합의 양식이 없어요');
-      });
-    }
-    // [2026-11-26] 표지 미리보기(tools/make-cover-thumbs.js로 만든 data/thumbs/<id>.png)가 있으면 글자 타일 대신 보여 준다
-    if (item) {
-      const artEl = card.querySelector('.card-art');
-      const img = document.createElement('img');
-      img.className = 'cover-thumb';
-      img.alt = `${comp} 표지`;
-      img.addEventListener('load', () => { artEl.innerHTML = ''; artEl.appendChild(img); });
-      img.src = `data/thumbs/${encodeURIComponent(item.id)}.png`;
-    }
-    el.companyGrid.appendChild(card);
+    const item = available[`${state.selectedType}__${comp}`];
+    el.companyGrid.appendChild(templateCard({
+      item,
+      name: comp,
+      color: COMPANY_COLORS[comp] || '#64748B',
+      meta: item ? `시트 ${item.sheetCount}개 · ${item.addUnit === 'page' ? '쪽마다 2항목' : '블록마다 1항목'}` : '양식 준비 중',
+      onOpen: item ? () => openTemplate(item.id) : () => showToast('아직 이 조합의 양식이 없어요')
+    }));
   }
+  renderMyTemplates();
+}
+
+// [2026-11-26] 양식 카드: 큰 미리보기 + ‹ › 로 시트 넘겨 보기(data/thumbs/<id>/<n>.png, tools/make-cover-thumbs.js)
+function previewPagesOf(item) {
+  if (item && item.previews && item.previews.length) return item.previews;
+  return item ? [{ sheet: (item.sheetNames && item.sheetNames[0]) || '표지', file: `${item.id}.png` }] : [];
+}
+function templateCard({ item, name, color, meta, onOpen, extra, kicker }) {
+  const card = h('div', { class: 'company-card' + (item ? '' : ' empty'), role: 'button', tabindex: '0', 'aria-disabled': item ? null : 'true' });
+  const mono = h('div', { class: 'mono', style: `background:${color || '#64748B'}` }, String(name || '').slice(0, 1));
+  const art = h('div', { class: 'card-art' }, mono);
+  const pages = previewPagesOf(item);
+  if (pages.length) {
+    let i = 0;
+    const img = h('img', { class: 'cover-thumb', alt: `${name} 미리보기` });
+    const cap = h('div', { class: 'art-cap' });
+    const prev = h('button', { class: 'art-nav prev', title: '앞 시트 보기', 'aria-label': '앞 시트' }, '‹');
+    const next = h('button', { class: 'art-nav next', title: '다음 시트 보기', 'aria-label': '다음 시트' }, '›');
+    const show = () => {
+      img.src = `data/thumbs/${pages[i].file.split('/').map(encodeURIComponent).join('/')}`;
+      cap.textContent = pages.length > 1 ? `${pages[i].sheet} · ${i + 1}/${pages.length}` : pages[i].sheet;
+      prev.disabled = i === 0;
+      next.disabled = i === pages.length - 1;
+    };
+    const step = (d) => (e) => {
+      e.stopPropagation();
+      const j = Math.max(0, Math.min(pages.length - 1, i + d));
+      if (j !== i) { i = j; show(); }
+    };
+    prev.addEventListener('click', step(-1));
+    next.addEventListener('click', step(1));
+    img.addEventListener('load', () => { if (mono.parentElement) { mono.remove(); art.append(img, cap); if (pages.length > 1) art.append(prev, next); } });
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') step(-1)(e);
+      else if (e.key === 'ArrowRight') step(1)(e);
+    });
+    show();
+  }
+  const body = h('div', { class: 'card-body' },
+    kicker ? h('div', { class: 'card-kicker', text: kicker }) : null,
+    h('div', { class: 'company-name', text: name }),
+    h('div', { class: 'company-meta', text: meta, title: meta }),
+    extra || null);
+  card.append(art, body);
+  card.addEventListener('click', (e) => { if (!e.target.closest('.card-actions')) onOpen(); });
+  card.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target === card) onOpen(); });
+  return card;
+}
+
+// --- [2026-11-26] 공백 양식 · 내 양식 ---
+async function renderMyTemplates() {
+  let box = document.getElementById('myTplSection');
+  if (!box) {
+    box = h('div', { id: 'myTplSection' });
+    const anchor = document.querySelector('.start-inner .section-label');
+    anchor.parentElement.insertBefore(box, anchor);
+  }
+  const list = await window.api.myTemplatesList().catch(() => []);
+  box.innerHTML = '';
+  box.appendChild(h('div', { class: 'section-label' }, '공백 양식 · 내 양식', h('span', { class: 'label-sub', text: '  새 현장은 공백 양식으로, 자주 쓰는 구성은 편집 화면의 [내 양식으로 저장]으로 모아 두세요' })));
+  const grid = h('div', { class: 'company-grid my-grid' });
+  for (const g of state.catalog.generic || []) {
+    grid.appendChild(templateCard({ item: g, name: g.title || '공백 양식', color: '#475467', kicker: '기본', meta: `시트 ${g.sheetCount}개 · 회사 표시 없음`, onOpen: () => openTemplate(g.id) }));
+  }
+  const byId = Object.fromEntries(Object.values(state.catalog.available).map((x) => [x.id, x]));
+  for (const t of list) {
+    const base = byId[t.templateId];
+    const actions = h('div', { class: 'card-actions' },
+      h('button', { class: 'ghost', onclick: () => renameMyTemplate(t) }, '이름 바꾸기'),
+      h('button', { class: 'ghost danger', onclick: () => deleteMyTemplate(t) }, '지우기'));
+    grid.appendChild(templateCard({
+      item: base || null,
+      name: t.name,
+      color: '#7C3AED',
+      kicker: '내 양식',
+      meta: `${t.baseLabel} · 블록 ${t.blockCount}개 · ${new Date(t.createdAt).toLocaleDateString('ko-KR')}`,
+      extra: actions,
+      onOpen: base ? () => startFromMyTemplate(t.id) : () => showToast('바탕 양식이 없어져 열 수 없어요.')
+    }));
+  }
+  box.appendChild(grid);
+}
+
+async function startFromMyTemplate(id) {
+  if (state.editor && el.editorView.classList.contains('active') && !(await confirmLeave())) return;
+  const res = await window.api.myTemplatesRead(id);
+  if (!res.ok) return showToast(`열지 못했어요: ${res.error}`);
+  const d = res.data;
+  await openTemplate(d.templateId, { format: 'photobook', templateId: d.templateId, editor: d.editor, activeSheetIdx: 0, photoFolder: null });
+  docState.filePath = null;
+  markClean();
+  updateDocTitle();
+  showToast(`"${d.name}"으로 시작했어요. 사진을 넣고 저장해 주세요.`, 3500);
+}
+
+function renameMyTemplate(t) {
+  const input = h('input', { type: 'text', value: t.name });
+  const back = openModal('내 양식 이름 바꾸기', [h('div', { class: 'form-row' }, h('label', { text: '이름' }), input)], [
+    h('button', { onclick: () => back.remove() }, '취소'),
+    h('button', { class: 'primary', onclick: async () => {
+      const v = input.value.trim();
+      if (!v) return input.focus();
+      await window.api.myTemplatesRename({ id: t.id, name: v });
+      back.remove();
+      renderMyTemplates();
+    } }, '바꾸기')
+  ], 400);
+  setTimeout(() => { input.focus(); input.select(); }, 0);
+}
+
+async function deleteMyTemplate(t) {
+  if (!confirm(`내 양식 "${t.name}"을(를) 지울까요? 이 양식으로 만든 작업 파일은 그대로 남아요.`)) return;
+  await window.api.myTemplatesDelete(t.id);
+  renderMyTemplates();
+  showToast('내 양식을 지웠어요.');
+}
+
+// 편집 화면: 지금 구성을 내 양식으로 저장(사진은 빼고)
+function openSaveMyTemplate() {
+  if (!state.editor) return;
+  const nameIn = h('input', { type: 'text', value: `${currentSiteName() || state.templateDef.title || state.templateDef.company} 양식`, placeholder: '예: 롯데 공용홀 3개 층' });
+  const keepText = h('input', { type: 'checkbox' });
+  const back = openModal('내 양식으로 저장', [
+    h('div', { class: 'insp-note', text: '지금 양식·시트 이름·블록 수·사진 배치·표지와 머리 행·반복값·글꼴 설정을 저장해 두고, 시작 화면에서 바로 다시 시작해요. 사진은 저장하지 않아요.' }),
+    h('div', { class: 'form-row' }, h('label', { text: '이름' }), nameIn),
+    h('label', { class: 'check-row' }, keepText, ' 블록마다 적은 글(위치·품목 등)도 같이 저장')
+  ], [
+    h('button', { onclick: () => back.remove() }, '취소'),
+    h('button', { class: 'primary', id: 'saveMyTplGoBtn', onclick: async () => {
+      const name = nameIn.value.trim();
+      if (!name) return nameIn.focus();
+      const data = projectData();
+      if (!keepText.checked) {
+        for (const s of data.editor.sheets) for (const b of s.blocks || []) { b.values = {}; b.extraCells = {}; }
+      }
+      const r = await window.api.myTemplatesSave({ name, data });
+      back.remove();
+      showToast(r.ok ? `내 양식 "${name}"을(를) 저장했어요. 시작 화면에 나와요.` : `저장하지 못했어요: ${r.error}`, 3500);
+    } }, '저장')
+  ], 460);
+  setTimeout(() => { nameIn.focus(); nameIn.select(); }, 0);
 }
 
 // --- Open Template & Initialize Editor State ---
@@ -166,7 +278,7 @@ async function openTemplate(templateId, restore = null) {
     window.api.setDirty(false);
     if (restore) await applyRestoredEditor(restore);
 
-    el.editorTitle.textContent = `${state.templateDef.company} 양식`;
+    el.editorTitle.textContent = state.templateDef.generic ? (state.templateDef.title || '공백 양식') : `${state.templateDef.company} 양식`;
     el.editorKicker.textContent = state.templateDef.type;
     state.selectedPhotoArea = null;
     view.zoom = 'fit';

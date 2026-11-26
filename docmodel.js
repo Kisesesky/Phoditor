@@ -158,5 +158,23 @@
     return out;
   }
 
-  return { deepClone, UndoHistory, serializeEditor, attachSheetDefs, transformAnnotations };
+  // --- [2026-11-26] 사진 칸 높이: 블록 안에서 사진 영역이 차지하는 행(블록 첫 행 기준 0부터) ---
+  function photoRowOffsets(blockDef) {
+    const set = new Set();
+    for (const pa of (blockDef && blockDef.photoAreas) || []) {
+      const m = /\{\+(\d+)\}:[A-Z]+\{\+(\d+)\}/.exec(String(pa.area || ''));
+      if (!m) continue;
+      for (let r = Number(m[1]); r <= Number(m[2]); r++) set.add(r);
+    }
+    return set;
+  }
+  const PHOTO_SCALE_MIN = 0.6;
+  const PHOTO_SCALE_MAX = 1.8;
+  function clampPhotoScale(v) {
+    const n = Number(v);
+    if (!Number.isFinite(n) || n <= 0) return 1;
+    return Math.round(Math.min(PHOTO_SCALE_MAX, Math.max(PHOTO_SCALE_MIN, n)) * 100) / 100;
+  }
+
+  return { deepClone, UndoHistory, serializeEditor, attachSheetDefs, transformAnnotations, photoRowOffsets, clampPhotoScale, PHOTO_SCALE_MIN, PHOTO_SCALE_MAX };
 });
