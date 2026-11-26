@@ -2,14 +2,26 @@
 // renderer.js(3,900줄)를 2026-11-26 나눈 조각. index.html이 번호 순서대로 읽고, 모든 조각이 같은 전역 범위를 쓴다(빌드 단계 없음).
 'use strict';
 
-const LAYOUT_SPECS = {
+const LAYOUT_PRESETS = {
   '1x1': { cols: 1, rows: 1, count: 1, label: '1×1' },
-  '1x2': { cols: 1, rows: 2, count: 2, label: '1×2' },
   '2x1': { cols: 2, rows: 1, count: 2, label: '2×1' },
-  '1x3': { cols: 1, rows: 3, count: 3, label: '1×3' },
+  '1x2': { cols: 1, rows: 2, count: 2, label: '1×2' },
+  '2x2': { cols: 2, rows: 2, count: 4, label: '2×2' },
   '3x1': { cols: 3, rows: 1, count: 3, label: '3×1' },
-  '2x2': { cols: 2, rows: 2, count: 4, label: '2×2' }
+  '1x3': { cols: 1, rows: 3, count: 3, label: '1×3' }
 };
+// [2026-11-26] 사용자 지정 배치: "열x행" 아무 조합(1~5 × 1~5)을 같은 방식으로 꺼낸다. 목록(Object.entries)은 기본 6가지만.
+const LAYOUT_SPECS = new Proxy(LAYOUT_PRESETS, {
+  get(t, k) {
+    if (typeof k !== 'string') return t[k];
+    if (t[k]) return t[k];
+    const m = /^([1-5])x([1-5])$/.exec(k);
+    if (!m) return undefined;
+    const cols = Number(m[1]);
+    const rows = Number(m[2]);
+    return { cols, rows, count: cols * rows, label: `${cols}×${rows}` };
+  }
+});
 
 // --- Address Helpers ---
 function colToNum(colStr) {
@@ -68,6 +80,8 @@ const state = {
   selectedCell: null, // { sheetIdx, blockIdx, key, isNormalCell: true }
   selectedPhotoSlot: null, // { sheetIdx, blockIdx, paIdx, slotIdx }
   photoFolder: null,
+  photoFolderStack: [], // [2026-11-26] 들어간 하위 폴더 경로(맨 앞이 연 폴더)
+  photoSubfolders: [],
   photos: [],
   photoSource: 'local', // 'local' | 'mybox'
   mybox: {
@@ -163,11 +177,12 @@ const el = {
   autoFillBtn: document.getElementById('autoFillBtn'),
   pasteTableBtn: document.getElementById('pasteTableBtn'),
   photoFilterBtn: document.getElementById('photoFilterBtn'),
-  photoSortSel: document.getElementById('photoSortSel'),
+  photoSortName: document.getElementById('photoSortName'),
+  photoSortTime: document.getElementById('photoSortTime'),
   inspector: document.getElementById('inspector'),
+  localUpBtn: document.getElementById('localUpBtn'),
   inspCollapseBtn: document.getElementById('inspCollapseBtn'),
   inspExpandBtn: document.getElementById('inspExpandBtn'),
-  photoSortDirBtn: document.getElementById('photoSortDirBtn'),
   photoColsSeg: document.getElementById('photoColsSeg'),
   myboxExpiryChip: document.getElementById('myboxExpiryChip'),
   myboxDaysSeg: document.getElementById('myboxDaysSeg'),
@@ -199,3 +214,29 @@ function showToast(msg, duration = 2600) {
   if (toastTimer) clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.toast.classList.remove('show'), duration);
 }
+
+// [2026-11-26] 단축키 목록(설정 화면·? 도움말에 같이 쓴다)
+const SHORTCUTS = [
+  ['⌘ Z', '실행 취소'],
+  ['⇧ ⌘ Z', '다시 실행 (⌘Y도 됨)'],
+  ['⌘ S', '저장'],
+  ['⇧ ⌘ S', '다른 이름으로 저장'],
+  ['⌘ O', '작업 열기'],
+  ['⌘ E', '엑셀로 내보내기'],
+  ['⇧ ⌘ E', 'PDF로 내보내기'],
+  ['⌘ ↵', '선택한 블록 아래에 블록 추가'],
+  ['⌘ D', '블록 복제(글자·사진 포함)'],
+  ['⌘ ⌫', '선택한 블록 삭제'],
+  ['⌥ ↑', '블록 위로 옮기기'],
+  ['⌥ ↓', '블록 아래로 옮기기'],
+  ['↑', '앞 블록 선택'],
+  ['↓', '다음 블록 선택'],
+  ['⌘ [', '앞 시트'],
+  ['⌘ ]', '다음 시트'],
+  ['⌫', '선택한 사진 빼기'],
+  ['↵', '선택한 칸 입력 시작'],
+  ['⌘ \\', '속성 패널 접기/펼치기'],
+  ['⌘ 1~4', '사진 보기 1~4열'],
+  ['⌘ +', '확대 (⌘- 축소, ⌘0 맞춤)'],
+  ['?', '단축키 보기']
+];

@@ -15,7 +15,7 @@ const modalBtn = (txt) => $$('.dyn-modal button').find((b) => b.textContent.trim
 try {
   await waitFor(() => $$('#companyGrid .company-card').length > 0);
   await sleep(600);
-  check('시작 화면: 최근 작업 영역', !!$('#recentSection .recent-head'));
+  check('시작 화면: 최근 작업 영역', !!$('#workTabs') && $('#workTabs').textContent.includes('최근 작업'));
   await openTpl('공용홀', '롯데');
   await clickEl(tabByName('1.외관'), 700);
   await clickEl($('#selectFolderBtn'), 2500);
@@ -24,6 +24,7 @@ try {
   // 1. 사진 자동 채우기
   await clickEl($('#autoFillBtn'), 400);
   check('자동 채우기 창', !!$('.dyn-modal') && $('.dyn-modal').textContent.includes('안 넣은 사진 5장'), $('.dyn-modal') && $('.dyn-modal .insp-note').textContent);
+  await clickEl($('.dyn-modal [data-v="photos"]'), 200); // 하위 폴더가 있으면 폴더별이 기본 → 이 확인은 '지금 보이는 사진'
   await clickEl(modalBtn('채우기'), 2500);
   check('사진 5장 → 블록 5개 자동 추가', blocks() === 5 && slotImgs().length === 5, `blocks=${blocks()} imgs=${slotImgs().length} ${toastText()}`);
   check('이름순으로 들어감', slotImgs()[0].startsWith('landscape') && slotImgs()[1].startsWith('portrait'), slotImgs().join(','));
@@ -87,7 +88,7 @@ try {
   await clickEl($('#photoFilterBtn'), 400);
   check('안 넣은 것만 → 모두 넣어서 0장', $$('#photoGrid .photo-item').length === 0 && $('#photoCountBadge').textContent.startsWith('0'), $('#photoCountBadge').textContent);
   await clickEl($('#photoFilterBtn'), 400);
-  $('#photoSortSel').value = 'time'; $('#photoSortSel').dispatchEvent(new Event('change')); await sleep(300);
+  $('#photoSortTime').click(); await sleep(300);
   check('찍은 시간순 정렬', $$('#photoGrid .photo-item').length === 5);
 
   // 8. 저장 → 수정 → 자동 저장 → 시작 화면 → 최근 작업으로 다시 열기
@@ -103,8 +104,8 @@ try {
   check('자동 저장본 생김', auto && auto.editor && JSON.stringify(auto.editor).includes('저장 뒤 입력'));
   await clickEl($('#backToCatalogBtn'), 2000);
   check('나갈 때 물어봄 → 저장', confirms.some((m) => m.includes('저장하지 않은 작업')), confirms.slice(-1)[0]);
-  await waitFor(() => $$('#recentSection .recent-open').length > 0, 5000);
-  const card = $$('#recentSection .recent-open')[0];
+  await waitFor(() => $$('#workList .work-row').length > 0, 5000);
+  const card = $$('#workList .work-row')[0];
   check('최근 작업 카드', !!card && card.textContent.includes('공용홀'), card && card.textContent);
   await clickEl(card, 3000);
   await waitFor(() => $('#editorView').classList.contains('active'), 8000);

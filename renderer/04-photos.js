@@ -55,7 +55,7 @@ function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
   const toolbar = document.createElement('div');
   toolbar.className = 'photo-area-toolbar';
   const changeBtn = document.createElement('button');
-  changeBtn.textContent = `배치 ${spec.count}장`;
+  changeBtn.textContent = `배치 ${spec.label}`;
   changeBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     state.selectedPhotoSlot = { sheetIdx, blockIdx, paIdx, slotIdx: 0 };
@@ -75,6 +75,7 @@ function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
   for (let sIdx = 0; sIdx < spec.count; sIdx++) {
     const slotEl = document.createElement('div');
     slotEl.className = 'photo-slot';
+    slotEl.dataset.slotKey = `${sheetIdx}-${blockIdx}-${paIdx}-${sIdx}`;
     const isSelected =
       state.selectedPhotoSlot &&
       state.selectedPhotoSlot.sheetIdx === sheetIdx &&
@@ -203,6 +204,10 @@ function getDraggedPhoto(dragEvent) {
 // --- Layout Picker Logic ---
 function openLayoutModal(sheetIdx, blockIdx, paIdx, draggedPhoto) {
   state.pendingLayoutTarget = { sheetIdx, blockIdx, paIdx, draggedPhoto };
+  const body = document.getElementById('layoutModalBody');
+  body.innerHTML = '';
+  const pa = state.editor.sheets[sheetIdx].blocks[blockIdx].photoAreas[paIdx];
+  body.appendChild(layoutPicker(sheetIdx, blockIdx, paIdx, pa && pa.layout, (key) => applyLayoutSelection(key)));
   el.layoutModal.classList.add('open');
 }
 
@@ -528,7 +533,8 @@ function renderPhotoPanel() {
   el.refreshFolderBtn.disabled = !state.photoFolder;
 
   el.photoGrid.innerHTML = '';
-  if (!state.photos.length) {
+  el.localUpBtn.style.display = state.photoFolderStack.length > 1 ? '' : 'none';
+  if (!state.photos.length && !(state.photoSubfolders || []).length) {
     el.photoGrid.innerHTML = `<div class="photo-empty">${
       state.photoFolder
         ? '이 폴더에 지원하는 사진 파일이 없습니다.'
@@ -537,6 +543,16 @@ function renderPhotoPanel() {
     return;
   }
 
+  // [2026-11-26] 하위 폴더: 누르면 들어간다(위 폴더 단추로 나옴)
+  for (const sf of state.photoSubfolders || []) {
+    const fb = h('button', { class: 'folder-item', 'data-tip': `${sf.name} 폴더 열기` },
+      h('svg', {}),
+      h('span', { class: 'fname', text: sf.name }),
+      h('span', { class: 'fcount', text: `${sf.count}장` }));
+    fb.replaceChild(iconSvgFolder(), fb.firstChild);
+    fb.addEventListener('click', () => loadLocalFolder(sf.path, true));
+    el.photoGrid.appendChild(fb);
+  }
   let shown = 0;
   state.photos.forEach((photo, idx) => {
     if (state.photoFilterUnused && state.editor && isPhotoUsed(photo)) return;
@@ -574,14 +590,36 @@ function applyPhotoSort() {
   state.mybox.folders.sort((a, b) => sign * String(a.name).localeCompare(String(b.name), 'ko', { numeric: true }));
 }
 function syncPhotoViewControls() {
-  el.photoSortSel.value = photoView.key;
-  el.photoSortDirBtn.textContent = photoView.dir === 'desc' ? '↓ 내림' : '↑ 오름';
-  el.photoSortDirBtn.title = photoView.dir === 'desc'
-    ? `내림차순 (${photoView.key === 'time' ? '최근 것 먼저' : 'ㅎ→ㄱ, 9→1'}) · 누르면 오름차순`
-    : `오름차순 (${photoView.key === 'time' ? '오래된 것 먼저' : 'ㄱ→ㅎ, 1→9'}) · 누르면 내림차순`;
+  // 이름순·시간순 아이콘: 고른 쪽이 켜지고, 화살표가 오름(↓ ㄱ→ㅎ)·내림을 보여 준다. 켜진 쪽을 다시 누르면 방향이 바뀐다
+  const desc = photoView.dir === 'desc';
+  el.photoSortName.classList.toggle('on', photoView.key === 'name');
+  el.photoSortTime.classList.toggle('on', photoView.key === 'time');
+  el.photoSortName.querySelector('svg').innerHTML = ICONS[photoView.key === 'name' && desc ? 'sortNameDesc' : 'sortName'];
+  el.photoSortTime.querySelector('svg').innerHTML = ICONS[photoView.key === 'time' && desc ? 'sortTimeDesc' : 'sortTime'];
+  el.photoSortName.dataset.tip = photoView.key === 'name' ? `이름순 ${desc ? '내림 (ㅎ→ㄱ)' : '오름 (ㄱ→ㅎ)'} · 누르면 반대로` : '이름순';
+  el.photoSortTime.dataset.tip = photoView.key === 'time' ? `시간순 ${desc ? '최근 먼저' : '오래된 것 먼저'} · 누르면 반대로` : '시간순';
   el.photoGrid.style.setProperty('--photo-cols', String(photoView.cols));
   el.photoGrid.dataset.cols = String(photoView.cols);
   for (const b of el.photoColsSeg.querySelectorAll('button')) b.classList.toggle('active', Number(b.dataset.cols) === photoView.cols);
+}
+
+function iconSvgFolder() {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', '0 0 24 24');
+  s.setAttribute('class', 'i');
+  s.innerHTML = '<path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="#FDE68A"/>';
+  return s;
+}
+// 내 컴퓨터 폴더 열기/들어가기/새로고침(같은 길)
+async function loadLocalFolder(folderPath, push) {
+  const res = await window.api.refreshPhotoFolder(folderPath);
+  if (!res || res.canceled) return showToast((res && res.error) || '폴더를 열 수 없어요.');
+  if (push) state.photoFolderStack.push(folderPath);
+  state.photoFolder = res.folderPath;
+  state.photos = res.photos || [];
+  state.photoSubfolders = res.subfolders || [];
+  applyPhotoSort();
+  renderPhotoPanel();
 }
 
 function renderMyboxPanel() {
@@ -785,8 +823,16 @@ async function openCropEditor(listRef, photoIdx, slotTarget = null) {
       natW: prepared.width,
       natH: prepared.height,
       rect: null, // display pixel coordinates relative to cropImage
-      drag: null
+      drag: null,
+      ratio: null // [2026-11-26] 가로/세로 비율 고정(null = 자유)
     };
+    // 자리에서 자를 때는 그 자리 모양(가로:세로)을 기본으로 → 자른 사진이 자리를 꽉 채워 여백·어긋남이 없다
+    const slotRatio = slotTarget ? slotAspect(slotTarget.slot) : null;
+    state.cropSession.slotRatio = slotRatio;
+    const prevRect = photo.isCropped && photo.cropRect;
+    state.cropSession.ratio = slotRatio && !prevRect ? slotRatio : null;
+    state.cropSession.ratioKey = state.cropSession.ratio ? 'slot' : 'free';
+    renderCropRatioSeg();
     el.cropSelection.style.display = 'none';
     el.cropImage.onload = () => {
       const dispW = el.cropImage.clientWidth;
@@ -796,6 +842,8 @@ async function openCropEditor(listRef, photoIdx, slotTarget = null) {
         // 다시 자를 때는 지난번 고른 영역에서 시작한다(원본 좌표 → 화면 좌표)
         const k = dispW / prepared.width;
         state.cropSession.rect = { x: prev.x * k, y: prev.y * k, w: prev.w * k, h: prev.h * k };
+      } else if (state.cropSession.ratio) {
+        state.cropSession.rect = ratioRectCentered(state.cropSession.ratio, dispW, dispH);
       } else {
         // Default initial selection: 80% centered box
         const padX = Math.round(dispW * 0.1);
@@ -814,6 +862,72 @@ async function openCropEditor(listRef, photoIdx, slotTarget = null) {
   } catch (err) {
     showToast(`크롭 편집기를 열 수 없습니다: ${err.message || err}`);
   }
+}
+
+// --- [2026-11-26] 자르기 비율 ---
+function slotAspect(slot) {
+  if (!slot) return null;
+  const elx = document.querySelector(`.photo-slot[data-slot-key="${slot.sheetIdx}-${slot.blockIdx}-${slot.paIdx}-${slot.slotIdx}"]`);
+  if (!elx) return null;
+  const r = elx.getBoundingClientRect();
+  const w = r.width - 8;
+  const h = r.height - 8;
+  return w > 4 && h > 4 ? w / h : null;
+}
+function ratioRectCentered(ratio, dispW, dispH, fill = 0.9) {
+  let w = dispW * fill;
+  let h = w / ratio;
+  if (h > dispH * fill) { h = dispH * fill; w = h * ratio; }
+  return { x: (dispW - w) / 2, y: (dispH - h) / 2, w, h };
+}
+function renderCropRatioSeg() {
+  const seg = document.getElementById('cropRatioSeg');
+  const sess = state.cropSession;
+  if (!seg || !sess) return;
+  const opts = [];
+  if (sess.slotRatio) opts.push(['slot', '자리에 맞춤', sess.slotRatio]);
+  opts.push(['free', '자유', null], ['4:3', '4:3', 4 / 3], ['3:4', '3:4', 3 / 4], ['1:1', '1:1', 1]);
+  seg.innerHTML = '';
+  for (const [key, label, ratio] of opts) {
+    const b = h('button', { class: sess.ratioKey === key ? 'active' : '', 'data-ratio': key, 'data-tip': key === 'slot' ? '사진 자리 모양 그대로 — 자른 뒤 자리를 꽉 채움' : null }, label);
+    b.addEventListener('click', () => {
+      sess.ratio = ratio;
+      sess.ratioKey = key;
+      if (ratio) {
+        const dispW = el.cropImage.clientWidth || 1;
+        const dispH = el.cropImage.clientHeight || 1;
+        // 지금 영역 가운데를 기준으로 비율에 맞춘다
+        const c = sess.rect ? { x: sess.rect.x + sess.rect.w / 2, y: sess.rect.y + sess.rect.h / 2 } : { x: dispW / 2, y: dispH / 2 };
+        const base = ratioRectCentered(ratio, dispW, dispH, 0.9);
+        let w = Math.min(base.w, sess.rect ? Math.max(sess.rect.w, sess.rect.h * ratio) : base.w);
+        let hh = w / ratio;
+        if (hh > dispH) { hh = dispH; w = hh * ratio; }
+        sess.rect = { x: c.x - w / 2, y: c.y - hh / 2, w, h: hh };
+      }
+      renderCropRatioSeg();
+      renderCropSelection();
+    });
+    seg.appendChild(b);
+  }
+}
+// 비율을 지키며 영역 고치기: 잡은 모서리 반대편을 고정한다
+function applyRatio(rect, ratio, mode, maxW, maxH) {
+  if (!ratio) return rect;
+  let { x, y, w, h: hh } = rect;
+  hh = w / ratio;
+  const anchorBottom = mode === 'ne' || mode === 'nw' || (mode === 'new' && rect._up);
+  if (anchorBottom) y = rect.y + rect.h - hh;
+  if (mode === 'nw' || mode === 'sw' || (mode === 'new' && rect._left)) x = rect.x + rect.w - w;
+  // 화면 밖으로 나가면 줄인다
+  const fit = Math.min(1, (anchorBottom ? (rect.y + rect.h) : (maxH - y)) / hh, ((mode === 'nw' || mode === 'sw') ? (rect.x + rect.w) : (maxW - x)) / w);
+  if (fit < 1) {
+    const nw = w * fit;
+    const nh = hh * fit;
+    if (mode === 'nw' || mode === 'sw') x = rect.x + rect.w - nw;
+    if (anchorBottom) y = rect.y + rect.h - nh;
+    w = nw; hh = nh;
+  }
+  return { x, y, w, h: hh };
 }
 
 function clampCropRect(rect, maxW, maxH) {
@@ -840,7 +954,7 @@ function renderCropSelection() {
 
   const natW = Math.max(1, Math.round((sess.rect.w / dispW) * sess.natW));
   const natH = Math.max(1, Math.round((sess.rect.h / dispH) * sess.natH));
-  el.cropInfoText.textContent = `원본 ${sess.natW}×${sess.natH} → 크롭 ${natW}×${natH} px (자유 비율 · JPEG 품질 95+)`;
+  el.cropInfoText.textContent = `원본 ${sess.natW}×${sess.natH} → 자른 크기 ${natW}×${natH} px${sess.ratio ? '' : ' (자유 비율)'}`;
 }
 
 function startCropDrag(e) {
@@ -883,6 +997,12 @@ function moveCropDrag(e) {
     const x2 = Math.max(d.startX, px);
     const y2 = Math.max(d.startY, py);
     sess.rect = { x: x1, y: y1, w: Math.max(16, x2 - x1), h: Math.max(16, y2 - y1) };
+    if (sess.ratio) {
+      // 비율 고정: 끈 방향 쪽으로 넓이 기준
+      const w = Math.max(16, x2 - x1);
+      const hh = w / sess.ratio;
+      sess.rect = { x: px < d.startX ? d.startX - w : d.startX, y: py < d.startY ? d.startY - hh : d.startY, w, h: hh };
+    }
   } else if (d.mode === 'move') {
     sess.rect = { x: o.x + dx, y: o.y + dy, w: o.w, h: o.h };
   } else if (d.mode === 'se') {
@@ -901,6 +1021,17 @@ function moveCropDrag(e) {
     const newX = Math.max(0, Math.min(o.x + dx, right - 16));
     const newY = Math.max(0, Math.min(o.y + dy, bottom - 16));
     sess.rect = { x: newX, y: newY, w: right - newX, h: bottom - newY };
+  }
+  if (sess.ratio && d.mode !== 'move' && d.mode !== 'new') sess.rect = applyRatio(sess.rect, sess.ratio, d.mode, maxW, maxH);
+  if (sess.ratio && d.mode === 'new') {
+    // 영역이 그림 밖으로 나가면 비율 유지한 채 줄임
+    const r = sess.rect;
+    const k = Math.min(1, (r.x < 0 ? (r.x + r.w) / r.w : 1), (r.y < 0 ? (r.y + r.h) / r.h : 1), (maxW - Math.max(0, r.x)) / r.w, (maxH - Math.max(0, r.y)) / r.h);
+    if (k < 1) {
+      const w = r.w * k;
+      const hh = r.h * k;
+      sess.rect = { x: px < d.startX ? d.startX - w : d.startX, y: py < d.startY ? d.startY - hh : d.startY, w, h: hh };
+    }
   }
   renderCropSelection();
 }

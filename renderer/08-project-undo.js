@@ -169,6 +169,8 @@ async function applyRestoredEditor(data) {
     if (r && !r.canceled) {
       state.photoFolder = data.photoFolder;
       state.photos = r.photos || [];
+      state.photoSubfolders = r.subfolders || [];
+      state.photoFolderStack = [data.photoFolder];
       applyPhotoSort();
     }
   }
@@ -181,35 +183,21 @@ async function applyRestoredEditor(data) {
 
 // --- 시작 화면: 최근 작업·자동 저장 복구 ---
 async function renderStartExtras() {
-  let box = document.getElementById('recentSection');
-  if (!box) {
-    box = document.createElement('div');
-    box.id = 'recentSection';
-    const inner = document.querySelector('.start-inner');
-    inner.insertBefore(box, inner.firstChild);
+  // 저장 안 한 작업(자동 저장본) 안내 + 아래 목록(최근 작업 / 내 양식)
+  const box = document.getElementById('recoverSlot');
+  if (box) {
+    box.innerHTML = '';
+    const auto = await window.api.autosaveRead();
+    if (auto && auto.editor) {
+      const when = new Date(auto.savedAt).toLocaleString('ko-KR');
+      box.appendChild(h('div', { class: 'recover-banner' },
+        h('div', {}, h('strong', { text: '저장하지 않은 작업이 남아 있어요' }), h('span', { text: ` ${auto.title || ''} · ${when}` })),
+        h('div', { class: 'insp-actions' },
+          h('button', { class: 'primary', onclick: async () => { await restoreProject(auto, auto.autosaveOf || null); docState.filePath = auto.autosaveOf || null; markDirty(); showToast('자동 저장본을 복구했어요. 저장해 주세요.'); } }, '복구'),
+          h('button', { onclick: async () => { if (confirm('자동 저장본을 버릴까요? 되돌릴 수 없어요.')) { await window.api.autosaveClear(); renderStartExtras(); } } }, '버리기'))));
+    }
   }
-  box.innerHTML = '';
-  const [recent, auto] = await Promise.all([window.api.projectRecent(), window.api.autosaveRead()]);
-  if (auto && auto.editor) {
-    const when = new Date(auto.savedAt).toLocaleString('ko-KR');
-    box.appendChild(h('div', { class: 'recover-banner' },
-      h('div', {}, h('strong', { text: '저장하지 않은 작업이 남아 있어요' }), h('span', { text: ` ${auto.title || ''} · ${when}` })),
-      h('div', { class: 'insp-actions' },
-        h('button', { class: 'primary', onclick: async () => { await restoreProject(auto, auto.autosaveOf || null); docState.filePath = auto.autosaveOf || null; markDirty(); showToast('자동 저장본을 복구했어요. 저장해 주세요.'); } }, '복구'),
-        h('button', { onclick: async () => { if (confirm('자동 저장본을 버릴까요? 되돌릴 수 없어요.')) { await window.api.autosaveClear(); renderStartExtras(); } } }, '버리기'))));
-  }
-  const head = h('div', { class: 'recent-head' }, h('h2', { text: '최근 작업' }), h('button', { onclick: () => openProject(null) }, '작업 열기…'));
-  box.appendChild(head);
-  const grid = h('div', { class: 'recent-grid' });
-  if (!recent.length) grid.appendChild(h('div', { class: 'insp-note', text: '저장한 작업이 여기에 나와요. 편집 중에 ⌘S로 저장하세요.' }));
-  for (const r of recent.slice(0, 6)) {
-    grid.appendChild(h('div', { class: 'recent-card', title: r.path },
-      h('button', { class: 'recent-open', onclick: () => openProject(r.path) },
-        h('div', { class: 'recent-title', text: r.title || r.path.split('/').pop() }),
-        h('div', { class: 'recent-meta', text: `${(r.templateId || '').replace('_', ' · ')} · ${r.savedAt ? new Date(r.savedAt).toLocaleString('ko-KR') : ''}` })),
-      h('button', { class: 'recent-dup', title: '이 작업을 바탕으로 새 현장 시작(사진 비움)', onclick: () => duplicateProject(r.path) }, '복제')));
-  }
-  box.appendChild(grid);
+  await renderWorkList();
 }
 
 // --- 블록 이동·복제 ---

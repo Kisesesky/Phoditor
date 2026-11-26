@@ -258,6 +258,14 @@
     .layout-pick button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
     .lp-ico { display: grid; gap: 2px; width: 30px; height: 22px; }
     .lp-ico i { background: currentColor; opacity: .35; border-radius: 1.5px; }
+    .crop-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .crop-head h3 { margin: 0; }
+    .crop-ratio button { padding: 4px 10px; white-space: nowrap; }
+    .layout-custom { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+    .lg-label { font-size: 11.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+    .layout-grid { display: grid; grid-template-columns: repeat(5, 22px); grid-auto-rows: 22px; gap: 3px; }
+    .layout-grid i { border: 1px solid var(--line-strong); border-radius: 3px; background: #fff; cursor: pointer; }
+    .layout-grid i.hot { background: var(--accent-soft); border-color: var(--accent); }
     .font-preview { font-size: 16px; padding: 9px 10px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--chrome); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .font-map-row { display: grid; grid-template-columns: 16px 1fr; align-items: center; gap: 4px 6px; font-size: 12px; padding: 6px 0; border-top: 1px dashed var(--line); }
     .font-map-row .from { grid-column: 1 / -1; font-weight: 600; color: var(--ink); word-break: break-all; }
@@ -359,11 +367,89 @@
     .scale-val { width: 42px; flex: none; text-align: right; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--ink-2); }
     .insp-row input[type=range] { min-width: 0; }
 
+    .icon-tools { gap: 2px; }
+    .folder-item { grid-column: 1 / -1; justify-content: flex-start; gap: 8px; padding: 7px 10px; background: #fff; border: 1px solid var(--line); font-weight: 600; color: var(--ink); text-align: left; font-size: 12.5px; }
+    .folder-item:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .folder-item .i { width: 16px; height: 16px; color: #D97706; flex: none; }
+    .folder-item .fname { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .folder-item .fcount { font-size: 11px; color: var(--ink-muted); font-weight: 500; }
+    .af-folders { max-height: 240px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; padding: 4px; display: flex; flex-direction: column; gap: 1px; }
+    .af-folder { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 6px; font-size: 12.5px; cursor: pointer; }
+    .af-folder:hover { background: var(--chrome); }
+    .af-folder .arrow { color: var(--ink-muted); }
+    .af-folder .loc { font-weight: 650; }
+    .af-folder .cnt { margin-left: auto; color: var(--ink-muted); font-size: 11.5px; }
+    .af-tools { display: flex; gap: 6px; }
+    .af-tools button { font-size: 11.5px; padding: 3px 8px; }
+    .tool-ico { width: 30px; height: 28px; padding: 0; justify-content: center; border: 1px solid transparent; background: transparent; border-radius: 7px; color: var(--ink-2); flex: none; }
+    .tool-ico:hover:not(:disabled) { background: #fff; border-color: var(--line); }
+    .tool-ico.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+    .tool-ico .i { width: 17px; height: 17px; }
+    .tool-sep { width: 1px; height: 18px; background: var(--line); margin: 0 4px; flex: none; }
+    .tool-grow { flex: 1; }
+    .icon-seg { display: flex; flex: none; background: var(--chrome-2); border: 1px solid var(--line); border-radius: 8px; padding: 2px; gap: 1px; }
+    .icon-seg button { width: 26px; height: 24px; padding: 0; border: none; background: transparent; border-radius: 6px; justify-content: center; color: var(--ink-muted); }
+    .icon-seg button svg { width: 18px; height: 18px; fill: currentColor; stroke: none; }
+    .icon-seg button.active { background: #fff; color: var(--accent); box-shadow: 0 1px 2px rgba(16,24,40,.1); }
+    #myboxControls .sidebar-actions { justify-content: flex-start; gap: 4px; }
+    /* [2026-11-26 시작 화면 개편] 왼쪽 메뉴 + 양식 한 줄 + 아래 목록 + 설정 */
+    .start-shell { flex: 1; display: flex; min-height: 0; }
+    .start-nav { width: 88px; flex: none; background: var(--chrome-2); border-right: 1px solid var(--line); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 0; }
+    .nav-btn { width: 72px; flex-direction: column; gap: 4px; padding: 10px 0 8px; border: none; border-radius: 10px; background: transparent; color: var(--ink-2); font-size: 12px; justify-content: center; }
+    .nav-btn .i { width: 22px; height: 22px; }
+    .nav-btn:hover { background: rgba(255,255,255,.7); }
+    .nav-btn.active { background: #fff; color: var(--accent); font-weight: 650; box-shadow: 0 1px 2px rgba(16,24,40,.08); }
+    .start-main { flex: 1; overflow: auto; min-width: 0; }
+    .start-page { display: none; padding: 26px 36px 40px; max-width: 1400px; }
+    .start-page.active { display: block; }
+    .start-page h1 { font-size: 22px; letter-spacing: -0.02em; margin: 0; }
+    .tpl-head { display: flex; align-items: center; gap: 22px; margin-bottom: 14px; flex-wrap: wrap; }
+    .tpl-head .type-tabs { margin: 0; }
+    .tpl-head .type-btn { padding: 6px 14px; font-size: 13px; }
+    .tpl-strip-wrap { position: relative; margin-bottom: 26px; }
+    .tpl-strip { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x proximity; padding: 4px 2px 10px; scrollbar-width: thin; }
+    .tpl-strip > .company-card { flex: 0 0 196px; scroll-snap-align: start; }
+    .strip-scroll { position: absolute; top: 96px; z-index: 3; width: 34px; height: 54px; padding: 0; justify-content: center; font-size: 24px; border-radius: 10px; background: rgba(255,255,255,.95); box-shadow: var(--shadow-pop); }
+    .strip-scroll.prev { left: -14px; } .strip-scroll.next { right: -14px; }
+    .strip-scroll[hidden] { display: none; }
+    .strip-empty { padding: 40px 10px; color: var(--ink-muted); font-size: 13px; }
+    .work-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+    .work-tabs { display: flex; gap: 4px; }
+    .work-tabs button { border: none; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; padding: 8px 12px; font-size: 14px; color: var(--ink-muted); }
+    .work-tabs button.on { color: var(--ink); font-weight: 650; border-bottom-color: var(--accent); }
+    .work-list { display: flex; flex-direction: column; }
+    .work-row { display: flex; align-items: center; gap: 14px; padding: 9px 12px; border-radius: 8px; cursor: pointer; }
+    .work-row:hover, .work-row:focus-visible { background: #fff; box-shadow: inset 0 0 0 1px var(--line); outline: none; }
+    .work-ico { width: 34px; height: 34px; flex: none; display: grid; place-items: center; }
+    .work-ico .pbook-ico { width: 32px; height: 32px; }
+    .work-ico.mine { border-radius: 8px; background: #F3E8FF; color: #7C3AED; }
+    .work-text { flex: 1; min-width: 0; }
+    .work-title { font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .work-meta { font-size: 11.5px; color: var(--ink-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .work-date { width: 90px; flex: none; font-size: 12.5px; color: var(--ink-2); text-align: right; }
+    .work-actions { display: flex; gap: 2px; opacity: 0; transition: opacity .12s; }
+    .work-row:hover .work-actions { opacity: 1; }
+    .work-empty { padding: 26px 12px; color: var(--ink-muted); font-size: 13px; }
+    #recoverSlot:empty { display: none; }
+    .set-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin-top: 18px; max-width: 760px; }
+    .set-card-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+    .set-card h2 { font-size: 15px; margin: 0 0 4px; }
+    .set-card p { margin: 0; font-size: 12.5px; color: var(--ink-muted); }
+    .set-detail { font-size: 13px; margin: 12px 0; color: var(--ink-2); }
+    .set-actions { display: flex; gap: 8px; }
+    .shortcut-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 24px; margin-top: 12px; }
+    .sc-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; padding: 4px 0; border-bottom: 1px dashed var(--line); }
+    .sc-keys { display: flex; gap: 3px; flex: none; }
+    kbd { font: 600 11px 'Pretendard', sans-serif; background: var(--chrome); border: 1px solid var(--line-strong); border-bottom-width: 2px; border-radius: 5px; padding: 1px 6px; min-width: 14px; text-align: center; color: var(--ink-2); }
+    /* 빠른 말풍선(아이콘 단추 설명) */
+    #tipBubble { position: fixed; z-index: 9999; pointer-events: none; background: #1F2937; color: #fff; font: 500 11.5px 'Pretendard', sans-serif; padding: 4px 8px; border-radius: 6px; white-space: nowrap; opacity: 0; transition: opacity .08s; }
+    #tipBubble.show { opacity: 1; }
+
     /* [2026-11-26 요청] 시작 화면 카드: 큰 미리보기·시트 넘겨 보기, 공백 양식·내 양식 */
     .company-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
     .company-card { min-height: 0; cursor: pointer; outline: none; }
     .company-card:focus-visible { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
-    .company-card .card-art { --art-h: 216px; height: var(--art-h); padding: 10px 0 24px; box-sizing: border-box; overflow: hidden; }
+    .company-card .card-art { --art-h: 236px; height: var(--art-h); padding: 10px 0 24px; box-sizing: border-box; overflow: hidden; }
     .company-card .card-art img.cover-thumb { height: auto; width: auto; max-height: calc(var(--art-h) - 34px); max-width: calc(100% - 56px); object-fit: contain; border-radius: 2px; box-shadow: 0 1px 4px rgba(16,24,40,.22); background: #fff; }
     .company-card .card-body { padding: 8px 12px 10px; gap: 1px; }
     .company-card .company-name { font-size: 13.5px; }
@@ -562,14 +648,58 @@
         사진첩 에디터
       </div>
     </div>
-    <div class="start-main">
-      <div class="start-inner">
-        <h1>새 사진첩 만들기</h1>
-        <p class="lead">종류와 업체를 고르면 그 회사 양식으로 바로 시작합니다. 원본 엑셀과 사진은 바뀌지 않아요.</p>
-        <div class="section-label">종류</div>
-        <div id="typeTabs" class="type-tabs"></div>
-        <div class="section-label">업체 양식</div>
-        <div id="companyGrid" class="company-grid"></div>
+    <div class="start-shell">
+      <nav class="start-nav" aria-label="시작 화면">
+        <button class="nav-btn active" data-page="home" data-tip="홈">
+          <svg class="i" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 01-1 1h-5v-6h-4v6H5a1 1 0 01-1-1z"/></svg><span>홈</span>
+        </button>
+        <button class="nav-btn" id="navOpenBtn" data-tip="작업 파일(.pbook) 열기 ⌘O">
+          <svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg><span>열기</span>
+        </button>
+        <button class="nav-btn" data-page="settings" data-tip="설정 · MYBOX 연결">
+          <svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg><span>설정</span>
+        </button>
+      </nav>
+      <div class="start-main">
+        <section id="homePage" class="start-page active">
+          <div id="recoverSlot"></div>
+          <div class="tpl-head">
+            <h1>새 사진첩</h1>
+            <div id="typeTabs" class="type-tabs"></div>
+          </div>
+          <div class="tpl-strip-wrap">
+            <button class="strip-scroll prev" id="stripPrev" data-tip="앞으로">‹</button>
+            <div id="companyGrid" class="tpl-strip"></div>
+            <button class="strip-scroll next" id="stripNext" data-tip="뒤로">›</button>
+          </div>
+          <div class="work-head">
+            <div id="workTabs" class="work-tabs">
+              <button data-tab="recent" class="on">최근 작업</button>
+              <button data-tab="mine">내 양식</button>
+            </div>
+          </div>
+          <div id="workList" class="work-list"></div>
+        </section>
+        <section id="settingsPage" class="start-page">
+          <h1>설정</h1>
+          <div class="set-card">
+            <div class="set-card-head">
+              <div><h2>MYBOX 연결</h2><p>사진을 MYBOX에서 바로 불러오려면 개인 액세스 토큰(PAT)을 넣어 주세요.</p></div>
+              <span id="setMyboxChip" class="expiry-chip unknown">확인 중</span>
+            </div>
+            <div id="setMyboxDetail" class="set-detail"></div>
+            <div class="set-actions">
+              <button id="setMyboxTokenBtn" class="primary">토큰 넣기</button>
+              <button id="setMyboxTestBtn">연결 테스트</button>
+              <button id="setMyboxClearBtn" class="danger">토큰 삭제</button>
+            </div>
+            <div id="setMyboxResult" class="test-result-box"></div>
+          </div>
+          <div class="set-card">
+            <div class="set-card-head"><div><h2>단축키</h2><p>편집 화면에서 쓸 수 있어요. 편집 중 <kbd>?</kbd>를 누르면 이 목록이 나와요.</p></div></div>
+            <div id="setShortcuts" class="shortcut-list"></div>
+          </div>
+        </section>
       </div>
     </div>
   </div>
@@ -664,7 +794,8 @@
               <button id="selectFolderBtn" class="primary">
                 <svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>폴더 열기
               </button>
-              <button id="refreshFolderBtn" title="새로고침" style="flex: 0 0 auto;" disabled>
+              <button id="localUpBtn" class="tool-ico" data-tip="위 폴더" style="flex: 0 0 auto; display: none;"><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+              <button id="refreshFolderBtn" data-tip="새로고침" style="flex: 0 0 auto;" disabled>
                 <svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-2.3 5.7M20 5v6h-6"/></svg>
               </button>
             </div>
@@ -676,26 +807,25 @@
               <span id="myboxCountBadge" class="badge">0장</span>
             </div>
             <div class="sidebar-actions">
-              <button id="myboxUpBtn" disabled>↑ 위로</button>
-              <button id="myboxRefreshBtn">새로고침</button>
-              <button id="myboxSettingsBtn">설정</button>
+              <button id="myboxUpBtn" class="tool-ico" data-tip="위 폴더" disabled><svg class="i" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+              <button id="myboxRefreshBtn" class="tool-ico" data-tip="새로고침"><svg class="i" viewBox="0 0 24 24"><path d="M20 11a8 8 0 10-2.3 5.7M20 5v6h-6"/></svg></button>
+              <button id="myboxSettingsBtn" class="tool-ico" data-tip="MYBOX 설정"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button>
             </div>
             <div id="myboxPathText" class="folder-path">/ (루트)</div>
             <button id="myboxExpiryChip" class="expiry-chip" hidden title="MYBOX 설정 열기"></button>
             <div class="mybox-notice">암호 폴더·공유받은 폴더는 열 수 없어요</div>
           </div>
-          <div class="photo-tools">
-            <button id="photoFilterBtn" class="ghost" title="아직 넣지 않은 사진만 보기">안 넣은 것만</button>
-            <select id="photoSortSel" title="사진 순서">
-              <option value="name">이름순</option>
-              <option value="time">시간순</option>
-            </select>
-            <button id="photoSortDirBtn" class="ghost sort-dir" title="오름차순 (누르면 내림차순)">↑ 오름</button>
-          </div>
-          <div class="photo-tools">
-            <span class="tools-label">보기</span>
-            <div class="seg cols-seg" id="photoColsSeg" title="한 줄에 보일 사진 수">
-              <button data-cols="1">1열</button><button data-cols="2">2열</button><button data-cols="3">3열</button><button data-cols="4">4열</button>
+          <div class="photo-tools icon-tools">
+            <button id="photoFilterBtn" class="tool-ico" data-tip="안 넣은 사진만"><svg class="i" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg></button>
+            <span class="tool-sep"></span>
+            <button id="photoSortName" class="tool-ico" data-tip="이름순"><svg class="i" viewBox="0 0 24 24"></svg></button>
+            <button id="photoSortTime" class="tool-ico" data-tip="시간순"><svg class="i" viewBox="0 0 24 24"></svg></button>
+            <span class="tool-grow"></span>
+            <div class="cols-seg icon-seg" id="photoColsSeg">
+              <button data-cols="1" data-tip="1열 (⌘1)"><svg viewBox="0 0 20 20"><rect x="5" y="5" width="10" height="10" rx="1.5"/></svg></button>
+              <button data-cols="2" data-tip="2열 (⌘2)"><svg viewBox="0 0 20 20"><rect x="4" y="5" width="5" height="10" rx="1"/><rect x="11" y="5" width="5" height="10" rx="1"/></svg></button>
+              <button data-cols="3" data-tip="3열 (⌘3)"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="3.6" height="10" rx=".8"/><rect x="8.2" y="5" width="3.6" height="10" rx=".8"/><rect x="13.4" y="5" width="3.6" height="10" rx=".8"/></svg></button>
+              <button data-cols="4" data-tip="4열 (⌘4)"><svg viewBox="0 0 20 20"><rect x="2.5" y="5" width="2.8" height="10" rx=".6"/><rect x="6.6" y="5" width="2.8" height="10" rx=".6"/><rect x="10.7" y="5" width="2.8" height="10" rx=".6"/><rect x="14.8" y="5" width="2.8" height="10" rx=".6"/></svg></button>
             </div>
           </div>
         </div>
@@ -754,27 +884,8 @@
   <!-- Layout Picker Modal -->
   <div id="layoutModal" class="modal-backdrop">
     <div class="modal-box">
-      <h3>사진 영역 레이아웃 선택 (열×행)</h3>
-      <div class="layout-options">
-        <button class="layout-opt-btn" data-layout="1x1">
-          <strong>1장 · 1×1</strong><span>기본값 (단독 1장)</span>
-        </button>
-        <button class="layout-opt-btn" data-layout="1x2">
-          <strong>2장 · 1×2 (위아래)</strong><span>2장 기본값</span>
-        </button>
-        <button class="layout-opt-btn" data-layout="2x1">
-          <strong>2장 · 2×1 (좌우)</strong><span>나란히 2장</span>
-        </button>
-        <button class="layout-opt-btn" data-layout="1x3">
-          <strong>3장 · 1×3 (위아래)</strong><span>3장 기본값</span>
-        </button>
-        <button class="layout-opt-btn" data-layout="3x1">
-          <strong>3장 · 3×1 (좌우)</strong><span>가로 3장</span>
-        </button>
-        <button class="layout-opt-btn" data-layout="2x2">
-          <strong>4장 · 2×2</strong><span>2열 × 2행 격자</span>
-        </button>
-      </div>
+      <h3>사진 배치 (가로×세로)</h3>
+      <div id="layoutModalBody"></div>
       <div class="modal-footer">
         <button id="cancelLayoutBtn">취소</button>
       </div>
@@ -812,7 +923,10 @@
   <!-- Stage 2 A: Pre-placement Crop Modal -->
   <div id="cropModal" class="modal-backdrop">
     <div class="modal-box crop-modal-box">
-      <h3>사진 크롭 (자유 비율)</h3>
+      <div class="crop-head">
+        <h3>사진 자르기</h3>
+        <div id="cropRatioSeg" class="seg crop-ratio"></div>
+      </div>
       <div class="crop-stage-wrap">
         <div id="cropStage" class="crop-stage">
           <img id="cropImage" alt="크롭 대상 이미지" />

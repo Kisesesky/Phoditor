@@ -87,8 +87,8 @@ try {
   await clickEl($('#saveBtn'), 1500);
   check('저장: 사진 1장 포함', toastText().includes('사진 1장 포함'), toastText());
   await clickEl($('#backToCatalogBtn'), 1200);
-  await waitFor(() => $$('#recentSection .recent-dup').length > 0, 5000);
-  await clickEl($$('#recentSection .recent-dup')[0], 1200);
+  await waitFor(() => $$('#workList .work-actions button').length > 0, 5000);
+  await clickEl($$('#workList .work-actions button')[0], 1200);
   const nameIn = $('.dyn-modal input[type=text]');
   nameIn.value = 'QA 새 현장';
   await clickEl($('#dupGoBtn'), 2500);
@@ -101,8 +101,8 @@ try {
 
   // 5. 원래 작업 다시 열기(사진이 파일 안에서 풀려 나옴)
   await clickEl($('#backToCatalogBtn'), 1500);
-  await waitFor(() => $$('#recentSection .recent-open').length > 0, 5000);
-  const orig = $$('#recentSection .recent-open').find((b) => !b.textContent.includes('QA 새 현장')) || $$('#recentSection .recent-open')[0];
+  await waitFor(() => $$('#workList .work-row').length > 0, 5000);
+  const orig = $$('#workList .work-row').find((b) => !b.textContent.includes('QA 새 현장')) || $$('#workList .work-row')[0];
   await clickEl(orig, 3000);
   await clickEl(tabByName('1.외관'), 800);
   const img = $('.pv-page .photo-slot img');

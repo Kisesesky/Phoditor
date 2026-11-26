@@ -177,14 +177,34 @@ function fitPhotoScaleToPage(sheet) {
   showToast(`사진 칸 높이를 ${Math.round(best * 100)}%로 맞췄어요 (쪽 수 그대로).`);
 }
 
-function layoutPicker(sheetIdx, bIdx, paIdx, curLayout) {
+function layoutPicker(sheetIdx, bIdx, paIdx, curLayout, onPick) {
+  const pick = onPick || ((key) => setAreaLayout(sheetIdx, bIdx, paIdx, key));
+  const outer = h('div', { class: 'layout-pick-wrap' });
   const wrap = h('div', { class: 'layout-pick' });
-  for (const [key, spec] of Object.entries(LAYOUT_SPECS)) {
+  for (const [key, spec] of Object.entries(LAYOUT_PRESETS)) {
     const ico = h('span', { class: 'lp-ico', style: `grid-template-columns:repeat(${spec.cols},1fr);grid-template-rows:repeat(${spec.rows},1fr)` });
     for (let i = 0; i < spec.count; i++) ico.appendChild(h('i'));
-    wrap.appendChild(h('button', { class: curLayout === key ? 'on' : '', title: `${spec.count}장 ${spec.label}`, onclick: () => setAreaLayout(sheetIdx, bIdx, paIdx, key) }, ico, `${spec.count}장 ${spec.label}`));
+    wrap.appendChild(h('button', { class: curLayout === key ? 'on' : '', 'data-layout': key, 'data-tip': `가로 ${spec.cols} × 세로 ${spec.rows}`, onclick: () => pick(key) }, ico, spec.label));
   }
-  return wrap;
+  outer.appendChild(wrap);
+  // 사용자 지정: 5×5 칸 위에 마우스를 올려 크기를 고르고 누른다(표 넣기처럼)
+  const cur = LAYOUT_SPECS[curLayout];
+  const custom = !!cur && !LAYOUT_PRESETS[curLayout];
+  const label = h('span', { class: 'lg-label', text: custom ? `지금 ${cur.label}` : '사용자 지정 (최대 5×5)' });
+  const grid = h('div', { class: 'layout-grid' });
+  const cells = [];
+  const paint = (c, r) => cells.forEach((x) => x.classList.toggle('hot', +x.dataset.c <= c && +x.dataset.r <= r));
+  for (let r = 1; r <= 5; r++) for (let c = 1; c <= 5; c++) {
+    const cell = h('i', { 'data-c': String(c), 'data-r': String(r) });
+    cell.addEventListener('mouseenter', () => { paint(c, r); label.textContent = `${c}×${r} (${c * r}장)`; });
+    cell.addEventListener('click', () => pick(`${c}x${r}`));
+    cells.push(cell);
+    grid.appendChild(cell);
+  }
+  grid.addEventListener('mouseleave', () => { if (custom) { paint(cur.cols, cur.rows); label.textContent = `지금 ${cur.label}`; } else { paint(0, 0); label.textContent = '사용자 지정 (최대 5×5)'; } });
+  if (custom) paint(cur.cols, cur.rows);
+  outer.appendChild(h('div', { class: 'layout-custom' }, label, grid));
+  return outer;
 }
 
 function documentSections() {

@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const crypto = require('crypto');
-const { execFileSync } = require('child_process');
+const { execFileSync, execFile } = require('child_process');
 const ExcelJS = require('exceljs');
 const {
   colWidthToPx,
@@ -356,12 +356,21 @@ ipcMain.handle('project-save', async (_event, { filePath, data, suggestedName, s
       target = res.filePath.endsWith(`.${PROJECT_EXT}`) ? res.filePath : `${res.filePath}.${PROJECT_EXT}`;
     }
     const stats = await writeProjectZip(target, data);
+    setPbookIcon(target);
     pushRecent({ path: target, title: data.title || path.basename(target), templateId: data.templateId, savedAt: data.savedAt });
     return { ok: true, filePath: target, ...stats };
   } catch (err) {
     return { ok: false, error: String((err && err.message) || err) };
   }
 });
+
+// [2026-11-26] 저장한 .pbook 파일에 사진첩 아이콘을 붙인다(맥 Finder에서 한눈에 구분). 실패해도 저장에는 영향 없음
+const PBOOK_ICON = path.join(__dirname, 'assets', 'pbook-icon.png');
+function setPbookIcon(file) {
+  if (process.platform !== 'darwin' || !fs.existsSync(PBOOK_ICON)) return;
+  const script = 'function run(argv){ObjC.import("AppKit");var img=$.NSImage.alloc.initWithContentsOfFile(argv[0]);return $.NSWorkspace.sharedWorkspace.setIconForFileOptions(img, argv[1], 0);}';
+  execFile('osascript', ['-l', 'JavaScript', '-e', script, PBOOK_ICON, file], { timeout: 15000 }, () => {});
+}
 
 ipcMain.handle('project-open', async (_event, filePath) => {
   try {
@@ -747,6 +756,17 @@ ipcMain.handle('select-photo-folder', async () => {
   return scanPhotoFolder(folderPath);
 });
 
+// [2026-11-26] 폴더별 자동 채우기: 고른 하위 폴더들의 사진 목록
+ipcMain.handle('scan-subfolders', async (_event, folderPaths) => {
+  const out = [];
+  for (const p of folderPaths || []) {
+    if (!p || !fs.existsSync(p)) continue;
+    const r = scanPhotoFolder(p);
+    out.push({ name: path.basename(p), path: p, photos: r.photos });
+  }
+  return out;
+});
+
 ipcMain.handle('refresh-photo-folder', async (_event, folderPath) => {
   if (!folderPath || !fs.existsSync(folderPath)) {
     return { canceled: true, error: '폴더를 찾을 수 없습니다.' };
@@ -771,12 +791,23 @@ function scanPhotoFolder(folderPath) {
 }
 
 function scanPhotoFolderInner(folderPath, pendingThumbs) {
-  const entries = fs.readdirSync(folderPath).sort((a, b) => a.localeCompare(b, 'ko'));
+  const entries = fs.readdirSync(folderPath).sort((a, b) => a.localeCompare(b, 'ko', { numeric: true }));
   const photos = [];
+  const subfolders = [];
   for (const name of entries) {
     if (name.startsWith('.')) continue;
     const ext = path.extname(name).toLowerCase();
-    if (!SUPPORTED_PHOTO_EXTS.has(ext)) continue;
+    if (!SUPPORTED_PHOTO_EXTS.has(ext)) {
+      // [2026-11-26] 하위 폴더(예: "16. 현관")는 사진 수와 함께 알려 준다(폴더별 자동 채우기·폴더 들어가기)
+      const sub = path.join(folderPath, name);
+      try {
+        if (fs.statSync(sub).isDirectory()) {
+          const count = fs.readdirSync(sub).filter((f) => !f.startsWith('.') && SUPPORTED_PHOTO_EXTS.has(path.extname(f).toLowerCase())).length;
+          subfolders.push({ name, path: sub, count });
+        }
+      } catch (_) {}
+      continue;
+    }
     const fullPath = path.join(folderPath, name);
     let stat;
     try {
@@ -800,7 +831,7 @@ function scanPhotoFolderInner(folderPath, pendingThumbs) {
       takenAt: photoTakenAt(fullPath, stat)
     });
   }
-  return { canceled: false, folderPath, photos };
+  return { canceled: false, folderPath, photos, subfolders };
 }
 
 ipcMain.handle('estimate-export-size', async (_event, { templateId, photoPaths, croppedItems }) => {

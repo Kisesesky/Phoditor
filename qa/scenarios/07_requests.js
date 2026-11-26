@@ -17,11 +17,35 @@ try {
   check('넘겨 봐도 양식이 열리지 않음', !$('#editorView').classList.contains('active'));
   art.querySelector('.art-nav.prev').click(); await sleep(300);
   check('‹ 로 되돌아감', art.querySelector('.art-cap').textContent === cap0);
-  check('공백 양식 카드', !!$$('#myTplSection .company-card').find((c) => c.textContent.includes('공백 양식')));
+  // 그림 영역을 눌러도 열리지 않고 넘겨 보기만(1번 요청)
+  art.click(); await sleep(300);
+  check('그림을 눌러도 편집 화면으로 안 넘어감', !$('#editorView').classList.contains('active'));
+  const r = art.getBoundingClientRect();
+  art.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: r.right - 20, clientY: r.top + 60 })); await sleep(300);
+  check('그림 오른쪽을 누르면 다음 시트', /2\/\d/.test(art.querySelector('.art-cap').textContent) && !$('#editorView').classList.contains('active'), art.querySelector('.art-cap').textContent);
+  art.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: r.left + 20, clientY: r.top + 60 })); await sleep(300);
+  art.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaX: 120, deltaY: 0 })); await sleep(300);
+  check('트랙패드 가로 밀기로 넘김', /2\/\d/.test(art.querySelector('.art-cap').textContent), art.querySelector('.art-cap').textContent);
+  art.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaX: -120, deltaY: 0 })); await sleep(300);
+  // 시작 화면 구성: 왼쪽 메뉴·양식 한 줄·아래 목록
+  check('왼쪽 메뉴(홈·열기·설정)', $$('.start-nav .nav-btn').map((b) => b.textContent.trim()).join() === '홈,열기,설정');
+  check('양식이 한 줄(가로로 넘김)', new Set($$('#companyGrid .company-card').map((c) => Math.round(c.getBoundingClientRect().top))).size === 1);
+  check('아래 목록 탭(최근 작업·내 양식)', $('#workTabs').textContent.includes('최근 작업') && $('#workTabs').textContent.includes('내 양식'));
+  check('목록이 첫 화면 안에 보임(스크롤 없이)', $('#workTabs').getBoundingClientRect().top < innerHeight - 80, `${Math.round($('#workTabs').getBoundingClientRect().top)} / ${innerHeight}`);
+  // 설정 화면
+  await clickEl($('.start-nav .nav-btn[data-page="settings"]'), 600);
+  check('설정 화면: MYBOX 연결 상태·단축키', $('#settingsPage').classList.contains('active') && $('#setMyboxChip').textContent.includes('연결 안 됨') && $$('#setShortcuts .sc-row').length >= 15, $('#setMyboxChip').textContent);
+  await clickEl($('#setMyboxTokenBtn'), 500);
+  check('설정 화면에서 토큰 넣기 창', $('#settingsModal').classList.contains('open'));
+  $('#settingsModal').classList.remove('open');
+  await shot('r00_settings');
+  await clickEl($('.start-nav .nav-btn[data-page="home"]'), 400);
+  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '공백·내 양식'), 800);
+  check('공백 양식 카드', !!$$('#companyGrid .company-card').find((c) => c.textContent.includes('공백 양식')));
   await shot('r01_start');
 
   // --- 공백 양식 열기 ---
-  await clickEl($$('#myTplSection .company-card').find((c) => c.textContent.includes('공백 양식')), 1800);
+  await clickEl($$('#companyGrid .company-card').find((c) => c.textContent.includes('공백 양식')), 1800);
   await waitFor(() => $('#editorView').classList.contains('active'));
   check('공백 양식으로 편집 시작(표지·사진 시트)', $('#editorTitle').textContent.includes('공백') && $$('#sheetTabsBar .sheet-tab').length === 2, $('#editorTitle').textContent);
   await clickEl($$('#sheetTabsBar .sheet-tab')[1], 700);
@@ -85,12 +109,12 @@ try {
   await clickEl($('#photoColsSeg button[data-cols="2"]'), 300);
   const names = () => $$('#photoGrid .photo-name').map((n) => n.textContent.trim());
   const asc = names();
-  check('정렬 방향 단추(오름)', $('#photoSortDirBtn').textContent.includes('오름'));
-  await clickEl($('#photoSortDirBtn'), 400);
-  check('내림차순으로 뒤집힘', $('#photoSortDirBtn').textContent.includes('내림') && names().join() === [...asc].reverse().join(), names().slice(0, 3).join());
-  await clickEl($('#photoSortDirBtn'), 400);
+  check('이름순 아이콘 켜짐(오름)', $('#photoSortName').classList.contains('on') && $('#photoSortName').dataset.tip.includes('오름'));
+  await clickEl($('#photoSortName'), 400);
+  check('한 번 더 누르면 내림차순으로 뒤집힘', $('#photoSortName').dataset.tip.includes('내림') && names().join() === [...asc].reverse().join(), names().slice(0, 3).join());
+  await clickEl($('#photoSortName'), 400);
   check('다시 오름차순', names().join() === asc.join());
-  check('정렬·열 수가 MYBOX에도 같이 보임(공통 도구)', !$('#photoSortSel').closest('#localControls'));
+  check('정렬·열 수가 MYBOX에도 같이 보임(공통 도구)', !$('#photoSortName').closest('#localControls'));
 
   // --- 속성 패널 접기 ---
   const vpW = $('#gridViewport').getBoundingClientRect().width;
@@ -127,8 +151,10 @@ try {
   nm.value = 'QA 공용홀 기본';
   await clickEl($('#saveMyTplGoBtn'), 800);
   check('내 양식 저장 안내', toastText().includes('QA 공용홀 기본'), toastText());
+  startUi.workTab = 'mine';
   await renderMyTemplates(); await sleep(500);
-  const myCard = $$('#myTplSection .company-card').find((c) => c.textContent.includes('QA 공용홀 기본'));
+  const myCard = $$('#companyGrid .company-card').find((c) => c.textContent.includes('QA 공용홀 기본'));
+  check('아래 "내 양식" 목록에도 나옴', $$('#workList .work-row').some((r) => r.textContent.includes('QA 공용홀 기본')));
   check('시작 화면 "내 양식"에 나옴(블록 3개)', myCard && myCard.textContent.includes('블록 3개'), myCard && myCard.textContent);
   const list = await window.api.myTemplatesList();
   await startFromMyTemplate(list[0].id); await sleep(1200);

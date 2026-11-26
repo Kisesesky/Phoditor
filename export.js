@@ -147,14 +147,26 @@ function rowHeightToPx(heightPt) {
 }
 
 // --- Layout Grid Definitions (D3: col x row) ---
-const LAYOUT_SPECS = {
-  '1x1': { cols: 1, rows: 1, count: 1 },
-  '1x2': { cols: 1, rows: 2, count: 2 },
-  '2x1': { cols: 2, rows: 1, count: 2 },
-  '1x3': { cols: 1, rows: 3, count: 3 },
-  '3x1': { cols: 3, rows: 1, count: 3 },
-  '2x2': { cols: 2, rows: 2, count: 4 }
+const LAYOUT_PRESETS = {
+  '1x1': { cols: 1, rows: 1, count: 1, label: '1×1' },
+  '2x1': { cols: 2, rows: 1, count: 2, label: '2×1' },
+  '1x2': { cols: 1, rows: 2, count: 2, label: '1×2' },
+  '2x2': { cols: 2, rows: 2, count: 4, label: '2×2' },
+  '3x1': { cols: 3, rows: 1, count: 3, label: '3×1' },
+  '1x3': { cols: 1, rows: 3, count: 3, label: '1×3' }
 };
+// [2026-11-26] 사용자 지정 배치: "열x행" 아무 조합(1~5 × 1~5)을 같은 방식으로 꺼낸다. 목록(Object.entries)은 기본 6가지만.
+const LAYOUT_SPECS = new Proxy(LAYOUT_PRESETS, {
+  get(t, k) {
+    if (typeof k !== 'string') return t[k];
+    if (t[k]) return t[k];
+    const m = /^([1-5])x([1-5])$/.exec(k);
+    if (!m) return undefined;
+    const cols = Number(m[1]);
+    const rows = Number(m[2]);
+    return { cols, rows, count: cols * rows, label: `${cols}×${rows}` };
+  }
+});
 
 function computeSlotPlacement(areaBoundsPx, layoutKey, slotIndex, imgW, imgH) {
   const spec = LAYOUT_SPECS[layoutKey] || LAYOUT_SPECS['1x1'];

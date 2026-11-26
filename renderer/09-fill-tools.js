@@ -14,31 +14,153 @@ function isPhotoUsed(p) {
   return countPhotoUses(p) > 0 || (p.resourceId && [...state.editor.sheets].some((sh) => (sh.blocks || []).some((b) => Object.values(b.photoAreas || {}).some((pa) => ((pa && pa.slots) || []).some((sl) => sl && sl.resourceId === p.resourceId)))));
 }
 
+// [2026-11-26] 폴더 이름 → 위치: "16. 현관" → "현관" (앞 번호·기호 떼기)
+function cleanFolderName(name) {
+  const t = String(name || '').replace(/^\s*[\(\[]?\d+(?:[.\-_]\d+)*[\)\]]?\s*[.\-_)]?\s*/, '').trim();
+  return t || String(name || '').trim();
+}
+// 폴더 이름을 넣을 칸 후보(블록 값 칸 중 라벨이 있는 것). 위치·LOCATION·부위·구분·명칭 순으로 고른다
+function locationCellOptions(blkDef) {
+  const opts = [];
+  for (const v of (blkDef && blkDef.values) || []) {
+    const lab = String(v.label || '').replace(/[■\s]/g, '');
+    if (!lab || v.labelKind === 'strayChar') continue;
+    if (opts.some((o) => o.cell === v.cell)) continue;
+    opts.push({ cell: v.cell, label: lab });
+  }
+  const prio = ['위치', 'LOCATION', '부위', '구분', '명칭', '공종'];
+  let best = -1;
+  for (const p of prio) { best = opts.findIndex((o) => o.label.toUpperCase().includes(p)); if (best >= 0) break; }
+  return { opts, best };
+}
+function blockIsEmpty(blk) {
+  if (!blk) return true;
+  if (Object.values(blk.values || {}).some((v) => String(v || '').trim())) return false;
+  return !Object.values(blk.photoAreas || {}).some((pa) => ((pa && pa.slots) || []).some(Boolean));
+}
+
 function openAutoFill() {
   const sheet = state.editor && state.editor.sheets[state.activeSheetIdx];
   if (!sheet || sheet.role !== 'block') return showToast('블록 시트(사진이 들어가는 시트)에서 써 주세요.');
+  const subs = state.photoSource === 'local' ? (state.photoSubfolders || []).filter((f) => f.count > 0) : [];
   const list = currentPhotoList();
-  if (!list.length) return showToast('먼저 왼쪽에서 사진 폴더를 열어 주세요.');
-  const order = radioGroup('order', [['name', '파일 이름순'], ['time', '찍은 시간순'], ['panel', '패널 순서']], 'name');
+  if (!list.length && !subs.length) return showToast('먼저 왼쪽에서 사진 폴더를 열어 주세요.');
+  const blkDef = sheet.sheetDef.block;
+  const loc = locationCellOptions(blkDef);
+  const locSel = h('select', {});
+  locSel.appendChild(h('option', { value: '', text: '넣지 않음' }));
+  loc.opts.forEach((o, i) => locSel.appendChild(h('option', { value: o.cell, text: o.label, selected: i === loc.best ? true : null })));
+  if (loc.best < 0) locSel.value = '';
+  let layoutKey = '1x1';
+  const layoutLabel = h('span', { class: 'lg-label', text: '블록마다 1×1 (1장)' });
+  const layoutBox = h('div', {});
+  const drawLayout = () => {
+    layoutBox.innerHTML = '';
+    layoutBox.appendChild(layoutPicker(0, 0, 0, layoutKey, (k) => { layoutKey = k; const sp = LAYOUT_SPECS[k]; layoutLabel.textContent = `블록마다 ${sp.label} (${sp.count}장)`; drawLayout(); }));
+  };
+  drawLayout();
+
+  // --- 폴더별 채우기(하위 폴더가 있을 때) ---
+  const folderChecks = subs.map((f) => {
+    const cb = h('input', { type: 'checkbox', checked: true });
+    const row = h('label', { class: 'af-folder' }, cb, h('span', { text: f.name }), h('span', { class: 'arrow', text: '→' }), h('span', { class: 'loc', text: cleanFolderName(f.name) }), h('span', { class: 'cnt', text: `${f.count}장` }));
+    return { f, cb, row };
+  });
+  const folderPane = h('div', { class: 'af-pane' },
+    h('div', { class: 'insp-note', text: '고른 폴더마다 블록을 만들어 사진을 넣고, 폴더 이름(앞 번호는 뺌)을 위치 칸에 적어요. 사진이 블록 하나에 다 안 들어가면 같은 위치로 다음 블록에 이어서 넣어요.' }),
+    h('div', { class: 'af-tools' },
+      h('button', { onclick: () => folderChecks.forEach((x) => { x.cb.checked = true; }) }, '모두 고르기'),
+      h('button', { onclick: () => folderChecks.forEach((x) => { x.cb.checked = false; }) }, '모두 빼기')),
+    h('div', { class: 'af-folders' }, ...folderChecks.map((x) => x.row)));
+
+  // --- 지금 보이는 사진 채우기(예전 방식) ---
   const which = radioGroup('which', [['unused', '안 넣은 사진만'], ['all', '모든 사진']], 'unused');
-  const per = radioGroup('per', [['1', '자리마다 1장'], ['keep', '지금 배치대로']], '1');
+  const per = radioGroup('per', [['layout', '아래 배치대로'], ['keep', '지금 배치대로']], 'layout');
   const start = radioGroup('start', [['selected', `선택한 블록(${state.selectedBlockIdx + 1})부터`], ['first', '처음부터']], 'selected');
-  const add = h('input', { type: 'checkbox', checked: true, id: 'afAdd' });
+  const curName = state.photoFolder ? cleanFolderName(state.photoFolder.split('/').pop()) : '';
+  const putName = h('input', { type: 'checkbox', checked: !!(subs.length === 0 && state.photoFolderStack.length > 1) });
   const unusedCount = list.filter((p) => !isPhotoUsed(p)).length;
-  const back = openModal('사진 자동 채우기', [
-    h('div', { class: 'insp-note', text: `왼쪽 사진(${list.length}장, 안 넣은 사진 ${unusedCount}장)을 이 시트의 빈 사진 자리에 차례대로 넣어요. 이미 사진이 있는 자리는 그대로 둬요.` }),
-    h('div', { class: 'form-row' }, h('label', { text: '순서' }), order),
+  const photoPane = h('div', { class: 'af-pane' },
+    h('div', { class: 'insp-note', text: `왼쪽 사진(${list.length}장, 안 넣은 사진 ${unusedCount}장)을 빈 사진 자리에 차례대로 넣어요. 이미 사진이 있는 자리는 그대로 둬요. 순서는 사진 패널 정렬을 따라요.` }),
     h('div', { class: 'form-row' }, h('label', { text: '넣을 사진' }), which),
     h('div', { class: 'form-row' }, h('label', { text: '배치' }), per),
     h('div', { class: 'form-row' }, h('label', { text: '시작 위치' }), start),
-    h('label', { class: 'check-row' }, add, ' 자리가 모자라면 블록을 자동으로 추가')
+    curName ? h('label', { class: 'check-row' }, putName, ` 위치 칸에 폴더 이름 "${curName}" 넣기`) : null);
+
+  const mode = radioGroup('mode', [['folders', `폴더별로 (${subs.length}개)`], ['photos', '지금 보이는 사진']], subs.length ? 'folders' : 'photos');
+  const sync = () => {
+    const m = segValue(mode, subs.length ? 'folders' : 'photos');
+    folderPane.style.display = m === 'folders' ? '' : 'none';
+    photoPane.style.display = m === 'photos' ? '' : 'none';
+  };
+  mode.addEventListener('click', () => setTimeout(sync, 0));
+  if (!subs.length) mode.querySelector('[data-v="folders"]').disabled = true;
+  sync();
+  const back = openModal('사진 자동 채우기', [
+    subs.length ? h('div', { class: 'form-row' }, h('label', { text: '채우는 방식' }), mode) : null,
+    folderPane,
+    photoPane,
+    h('div', { class: 'form-row' }, h('label', { text: '사진 배치' }), layoutLabel, layoutBox),
+    h('div', { class: 'form-row' }, h('label', { text: '폴더 이름 넣을 칸' }), locSel)
   ], [
     h('button', { onclick: () => back.remove() }, '취소'),
     h('button', { class: 'primary', id: 'autoFillRunBtn', onclick: async () => {
-      back.remove();
-      await runAutoFill({ order: segValue(order, 'name'), which: segValue(which, 'unused'), per: segValue(per, '1'), start: segValue(start, 'selected'), addBlocks: add.checked });
+      const m = segValue(mode, subs.length ? 'folders' : 'photos');
+      if (m === 'folders') {
+        const chosen = folderChecks.filter((x) => x.cb.checked).map((x) => x.f);
+        if (!chosen.length) return showToast('넣을 폴더를 골라 주세요.');
+        back.remove();
+        await runFolderFill({ folders: chosen, layout: layoutKey, locCell: locSel.value || null });
+      } else {
+        back.remove();
+        await runAutoFill({ order: 'panel', which: segValue(which, 'unused'), per: segValue(per, 'layout'), layout: layoutKey, start: segValue(start, 'selected'), addBlocks: true, locCell: putName.checked ? locSel.value || null : null, locValue: curName });
+      }
     } }, '채우기')
-  ]);
+  ], 600);
+  back.classList.add('af-modal');
+}
+
+// 폴더별 채우기: 폴더 하나 = 위치 하나. 빈 블록부터 쓰고 모자라면 블록을 추가한다
+async function runFolderFill(opt) {
+  const sheetIdx = state.activeSheetIdx;
+  const sheet = state.editor.sheets[sheetIdx];
+  const paDefs = sheet.sheetDef.block.photoAreas || [];
+  const spec = LAYOUT_SPECS[opt.layout] || LAYOUT_SPECS['1x1'];
+  showToast('폴더 사진을 읽는 중…');
+  const folders = await window.api.scanSubfolders(opt.folders.map((f) => f.path));
+  const total = folders.reduce((a, f) => a + f.photos.length, 0);
+  if (!total) return showToast('고른 폴더에 사진이 없어요.');
+  recordUndo('폴더별 사진 채우기');
+  let b = 0;
+  let placed = 0;
+  let added = 0;
+  const nextEmpty = () => {
+    while (b < sheet.blocks.length && !blockIsEmpty(sheet.blocks[b])) b++;
+    if (b >= sheet.blocks.length) { sheet.blocks.push(createEmptyBlockData()); added++; }
+    return sheet.blocks[b];
+  };
+  let firstBlock = null;
+  for (const f of folders) {
+    const queue = sortPhotoList(f.photos.slice());
+    const locName = cleanFolderName(f.name);
+    while (queue.length) {
+      const blk = nextEmpty();
+      if (firstBlock === null) firstBlock = b;
+      if (opt.locCell) blk.values = { ...(blk.values || {}), [opt.locCell]: locName };
+      for (let paIdx = 0; paIdx < paDefs.length && queue.length; paIdx++) {
+        const slots = new Array(spec.count).fill(null);
+        for (let s = 0; s < spec.count && queue.length; s++) { slots[s] = { ...queue.shift() }; placed++; }
+        blk.photoAreas[paIdx] = { layout: opt.layout, slots };
+      }
+      b++;
+      if (b > 3000) break;
+    }
+  }
+  state.selectedBlockIdx = Math.max(0, firstBlock || 0);
+  state.selectedPhotoSlot = null;
+  state.selectedCell = null;
+  rerenderAll();
+  showToast(`폴더 ${folders.length}개 · 사진 ${placed}장을 넣었어요${added ? ` (블록 ${added}개 추가)` : ''}${opt.locCell ? ' · 위치 칸에 폴더 이름' : ''}.`, 4500);
 }
 
 async function runAutoFill(opt) {
@@ -63,8 +185,12 @@ async function runAutoFill(opt) {
     const blk = sheet.blocks[b];
     for (let paIdx = 0; paIdx < paDefs.length && queue.length; paIdx++) {
       let pa = blk.photoAreas[paIdx];
-      if (!pa || !pa.layout) pa = blk.photoAreas[paIdx] = { layout: '1x1', slots: [null] };
+      const wantLayout = opt.per === 'layout' ? (opt.layout || '1x1') : (pa && pa.layout) || '1x1';
+      if (!pa || !pa.layout || (opt.per === 'layout' && pa.layout !== wantLayout && !(pa.slots || []).some(Boolean))) {
+        pa = blk.photoAreas[paIdx] = { layout: wantLayout, slots: new Array(LAYOUT_SPECS[wantLayout].count).fill(null) };
+      }
       const count = opt.per === '1' ? 1 : (LAYOUT_SPECS[pa.layout] || LAYOUT_SPECS['1x1']).count;
+      if (opt.locCell && opt.locValue && !String((blk.values || {})[opt.locCell] || '').trim()) blk.values = { ...(blk.values || {}), [opt.locCell]: opt.locValue };
       for (let s = 0; s < count && queue.length; s++) {
         if (pa.slots[s]) continue;
         let photo = queue.shift();

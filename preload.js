@@ -28,6 +28,7 @@ contextBridge.exposeInMainWorld('api', {
   openTemplate: (templateId) => ipcRenderer.invoke('open-template', templateId),
   selectPhotoFolder: () => ipcRenderer.invoke('select-photo-folder'),
   refreshPhotoFolder: (folderPath) => ipcRenderer.invoke('refresh-photo-folder', folderPath),
+  scanSubfolders: (folderPaths) => ipcRenderer.invoke('scan-subfolders', folderPaths),
   estimateExportSize: (payload) => ipcRenderer.invoke('estimate-export-size', payload),
   exportXlsx: (payload) => ipcRenderer.invoke('export-xlsx', payload),
   // Stage 2 A — Pre-placement Crop

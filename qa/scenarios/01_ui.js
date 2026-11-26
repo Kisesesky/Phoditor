@@ -42,7 +42,7 @@ try {
   check('사진을 끌어 놓으면 바로 1장 배치', $$('.photo-slot img').length === 1, $$('.photo-slot img').length);
   check('속성 패널: 사진 자리', insp().includes('사진 자리'), insp());
   check('사진 패널에 "넣음 1" 표시', ph('landscape_3000').textContent.includes('넣음 1'));
-  await clickEl($$('#inspBody .layout-pick button').find((b) => b.textContent.includes('2장 1×2')), 700);
+  await clickEl($$('#inspBody .layout-pick button').find((b) => b.dataset.layout === '1x2'), 700);
   check('속성 패널에서 배치 2장(1×2)으로', $$('.pv-page .photo-slot').length === 2, $$('.pv-page .photo-slot').length);
   $$('.pv-page .photo-slot')[1].click(); await sleep(500);
   await clickEl(ph('portrait_1200'), 1200);

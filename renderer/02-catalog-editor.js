@@ -22,118 +22,129 @@ async function initCatalog() {
   } catch (_) {}
 }
 
+// [2026-11-26 시작 화면 개편] 왼쪽 메뉴(홈·열기·설정) + 위: 종류 탭과 양식 카드 한 줄 + 아래: 최근 작업 / 내 양식 목록
+const MINE_TAB = '__mine';
+const startUi = { workTab: 'recent' };
+
 function renderCatalog() {
   const { types, companies, available } = state.catalog;
   el.typeTabs.innerHTML = '';
-  for (const t of types) {
-    const btn = document.createElement('button');
-    btn.className = 'type-btn' + (state.selectedType === t ? ' selected' : '');
-    const cnt = companies.filter((c) => available[`${t}__${c}`]).length;
-    btn.innerHTML = `${t}<span class="cnt">${cnt}</span>`;
-    if (!cnt) {
-      btn.classList.add('empty-type');
-      btn.title = '아직 이 종류의 양식이 없어요(새 원본이 오면 추가)';
-    }
-    btn.addEventListener('click', () => {
-      state.selectedType = t;
-      renderCatalog();
-    });
+  const tabs = [[MINE_TAB, '공백·내 양식', null], ...types.map((t) => [t, t, companies.filter((c) => available[`${t}__${c}`]).length])];
+  for (const [key, label, cnt] of tabs) {
+    const btn = h('button', { class: 'type-btn' + (state.selectedType === key ? ' selected' : '') + (cnt === 0 ? ' empty-type' : ''), title: cnt === 0 ? '아직 이 종류의 양식이 없어요' : null });
+    btn.append(label);
+    if (cnt !== null) btn.appendChild(h('span', { class: 'cnt', text: String(cnt) }));
+    btn.addEventListener('click', () => { state.selectedType = key; renderCatalog(); });
     el.typeTabs.appendChild(btn);
   }
-
   el.companyGrid.innerHTML = '';
-  for (const comp of companies) {
-    const item = available[`${state.selectedType}__${comp}`];
-    el.companyGrid.appendChild(templateCard({
-      item,
-      name: comp,
-      color: COMPANY_COLORS[comp] || '#64748B',
-      meta: item ? `시트 ${item.sheetCount}개 · ${item.addUnit === 'page' ? '쪽마다 2항목' : '블록마다 1항목'}` : '양식 준비 중',
-      onOpen: item ? () => openTemplate(item.id) : () => showToast('아직 이 조합의 양식이 없어요')
-    }));
+  el.companyGrid.scrollLeft = 0;
+  if (state.selectedType === MINE_TAB) {
+    renderMineStrip();
+  } else {
+    const list = companies.filter((c) => available[`${state.selectedType}__${c}`]);
+    for (const comp of list) {
+      const item = available[`${state.selectedType}__${comp}`];
+      el.companyGrid.appendChild(templateCard({
+        item,
+        name: comp,
+        color: COMPANY_COLORS[comp] || '#64748B',
+        meta: `시트 ${item.sheetCount}개 · ${item.addUnit === 'page' ? '쪽마다 2항목' : '블록마다 1항목'}`,
+        onOpen: () => openTemplate(item.id)
+      }));
+    }
+    if (!list.length) el.companyGrid.appendChild(h('div', { class: 'strip-empty', text: '아직 이 종류의 양식이 없어요. 새 원본이 오면 추가할게요. 지금은 [공백·내 양식]의 공백 양식으로 시작할 수 있어요.' }));
   }
-  renderMyTemplates();
+  updateStripButtons();
 }
 
-// [2026-11-26] 양식 카드: 큰 미리보기 + ‹ › 로 시트 넘겨 보기(data/thumbs/<id>/<n>.png, tools/make-cover-thumbs.js)
+function updateStripButtons() {
+  const s = el.companyGrid;
+  const prev = document.getElementById('stripPrev');
+  const next = document.getElementById('stripNext');
+  if (!prev) return;
+  prev.hidden = s.scrollLeft <= 2;
+  next.hidden = s.scrollLeft + s.clientWidth >= s.scrollWidth - 2;
+}
+
+// 양식 카드: 미리보기(‹ › 또는 그림 왼쪽·오른쪽을 눌러 시트 넘겨 보기) + 이름. 그림을 눌러도 열리지 않고, 아래 이름 부분·두 번 누르기·Enter로 연다
 function previewPagesOf(item) {
   if (item && item.previews && item.previews.length) return item.previews;
   return item ? [{ sheet: (item.sheetNames && item.sheetNames[0]) || '표지', file: `${item.id}.png` }] : [];
 }
-function templateCard({ item, name, color, meta, onOpen, extra, kicker }) {
-  const card = h('div', { class: 'company-card' + (item ? '' : ' empty'), role: 'button', tabindex: '0', 'aria-disabled': item ? null : 'true' });
+function templateCard({ item, name, color, meta, onOpen, kicker }) {
+  const card = h('div', { class: 'company-card', role: 'button', tabindex: '0' });
   const mono = h('div', { class: 'mono', style: `background:${color || '#64748B'}` }, String(name || '').slice(0, 1));
-  const art = h('div', { class: 'card-art' }, mono);
+  const art = h('div', { class: 'card-art', 'data-tip': '◀ ▶ 시트 넘겨 보기 · 두 번 누르면 열기' }, mono);
   const pages = previewPagesOf(item);
-  if (pages.length) {
-    let i = 0;
-    const img = h('img', { class: 'cover-thumb', alt: `${name} 미리보기` });
-    const cap = h('div', { class: 'art-cap' });
-    const prev = h('button', { class: 'art-nav prev', title: '앞 시트 보기', 'aria-label': '앞 시트' }, '‹');
-    const next = h('button', { class: 'art-nav next', title: '다음 시트 보기', 'aria-label': '다음 시트' }, '›');
-    const show = () => {
-      img.src = `data/thumbs/${pages[i].file.split('/').map(encodeURIComponent).join('/')}`;
-      cap.textContent = pages.length > 1 ? `${pages[i].sheet} · ${i + 1}/${pages.length}` : pages[i].sheet;
-      prev.disabled = i === 0;
-      next.disabled = i === pages.length - 1;
-    };
-    const step = (d) => (e) => {
-      e.stopPropagation();
-      const j = Math.max(0, Math.min(pages.length - 1, i + d));
-      if (j !== i) { i = j; show(); }
-    };
-    prev.addEventListener('click', step(-1));
-    next.addEventListener('click', step(1));
-    img.addEventListener('load', () => { if (mono.parentElement) { mono.remove(); art.append(img, cap); if (pages.length > 1) art.append(prev, next); } });
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') step(-1)(e);
-      else if (e.key === 'ArrowRight') step(1)(e);
-    });
-    show();
+  let i = 0;
+  const step = (d) => {
+    const j = Math.max(0, Math.min(pages.length - 1, i + d));
+    if (j !== i) { i = j; show(); }
+  };
+  const img = h('img', { class: 'cover-thumb', alt: `${name} 미리보기`, draggable: 'false' });
+  const cap = h('div', { class: 'art-cap' });
+  const prev = h('button', { class: 'art-nav prev', 'aria-label': '앞 시트' }, '‹');
+  const next = h('button', { class: 'art-nav next', 'aria-label': '다음 시트' }, '›');
+  function show() {
+    if (!pages.length) return;
+    img.src = `data/thumbs/${pages[i].file.split('/').map(encodeURIComponent).join('/')}`;
+    cap.textContent = pages.length > 1 ? `${pages[i].sheet} · ${i + 1}/${pages.length}` : pages[i].sheet;
+    prev.disabled = i === 0;
+    next.disabled = i === pages.length - 1;
   }
-  const body = h('div', { class: 'card-body' },
+  img.addEventListener('load', () => { if (mono.parentElement) { mono.remove(); art.append(img, cap); if (pages.length > 1) art.append(prev, next); } });
+  // 그림 영역: 한 번 누르면 왼쪽 절반=앞, 오른쪽 절반=다음 (절대 열지 않음), 두 번 누르면 열기
+  art.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (e.target === prev) return step(-1);
+    if (e.target === next) return step(1);
+    if (pages.length < 2) return;
+    const r = art.getBoundingClientRect();
+    step(e.clientX < r.left + r.width / 2 ? -1 : 1);
+  });
+  art.addEventListener('dblclick', (e) => { e.stopPropagation(); onOpen(); });
+  // 트랙패드 가로 밀기로도 넘김
+  let wheelAcc = 0;
+  art.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || pages.length < 2) return;
+    e.preventDefault();
+    wheelAcc += e.deltaX;
+    if (Math.abs(wheelAcc) > 60) { step(wheelAcc > 0 ? 1 : -1); wheelAcc = 0; }
+  }, { passive: false });
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    else if (e.key === 'Enter' && e.target === card) onOpen();
+  });
+  show();
+  const body = h('div', { class: 'card-body', 'data-tip': '이 양식으로 시작' },
     kicker ? h('div', { class: 'card-kicker', text: kicker }) : null,
     h('div', { class: 'company-name', text: name }),
-    h('div', { class: 'company-meta', text: meta, title: meta }),
-    extra || null);
+    h('div', { class: 'company-meta', text: meta }));
+  card.addEventListener('click', (e) => { if (!e.target.closest('.card-art')) onOpen(); });
   card.append(art, body);
-  card.addEventListener('click', (e) => { if (!e.target.closest('.card-actions')) onOpen(); });
-  card.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target === card) onOpen(); });
   return card;
 }
 
-// --- [2026-11-26] 공백 양식 · 내 양식 ---
-async function renderMyTemplates() {
-  let box = document.getElementById('myTplSection');
-  if (!box) {
-    box = h('div', { id: 'myTplSection' });
-    const anchor = document.querySelector('.start-inner .section-label');
-    anchor.parentElement.insertBefore(box, anchor);
-  }
+// --- 공백 양식 · 내 양식 ---
+async function renderMineStrip() {
   const list = await window.api.myTemplatesList().catch(() => []);
-  box.innerHTML = '';
-  box.appendChild(h('div', { class: 'section-label' }, '공백 양식 · 내 양식', h('span', { class: 'label-sub', text: '  새 현장은 공백 양식으로, 자주 쓰는 구성은 편집 화면의 [내 양식으로 저장]으로 모아 두세요' })));
-  const grid = h('div', { class: 'company-grid my-grid' });
+  if (state.selectedType !== MINE_TAB) return;
+  el.companyGrid.innerHTML = '';
   for (const g of state.catalog.generic || []) {
-    grid.appendChild(templateCard({ item: g, name: g.title || '공백 양식', color: '#475467', kicker: '기본', meta: `시트 ${g.sheetCount}개 · 회사 표시 없음`, onOpen: () => openTemplate(g.id) }));
+    el.companyGrid.appendChild(templateCard({ item: g, name: g.title || '공백 양식', color: '#475467', kicker: '기본', meta: `시트 ${g.sheetCount}개 · 회사 표시 없음`, onOpen: () => openTemplate(g.id) }));
   }
   const byId = Object.fromEntries(Object.values(state.catalog.available).map((x) => [x.id, x]));
   for (const t of list) {
     const base = byId[t.templateId];
-    const actions = h('div', { class: 'card-actions' },
-      h('button', { class: 'ghost', onclick: () => renameMyTemplate(t) }, '이름 바꾸기'),
-      h('button', { class: 'ghost danger', onclick: () => deleteMyTemplate(t) }, '지우기'));
-    grid.appendChild(templateCard({
-      item: base || null,
-      name: t.name,
-      color: '#7C3AED',
-      kicker: '내 양식',
-      meta: `${t.baseLabel} · 블록 ${t.blockCount}개 · ${new Date(t.createdAt).toLocaleDateString('ko-KR')}`,
-      extra: actions,
-      onOpen: base ? () => startFromMyTemplate(t.id) : () => showToast('바탕 양식이 없어져 열 수 없어요.')
-    }));
+    el.companyGrid.appendChild(templateCard({ item: base || null, name: t.name, color: '#7C3AED', kicker: '내 양식', meta: `${t.baseLabel} · 블록 ${t.blockCount}개`, onOpen: base ? () => startFromMyTemplate(t.id) : () => showToast('바탕 양식이 없어져 열 수 없어요.') }));
   }
-  box.appendChild(grid);
+  updateStripButtons();
+}
+async function renderMyTemplates() {
+  if (state.selectedType === MINE_TAB) await renderMineStrip();
+  if (startUi.workTab === 'mine') await renderWorkList();
 }
 
 async function startFromMyTemplate(id) {
@@ -170,6 +181,70 @@ async function deleteMyTemplate(t) {
   showToast('내 양식을 지웠어요.');
 }
 
+// 아래 목록: 최근 작업 / 내 양식 (PowerPoint 홈처럼 한 줄씩)
+const PBOOK_ICON = '<svg class="pbook-ico" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 3h11l7 7v17a2 2 0 01-2 2H8a2 2 0 01-2-2V5a2 2 0 012-2z" fill="#fff" stroke="#CBD5E1"/><path d="M19 3v7h7" fill="#EEF2FF" stroke="#CBD5E1"/><rect x="9" y="13" width="14" height="11" rx="2" fill="#2563EB"/><circle cx="13.5" cy="17" r="1.6" fill="#fff"/><path d="M10 23l4-4 3 3 2-2 3 3z" fill="#BFDBFE"/></svg>';
+async function renderWorkList() {
+  const box = el.workList || document.getElementById('workList');
+  if (!box) return;
+  for (const b of document.querySelectorAll('#workTabs button')) b.classList.toggle('on', b.dataset.tab === startUi.workTab);
+  const rows = [];
+  if (startUi.workTab === 'recent') {
+    const recent = await window.api.projectRecent();
+    for (const r of recent.slice(0, 12)) {
+      const dir = r.path.split('/').slice(0, -1).join('/').replace(/^\/Users\/[^/]+/, '~');
+      const row = h('div', { class: 'work-row', role: 'button', tabindex: '0', title: r.path },
+        h('span', { class: 'work-ico' }),
+        h('div', { class: 'work-text' }, h('div', { class: 'work-title', text: r.title || r.path.split('/').pop() }), h('div', { class: 'work-meta', text: `${(r.templateId || '').replace('_', ' · ')}  ·  ${dir}` })),
+        h('div', { class: 'work-date', text: r.savedAt ? new Date(r.savedAt).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' }) : '' }),
+        h('div', { class: 'work-actions' }, h('button', { class: 'ghost icon-btn', 'data-tip': '복제해서 새 현장', onclick: (e) => { e.stopPropagation(); duplicateProject(r.path); } }, iconSvg('copy'))));
+      row.querySelector('.work-ico').innerHTML = PBOOK_ICON;
+      row.addEventListener('click', () => openProject(r.path));
+      row.addEventListener('keydown', (e) => { if (e.key === 'Enter') openProject(r.path); });
+      rows.push(row);
+    }
+    if (!rows.length) rows.push(h('div', { class: 'work-empty', text: '저장한 작업이 여기에 나와요. 편집 중에 ⌘S로 저장하세요.' }));
+  } else {
+    const list = await window.api.myTemplatesList().catch(() => []);
+    for (const t of list) {
+      const row = h('div', { class: 'work-row', role: 'button', tabindex: '0' },
+        h('span', { class: 'work-ico mine' }, iconSvg('star')),
+        h('div', { class: 'work-text' }, h('div', { class: 'work-title', text: t.name }), h('div', { class: 'work-meta', text: `${t.baseLabel} · 시트 ${t.sheetCount}개 · 블록 ${t.blockCount}개` })),
+        h('div', { class: 'work-date', text: new Date(t.createdAt).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' }) }),
+        h('div', { class: 'work-actions' },
+          h('button', { class: 'ghost icon-btn', 'data-tip': '이름 바꾸기', onclick: (e) => { e.stopPropagation(); renameMyTemplate(t); } }, iconSvg('pen')),
+          h('button', { class: 'ghost icon-btn danger', 'data-tip': '지우기', onclick: (e) => { e.stopPropagation(); deleteMyTemplate(t); } }, iconSvg('trash'))));
+      row.addEventListener('click', () => (t.missingBase ? showToast('바탕 양식이 없어져 열 수 없어요.') : startFromMyTemplate(t.id)));
+      rows.push(row);
+    }
+    if (!rows.length) rows.push(h('div', { class: 'work-empty', text: '자주 쓰는 구성을 편집 화면 속성 패널의 [내 양식으로 저장]으로 모아 두면 여기서 바로 시작해요.' }));
+  }
+  box.innerHTML = '';
+  rows.forEach((r) => box.appendChild(r));
+}
+
+// 작은 선 아이콘 모음(아이콘 단추용)
+const ICONS = {
+  copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h2"/>',
+  star: '<path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',
+  pen: '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+  trash: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+  refresh: '<path d="M20 11a8 8 0 10-2.3 5.7M20 5v6h-6"/>',
+  up: '<path d="M12 19V5M6 11l6-6 6 6"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+  filter: '<path d="M3 5h18l-7 8v6l-4 2v-8z"/>',
+  sortName: '<path d="M4 9l3-5 3 5M4.8 7.5h4.4"/><path d="M4 14h6l-6 6h6"/><path d="M17 4v16M13.5 16.5L17 20l3.5-3.5"/>',
+  sortNameDesc: '<path d="M4 9l3-5 3 5M4.8 7.5h4.4"/><path d="M4 14h6l-6 6h6"/><path d="M17 20V4M13.5 7.5L17 4l3.5 3.5"/>',
+  sortTime: '<circle cx="9" cy="12" r="6.5"/><path d="M9 8.5V12l2.3 1.6"/><path d="M19 4v16M16 16.5l3 3.5 3-3.5"/>',
+  sortTimeDesc: '<circle cx="9" cy="12" r="6.5"/><path d="M9 8.5V12l2.3 1.6"/><path d="M19 20V4M16 7.5l3-3.5 3 3.5"/>'
+};
+function iconSvg(name) {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', '0 0 24 24');
+  s.setAttribute('class', 'i');
+  s.innerHTML = ICONS[name] || '';
+  return s;
+}
+
 // 편집 화면: 지금 구성을 내 양식으로 저장(사진은 빼고)
 function openSaveMyTemplate() {
   if (!state.editor) return;
@@ -194,6 +269,26 @@ function openSaveMyTemplate() {
     } }, '저장')
   ], 460);
   setTimeout(() => { nameIn.focus(); nameIn.select(); }, 0);
+}
+
+// --- 설정 화면 ---
+function showStartPage(page) {
+  for (const b of document.querySelectorAll('.start-nav .nav-btn[data-page]')) b.classList.toggle('active', b.dataset.page === page);
+  for (const p of document.querySelectorAll('.start-page')) p.classList.toggle('active', p.id === `${page}Page`);
+  if (page === 'settings') renderSettingsPage();
+}
+async function renderSettingsPage() {
+  await refreshMyboxStatus();
+  const t = expiryText(myboxUi.hasToken, myboxUi.expiry);
+  const chip = document.getElementById('setMyboxChip');
+  chip.className = `expiry-chip ${t.cls}`;
+  chip.textContent = t.short;
+  document.getElementById('setMyboxDetail').textContent = t.long;
+  document.getElementById('setMyboxTokenBtn').textContent = myboxUi.hasToken ? '토큰·기간 바꾸기' : '토큰 넣기';
+  document.getElementById('setMyboxClearBtn').disabled = !myboxUi.hasToken;
+  const sc = document.getElementById('setShortcuts');
+  sc.innerHTML = '';
+  for (const [k, d] of SHORTCUTS) sc.appendChild(h('div', { class: 'sc-row' }, h('span', { class: 'sc-keys' }, ...k.split(' ').map((x) => h('kbd', { text: x }))), h('span', { text: d })));
 }
 
 // --- Open Template & Initialize Editor State ---

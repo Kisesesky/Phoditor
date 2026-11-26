@@ -45,6 +45,14 @@ function makePhotos(dir) {
   sips(['-s', 'format', 'jpeg', src('s', 300, 200, 4), '--out', path.join(dir, 'small_300.jpg')]);
   fs.copyFileSync(src('s2', 300, 200, 5), path.join(dir, 'small_300.png'));
   for (const f of fs.readdirSync(dir)) if (f.startsWith('.')) fs.unlinkSync(path.join(dir, f));
+  // [2026-11-26] 폴더별 자동 채우기 확인용 하위 폴더: "16. 현관"(2장), "17-거실"(3장)
+  const sub = (name, files) => {
+    const d = path.join(dir, name);
+    fs.mkdirSync(d, { recursive: true });
+    files.forEach(([src, dst]) => fs.copyFileSync(path.join(dir, src), path.join(d, dst)));
+  };
+  sub('16. 현관', [['landscape_3000.jpg', 'a1.jpg'], ['portrait_1200.jpg', 'a2.jpg']]);
+  sub('17-거실', [['landscape_3000.jpg', 'b1.jpg'], ['small_300.jpg', 'b2.jpg'], ['portrait_1200.jpg', 'b3.jpg']]);
 }
 
 function runOne(name) {
@@ -53,6 +61,8 @@ function runOne(name) {
     fs.mkdirSync(out, { recursive: true });
     const script = path.join(out, '_scenario.js');
     fs.writeFileSync(script, fs.readFileSync(path.join(__dirname, 'common.js'), 'utf-8') + '\n' + fs.readFileSync(path.join(__dirname, 'scenarios', name), 'utf-8'));
+    // 시나리오마다 새 앱 설정으로(지난번 정렬·열 수 등 기억한 값이 남지 않게): 이 테스트가 만든 userData만 비운다
+    fs.rmSync(path.join(out, 'userData'), { recursive: true, force: true });
     const reportFile = path.join(out, 'report.json');
     if (fs.existsSync(reportFile)) fs.unlinkSync(reportFile);
     const electron = path.join(APP, 'node_modules', '.bin', 'electron');
