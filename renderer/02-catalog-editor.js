@@ -441,6 +441,7 @@ function renderSheetTabs() {
   sheets.forEach((s, idx) => {
     const tab = document.createElement('div');
     tab.className = 'sheet-tab' + (idx === state.activeSheetIdx ? ' active' : '');
+    keyActivate(tab, () => el.sheetTabsBar.querySelectorAll('.sheet-tab')[idx]);
     const dot = document.createElement('i');
     dot.className = 'role-dot';
     tab.appendChild(dot);

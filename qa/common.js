@@ -19,3 +19,12 @@ const dragTo = async (srcEl, dstEl) => {
   dstEl.dispatchEvent(new DragEvent('drop', { bubbles: true, cancelable: true, dataTransfer: dt }));
   await sleep(400);
 };
+// 진짜 키 누름(하니스가 sendInputEvent로 보냄)
+let qaKeyId = 0;
+const pressKey = async (key, mods = [], wait = 60) => {
+  const id = ++qaKeyId;
+  console.log('__QA_KEY__:' + JSON.stringify({ key, mods, id }));
+  const t = Date.now();
+  while ((window.__qaKeyAck || 0) < id && Date.now() - t < 3000) await sleep(10);
+  await sleep(wait);
+};

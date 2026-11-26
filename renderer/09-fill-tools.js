@@ -62,8 +62,11 @@ function openAutoFill() {
 
   // --- 폴더별 채우기(하위 폴더가 있을 때) ---
   const folderChecks = subs.map((f) => {
-    const cb = h('input', { type: 'checkbox', checked: true });
-    const row = h('label', { class: 'af-folder' }, cb, h('span', { text: f.name }), h('span', { class: 'arrow', text: '→' }), h('span', { class: 'loc', text: cleanFolderName(f.name) }), h('span', { class: 'cnt', text: `${f.count}장` }));
+    const cb = h('input', { type: 'checkbox', checked: true, tabindex: '-1' });
+    const row = h('label', { class: 'af-folder', role: 'checkbox' }, cb, h('span', { text: f.name }), h('span', { class: 'arrow', text: '→' }), h('span', { class: 'loc', text: cleanFolderName(f.name) }), h('span', { class: 'cnt', text: `${f.count}장` }));
+    keyActivate(row);
+    const syncAria = () => row.setAttribute('aria-checked', cb.checked ? 'true' : 'false');
+    cb.addEventListener('change', syncAria); syncAria();
     return { f, cb, row };
   });
   const folderPane = h('div', { class: 'af-pane' },
@@ -334,21 +337,24 @@ function attachSuggest(input, key, onPick) {
   const render = () => {
     items = suggestionsFor(key, input.value);
     if (!items.length) return close();
-    if (!box) { box = h('div', { class: 'suggest-box' }); document.body.appendChild(box); }
+    if (!box) { box = h('div', { class: 'suggest-box', role: 'listbox' }); document.body.appendChild(box); }
     const r = input.getBoundingClientRect();
     box.style.left = `${r.left}px`;
     box.style.top = `${r.bottom + 2}px`;
     box.style.minWidth = `${Math.max(180, r.width)}px`;
     box.innerHTML = '';
     items.forEach((v, i) => {
-      const it = h('div', { class: 'suggest-item' + (i === idx ? ' on' : ''), text: v });
-      it.addEventListener('mousedown', (e) => { e.preventDefault(); input.value = v; close(); onPick(); });
+      const it = h('div', { class: 'suggest-item' + (i === idx ? ' on' : ''), role: 'option', 'aria-selected': i === idx ? 'true' : 'false', text: v });
+      it.addEventListener('mousedown', (e) => e.preventDefault()); // 입력칸 초점 유지
+      it.addEventListener('click', () => { input.value = v; close(); onPick(); input.focus(); });
+      it.addEventListener('blur', (e) => { if (!box || !box.contains(e.relatedTarget)) setTimeout(() => { if (document.activeElement !== input && !(box && box.contains(document.activeElement))) close(); }, 80); });
+      keyActivate(it);
       box.appendChild(it);
     });
   };
   input.addEventListener('input', () => { idx = -1; render(); });
   input.addEventListener('focus', render);
-  input.addEventListener('blur', () => setTimeout(close, 80));
+  input.addEventListener('blur', (e) => { if (box && box.contains(e.relatedTarget)) return; setTimeout(close, 80); });
   input.addEventListener('keydown', (e) => {
     if (!box) return;
     if (e.key === 'ArrowDown') { e.preventDefault(); idx = Math.min(items.length - 1, idx + 1); render(); }

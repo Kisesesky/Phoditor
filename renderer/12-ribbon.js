@@ -134,7 +134,7 @@ $id('ribbonTabs').addEventListener('click', (e) => {
   setRibbonTab(b.dataset.tab);
 });
 $id('ribbonCollapseBtn').addEventListener('click', () => setRibbonCollapsed(!$id('ribbon').classList.contains('collapsed')));
-try { if (localStorage.getItem('phoditor.ribbonCollapsed')) setRibbonCollapsed(true); } catch (_) {}
+{ let on = false; try { on = !!localStorage.getItem('phoditor.ribbonCollapsed'); } catch (_) {} setRibbonCollapsed(on); } // 시작 때 aria-expanded·말풍선을 저장된 상태와 맞춘다
 
 const withBlockSel = (fn) => () => { if (state.editor) fn(); };
 $id('dupBlockBtn').addEventListener('click', withBlockSel(duplicateBlock));

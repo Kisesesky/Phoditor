@@ -174,6 +174,10 @@
     .cache-badge { position: absolute; bottom: 44px; left: 9px; background: rgba(28,29,33,.7); color: #fff; font-size: 9px; padding: 1px 5px; border-radius: 4px; }
     .mybox-folder-item { grid-column: 1 / -1; justify-content: flex-start; padding: 8px 10px; background: #fff; border: 1px solid var(--line); font-weight: 600; color: var(--ink); text-align: left; }
     .mybox-folder-item:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .mybox-folder-item { display: flex; align-items: center; gap: 8px; }
+    .mybox-folder-item .i { width: 16px; height: 16px; flex: none; color: var(--folder); }
+    .warn-ico { width: 14px; height: 14px; flex: none; vertical-align: -2px; margin-right: 4px; color: var(--warn); }
+    .insp-note.warn .warn-ico { margin-right: 6px; }
     .mybox-error-box { grid-column: 1 / -1; background: var(--warn-soft); border: 1px solid var(--warn-border); border-radius: var(--radius); padding: 12px; font-size: 12px; color: var(--warn-ink); display: flex; flex-direction: column; gap: 8px; line-height: 1.45; }
 
     /* 쪽 캔버스 */
@@ -230,6 +234,7 @@
     .photo-slot:hover .slot-remove-btn, .photo-slot:hover .slot-actions, .photo-slot.selected-slot .slot-remove-btn, .photo-slot.selected-slot .slot-actions { opacity: 1; }
     .slot-actions button { font-size: 11px; padding: 2px 9px; background: rgba(255,255,255,.96); box-shadow: 0 1px 3px rgba(0,0,0,.14); }
     .slot-conv-tag { position: absolute; top: 4px; left: 4px; background: rgba(37,99,235,.9); color: #fff; font: 700 10px 'Pretendard', sans-serif; padding: 1px 6px; border-radius: 4px; zoom: var(--ui-zoom, 1); }
+    .slot-conv-tag.crop { background: color-mix(in srgb, var(--ok) 90%, transparent); }
 
     /* 속성 패널 */
     .inspector { width: var(--inspector-w); flex: none; background: #fff; border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
@@ -364,7 +369,7 @@
     .insp-row input[type=range] { min-width: 0; }
 
     .icon-tools { gap: 2px; }
-    .ctx-menu { position: fixed; z-index: 9000; min-width: 210px; background: #fff; border: 1px solid var(--line); border-radius: 9px; box-shadow: 0 10px 30px rgba(16,24,40,.18); padding: 4px; display: flex; flex-direction: column; }
+    .ctx-menu { position: fixed; z-index: 9000; min-width: 210px; background: #fff; border: 1px solid var(--line); border-radius: 9px; box-shadow: var(--shadow-pop); padding: 4px; display: flex; flex-direction: column; }
     .ctx-item { display: flex; justify-content: space-between; gap: 18px; border: none; background: transparent; padding: 6px 10px; border-radius: 6px; font-size: 12.5px; color: var(--ink); text-align: left; }
     .ctx-item:hover:not(:disabled), .ctx-item:focus-visible { background: var(--accent); color: #fff; outline: none; }
     .ctx-item:hover:not(:disabled) .ctx-keys, .ctx-item:focus-visible .ctx-keys { color: rgba(255,255,255,.8); }
@@ -400,7 +405,7 @@
     .app-toolbar .tb-spacer { flex: 1; }
     /* [2026-11-26 감사] 키보드 초점 링·끄는 동안 커서 */
     .sheet-tab:focus-visible, .photo-slot:focus-visible, .photo-item:focus-visible, .photo-area-empty:focus-visible,
-    .af-folder:focus-visible, .suggest-item:focus-visible, .layout-grid i:focus-visible { outline: 3px solid var(--accent-ring); outline-offset: 0; }
+    .af-folder:focus-visible, .suggest-item:focus-visible, .suggest-item.on, .layout-grid i:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--accent); }
     .photo-item:active { cursor: grabbing; }
     /* [2026-11-26] 사진 패널·속성 패널: 끌어서 너비 조절, 사진 패널 접기 */
     .pane-resizer { width: 6px; margin: 0 -3px; flex: none; cursor: col-resize; position: relative; z-index: 5; }
@@ -783,7 +788,7 @@
       <button id="saveMyTplTopBtn" class="ghost file-btn" data-tip="지금 구성을 내 양식으로 저장(사진 빼고)"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg><span>내 양식</span></button>
       <button id="pdfBtn" class="ghost file-btn" data-tip="PDF로 내보내기 (⇧⌘E)"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span>PDF</span></button>
       <button id="exportBtn" class="primary"><svg class="i" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5"/><path d="M5 19h14"/></svg>엑셀로 내보내기</button>
-      <button id="ribbonCollapseBtn" class="ghost icon-btn rb-collapse" data-tip="리본 접기"><svg class="i" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
+      <button id="ribbonCollapseBtn" class="ghost icon-btn rb-collapse" data-tip="리본 접기" aria-expanded="true" aria-controls="ribbon"><svg class="i" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
       <span id="templateStatusBadge" hidden></span>
       <span id="blankStatusBadge" hidden></span>
     </header>

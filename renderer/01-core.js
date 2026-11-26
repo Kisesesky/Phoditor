@@ -244,3 +244,30 @@ const SHORTCUTS = [
   ['⌘ +', '확대 (⌘- 축소, ⌘0 맞춤)'],
   ['?', '단축키 보기']
 ];
+
+// [2026-11-27 초점] div·label·i 같은 누를 수 있는 칸을 키보드로도: Tab으로 들어가고 Enter/Space로 기존 클릭 동작을 그대로 부른다.
+// refind: 클릭이 화면을 다시 그려 요소가 바뀌면, 새로 그려진 같은 칸을 찾아 초점을 옮겨 준다.
+function keyActivate(node, refind) {
+  node.tabIndex = 0;
+  node.addEventListener('keydown', (e) => {
+    if (e.target !== node || (e.key !== 'Enter' && e.key !== ' ') || e.metaKey || e.ctrlKey || e.altKey) return;
+    e.preventDefault();
+    e.stopPropagation();
+    node.click();
+    if (refind && !node.isConnected) {
+      const n = refind();
+      if (n) n.focus({ preventScroll: true });
+    }
+  });
+  return node;
+}
+
+// [2026-11-27] 경고 삼각형 선 아이콘(그림문자 대신). 색은 감싸는 글자색(경고 칸은 --warn)을 따른다.
+function iconWarn() {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', '0 0 24 24');
+  s.setAttribute('class', 'i warn-ico');
+  s.setAttribute('aria-hidden', 'true');
+  s.innerHTML = '<path d="M10.3 4.2 2.6 17.5A2 2 0 0 0 4.3 20.5h15.4a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4"/><path d="M12 17h.01"/>';
+  return s;
+}

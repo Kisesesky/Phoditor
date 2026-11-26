@@ -69,12 +69,83 @@ try {
   check('6. 보이는 아이콘 크기가 14/16/18/22 안', [...sizes].every((z) => [14, 16, 18, 22].includes(z)), [...sizes].join(','));
 
   // 7. 초점 링·커서·비활성 대비
-  check('7. 누를 수 있는 칸들에 초점 링 규칙', /outline/.test(cssRuleText('.sheet-tab:focus-visible, .photo-slot:focus-visible, .photo-item:focus-visible, .photo-area-empty:focus-visible, .af-folder:focus-visible, .suggest-item:focus-visible, .layout-grid i:focus-visible') || ''));
+  check('7. 누를 수 있는 칸들에 초점 링 규칙(안쪽 2px 강조색)', /inset/.test(cssRuleText('.sheet-tab:focus-visible, .photo-slot:focus-visible, .photo-item:focus-visible, .photo-area-empty:focus-visible, .af-folder:focus-visible, .suggest-item:focus-visible, .suggest-item.on, .layout-grid i:focus-visible') || '') && /var\(--accent\)/.test(cssRuleText('.sheet-tab:focus-visible, .photo-slot:focus-visible, .photo-item:focus-visible, .photo-area-empty:focus-visible, .af-folder:focus-visible, .suggest-item:focus-visible, .suggest-item.on, .layout-grid i:focus-visible') || ''), cssRuleText('.sheet-tab:focus-visible, .photo-slot:focus-visible, .photo-item:focus-visible, .photo-area-empty:focus-visible, .af-folder:focus-visible, .suggest-item:focus-visible, .suggest-item.on, .layout-grid i:focus-visible'));
   check('7. 사진을 끄는 동안 grabbing', /grabbing/.test(cssRuleText('.photo-item:active') || ''));
   $('#photoGrid .photo-item').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 100, clientY: 500 })); await sleep(300);
   const dis = $('.ctx-menu .ctx-item:disabled');
   check('7. 비활성 메뉴 항목은 투명도 1(색으로만 흐림)', dis && getComputedStyle(dis).opacity === '1', dis && getComputedStyle(dis).opacity);
   await shot('a04_ctx');
   closeContextMenu();
+
+  // 8. [2026-11-27] 키보드 초점: tabindex + 진짜 Tab 순회 + Enter/Space(기존 클릭 동작)
+  const ae = () => document.activeElement;
+  const ring = (n) => !!n && n.matches(':focus-visible') && /inset/.test(getComputedStyle(n).boxShadow) && /2px/.test(getComputedStyle(n).boxShadow);
+  const tabTo = async (pred, max = 400) => { for (let i = 0; i < max; i++) { if (ae() && pred(ae())) return ae(); await pressKey('Tab', [], 35); } return null; };
+  check('8. tabindex=0: 시트 탭·사진 카드·빈 사진 자리', [...$$('.sheet-tab'), ...$$('#photoGrid .photo-item'), ...$$('.photo-area-empty')].every((n) => n.getAttribute('tabindex') === '0') && $$('.photo-area-empty').length > 0, `${$$('.sheet-tab').length}/${$$('#photoGrid .photo-item').length}/${$$('.photo-area-empty').length}`);
+  ae().blur();
+  let f = await tabTo((n) => n.classList.contains('sheet-tab'));
+  check('8. Tab → 시트 탭에 초점·링', ring(f), f && getComputedStyle(f).boxShadow);
+  await shot('a05_focus_sheettab');
+  await pressKey('Enter', [], 500);
+  check('8. 시트 탭 Enter → 그 시트로, 초점 유지', state.activeSheetIdx === 0 && ae().classList.contains('sheet-tab'), `${state.activeSheetIdx} ${ae().className}`);
+  await pressKey('Tab'); await pressKey('Space', [], 600);
+  check('8. 다음 탭 Space → 시트 2', state.activeSheetIdx === 1 && ae().classList.contains('sheet-tab') && ring(ae()), `${state.activeSheetIdx} ${ae().className}`);
+  f = await tabTo((n) => n.classList.contains('photo-area-empty'));
+  check('8. Tab → 빈 사진 자리에 초점·링', ring(f), f && getComputedStyle(f).boxShadow);
+  await shot('a06_focus_area');
+  await pressKey('Enter', [], 500);
+  check('8. 빈 사진 자리 Enter → 선택(배치 고르기 보임)', !!state.selectedPhotoArea && $$('.layout-grid i').length === 25, $$('.layout-grid i').length);
+  check('8. 배치 칸 tabindex=0', $$('.layout-grid i').length > 0 && $$('.layout-grid i').every((n) => n.getAttribute('tabindex') === '0'));
+  f = await tabTo((n) => n.matches('.layout-grid i[data-c="2"][data-r="1"]'));
+  check('8. Tab → 배치 칸(2×1)에 초점·링, 크기 표시', ring(f) && /2×1/.test($('.lg-label').textContent), `${f && getComputedStyle(f).boxShadow} ${$('.lg-label') && $('.lg-label').textContent}`);
+  await shot('a07_focus_layout');
+  await pressKey('Enter', [], 700);
+  const slots = () => $$('.pv-page .photo-slot');
+  check('8. 배치 칸 Enter → 2칸 생김', slots().length >= 2, slots().length);
+  check('8. 사진 자리 tabindex=0', slots().length > 0 && slots().every((n) => n.getAttribute('tabindex') === '0'));
+  f = await tabTo((n) => n.classList.contains('photo-slot'));
+  check('8. Tab → 사진 자리에 초점·링', ring(f), f && getComputedStyle(f).boxShadow);
+  await pressKey('Enter', [], 600);
+  check('8. 사진 자리 Enter → 선택, 초점 유지', !!state.selectedPhotoSlot && ae().classList.contains('photo-slot') && ae().classList.contains('selected-slot'), `${JSON.stringify(state.selectedPhotoSlot)} ${ae().className}`);
+  await shot('a08_focus_slot');
+  f = await tabTo((n) => n.classList.contains('photo-item'));
+  await sleep(250); // 사진 카드는 box-shadow 전환(.12s)이 있어 끝난 뒤에 잰다
+  check('8. Tab → 사진 카드에 초점·링', ring(f), f && getComputedStyle(f).boxShadow);
+  await shot('a09_focus_photo');
+  const imgs0 = $$('.pv-page .photo-slot img').length;
+  await pressKey('Enter', [], 1500);
+  check('8. 사진 카드 Enter → 고른 자리에 넣음', $$('.pv-page .photo-slot img').length === imgs0 + 1, `${imgs0} → ${$$('.pv-page .photo-slot img').length}`);
+
+  await clickEl($('#autoFillBtn'), 600);
+  const afRows = $$('.af-folder');
+  check('8. 폴더 행 tabindex=0, 안의 체크칸은 차례에서 뺌', afRows.length > 0 && afRows.every((n) => n.getAttribute('tabindex') === '0' && n.querySelector('input').tabIndex === -1), afRows.length);
+  f = await tabTo((n) => n.classList.contains('af-folder'), 80);
+  check('8. Tab → 폴더 행에 초점·링', ring(f), f && getComputedStyle(f).boxShadow);
+  await shot('a10_focus_afolder');
+  await pressKey('Space', [], 200);
+  check('8. 폴더 행 Space → 체크 풀림(aria-checked도)', !!f && !f.querySelector('input').checked && f.getAttribute('aria-checked') === 'false');
+  await pressKey('Space', [], 200);
+  check('8. 다시 Space → 체크', !!f && f.querySelector('input').checked && f.getAttribute('aria-checked') === 'true');
+  { const m = document.querySelector('.dyn-modal'); if (m) m.parentNode.removeChild(m); }
+  await sleep(200);
+
+  rememberValue('__qa_focus', '현관 바닥');
+  rememberValue('__qa_focus', '거실 벽');
+  const inp = document.createElement('input');
+  inp.style.cssText = 'position:fixed;left:400px;top:300px;width:200px';
+  document.body.appendChild(inp);
+  let picked = 0;
+  attachSuggest(inp, '__qa_focus', () => { picked++; });
+  inp.focus(); await sleep(200);
+  check('8. 제안 항목 tabindex=0', $$('.suggest-item').length === 2 && $$('.suggest-item').every((n) => n.getAttribute('tabindex') === '0'), $$('.suggest-item').length);
+  await pressKey('Down', [], 200);
+  const on = $('.suggest-item.on');
+  check('8. ↓로 고른 제안에 같은 링(입력칸 초점 유지)', !!on && /inset/.test(getComputedStyle(on).boxShadow) && ae() === inp, on && getComputedStyle(on).boxShadow);
+  await shot('a11_focus_suggest');
+  $$('.suggest-item')[1].focus(); await sleep(150);
+  check('8. 제안 항목에 초점이 가도 목록이 닫히지 않음', ae().classList.contains('suggest-item') && ring(ae()), ae().className);
+  await pressKey('Enter', [], 300);
+  check('8. 제안 항목 Enter → 그 값으로', inp.value === '현관 바닥' && picked === 1 && !$('.suggest-box'), `${inp.value} ${picked}`);
+  inp.parentNode.removeChild(inp);
 } catch (err) { check('예외 없음', false, String(err && err.stack || err)); }
 return { checks, confirms };

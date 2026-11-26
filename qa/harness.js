@@ -36,6 +36,18 @@ app.on('browser-window-created', (_e, win) => {
       shotN++;
       return;
     }
+    // 진짜 키 누름(Tab 순회 등): __QA_KEY__:{"key":"Tab","mods":["shift"]}
+    if (typeof message === 'string' && message.startsWith('__QA_KEY__:')) {
+      const o = JSON.parse(message.slice('__QA_KEY__:'.length));
+      const mods = o.mods || [];
+      if (!win.isFocused()) { win.focus(); wc.focus(); await new Promise((r) => setTimeout(r, 150)); } // 창에 초점이 없으면 :focus-visible·focus 이벤트가 안 생김
+      wc.sendInputEvent({ type: 'keyDown', keyCode: o.key, modifiers: mods });
+      if (o.key.length === 1 || o.key === 'Space') wc.sendInputEvent({ type: 'char', keyCode: o.key === 'Space' ? ' ' : o.key, modifiers: mods });
+      wc.sendInputEvent({ type: 'keyUp', keyCode: o.key, modifiers: mods });
+      await new Promise((r) => setTimeout(r, 25));
+      wc.executeJavaScript(`window.__qaKeyAck = ${Number(o.id) || 0}`).catch(() => {}); // 다 보냈다고 알림(키가 밀리지 않게)
+      return;
+    }
     if (typeof message === 'string' && message.startsWith('__QA_SHOT__:')) {
       const name = message.slice('__QA_SHOT__:'.length);
       const img = await wc.capturePage();

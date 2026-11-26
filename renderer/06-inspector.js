@@ -196,12 +196,18 @@ function layoutPicker(sheetIdx, bIdx, paIdx, curLayout, onPick) {
   const paint = (c, r) => cells.forEach((x) => x.classList.toggle('hot', +x.dataset.c <= c && +x.dataset.r <= r));
   for (let r = 1; r <= 5; r++) for (let c = 1; c <= 5; c++) {
     const cell = h('i', { 'data-c': String(c), 'data-r': String(r) });
-    cell.addEventListener('mouseenter', () => { paint(c, r); label.textContent = `${c}×${r} (${c * r}장)`; });
+    const hover = () => { paint(c, r); label.textContent = `${c}×${r} (${c * r}장)`; };
+    cell.addEventListener('mouseenter', hover);
+    cell.addEventListener('focus', hover);
+    cell.setAttribute('aria-label', `${c}×${r} 배치`);
+    keyActivate(cell);
     cell.addEventListener('click', () => pick(`${c}x${r}`));
     cells.push(cell);
     grid.appendChild(cell);
   }
-  grid.addEventListener('mouseleave', () => { if (custom) { paint(cur.cols, cur.rows); label.textContent = `지금 ${cur.label}`; } else { paint(0, 0); label.textContent = '사용자 지정 (최대 5×5)'; } });
+  const resetPaint = () => { if (custom) { paint(cur.cols, cur.rows); label.textContent = `지금 ${cur.label}`; } else { paint(0, 0); label.textContent = '사용자 지정 (최대 5×5)'; } };
+  grid.addEventListener('mouseleave', resetPaint);
+  grid.addEventListener('focusout', (e) => { if (!grid.contains(e.relatedTarget)) resetPaint(); }); // 키보드로 칸 밖에 나가도 원래대로
   if (custom) paint(cur.cols, cur.rows);
   outer.appendChild(h('div', { class: 'layout-custom' }, label, grid));
   return outer;
@@ -224,7 +230,7 @@ function documentSections() {
   const used = [...new Set(state.usedFonts || [])].sort();
   const missing = new Set(state.missingFonts || []);
   const rows = used.map((name) => h('div', { class: 'font-map-row' },
-    h('span', { class: 'from' + (missing.has(name) && !state.editor.fontMap[name] ? ' missing' : ''), title: missing.has(name) ? '이 Mac에 없는 글꼴' : name, text: `${missing.has(name) ? '⚠ ' : ''}${name}` }),
+    h('span', { class: 'from' + (missing.has(name) && !state.editor.fontMap[name] ? ' missing' : ''), title: missing.has(name) ? '이 Mac에 없는 글꼴' : name }, missing.has(name) ? iconWarn() : null, name),
     h('span', { text: '→', style: 'color:var(--ink-muted)' }),
     fontSelect(state.editor.fontMap[name] || '', (v) => {
       recordUndo('문서 글꼴 바꾸기');
@@ -235,7 +241,7 @@ function documentSections() {
     }, '그대로')));
   const notes = Object.values(state.editor.fontMap).map(installNoteFor).filter(Boolean);
   out.push(sec('문서 글꼴 바꾸기', h('div', { class: 'insp-note', text: '이 양식에서 쓰는 글꼴을 다른 글꼴로 한꺼번에 바꿉니다. 내보낸 엑셀에도 그대로 들어가요.' }), ...rows, ...notes,
-    missing.size ? h('div', { class: 'insp-note warn', text: `⚠ 표시 글꼴은 이 Mac에 없어서 비슷한 글꼴로 보여요. 다른 글꼴로 바꾸거나, 그 글꼴을 설치해 주세요.` }) : null));
+    missing.size ? h('div', { class: 'insp-note warn' }, iconWarn(), '표시 글꼴은 이 Mac에 없어서 비슷한 글꼴로 보여요. 다른 글꼴로 바꾸거나, 그 글꼴을 설치해 주세요.') : null));
   out.push(sec('양식 정보', h('dl', { class: 'insp-kv' },
     h('dt', { text: '종류' }), h('dd', { text: def.type }),
     h('dt', { text: '업체' }), h('dd', { text: def.company }),

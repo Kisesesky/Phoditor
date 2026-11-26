@@ -13,6 +13,7 @@ function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
   if (!paState || !paState.layout) {
     const emptyBtn = document.createElement('div');
     emptyBtn.className = 'photo-area-empty';
+    keyActivate(emptyBtn, () => document.querySelector(`.photo-area-box[data-area-key="${sheetIdx}-${blockIdx}-${paIdx}"] .photo-area-empty`));
     emptyBtn.innerHTML = '<strong>사진 넣기</strong><span>왼쪽 사진을 끌어 놓거나<br/>눌러서 배치(1×1 ~ 5×5)를 고르세요</span>';
     const sa = state.selectedPhotoArea;
     if (sa && sa.sheetIdx === sheetIdx && sa.blockIdx === blockIdx && sa.paIdx === paIdx) emptyBtn.classList.add('selected');
@@ -77,6 +78,7 @@ function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
     const slotEl = document.createElement('div');
     slotEl.className = 'photo-slot';
     slotEl.dataset.slotKey = `${sheetIdx}-${blockIdx}-${paIdx}-${sIdx}`;
+    keyActivate(slotEl, () => document.querySelector(`.pv-page .photo-slot[data-slot-key="${sheetIdx}-${blockIdx}-${paIdx}-${sIdx}"]`));
     const isSelected =
       state.selectedPhotoSlot &&
       state.selectedPhotoSlot.sheetIdx === sheetIdx &&
@@ -95,8 +97,7 @@ function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
 
       if (photo.isCropped) {
         const tag = document.createElement('span');
-        tag.className = 'slot-conv-tag';
-        tag.style.background = 'rgba(16, 138, 68, 0.9)';
+        tag.className = 'slot-conv-tag crop';
         tag.textContent = '크롭';
         slotEl.appendChild(tag);
       } else if (photo.conversionBadge) {
@@ -328,6 +329,7 @@ function switchPhotoSource(source) {
 function createPhotoCardElement(photo, idx, sourceKey, listRef) {
   const item = document.createElement('div');
   item.className = 'photo-item';
+  keyActivate(item);
   item.addEventListener('contextmenu', (e) => openPhotoCardMenu(e, photo, idx, listRef));
   const zoomBtn = document.createElement('button');
   zoomBtn.className = 'photo-zoom-btn';
@@ -567,7 +569,7 @@ function iconSvgFolder() {
   const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   s.setAttribute('viewBox', '0 0 24 24');
   s.setAttribute('class', 'i');
-  s.innerHTML = '<path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="#FDE68A"/>';
+  s.innerHTML = '<path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>';
   return s;
 }
 // 내 컴퓨터 폴더 열기/들어가기/새로고침(같은 길)
@@ -630,7 +632,7 @@ function renderMyboxPanel() {
   for (const folder of mb.folders) {
     const fBtn = document.createElement('button');
     fBtn.className = 'mybox-folder-item';
-    fBtn.textContent = `📁 ${folder.name}`;
+    fBtn.append(iconSvgFolder(), h('span', { class: 'fname', text: folder.name }));
     fBtn.addEventListener('click', () => {
       mb.folderStack.push({ id: folder.resourceId, name: folder.name });
       loadMyboxCurrentFolder();
