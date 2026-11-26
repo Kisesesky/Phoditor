@@ -331,8 +331,7 @@
       state.selectedCell = null;
       state.selectedPhotoSlot = null;
       // [작업 저장 2026-11-25] 저장한 작업 열기 / 새로 시작할 때 기록 초기화
-      history.undo = [];
-      history.redo = [];
+      history.clear();
       docState.filePath = null;
       docState.dirty = false;
       window.api.setDirty(false);
@@ -2676,26 +2675,14 @@
   // [기능 추가 2026-11-25] 실행 취소·작업 저장·자동 저장·사진 자동 채우기·블록 이동/복제·표 붙여넣기·자동완성·목차 채우기·사진 크게 보기/돌리기
   // =====================================================================
 
-  // --- 실행 취소/다시 실행 ---
-  const history = { undo: [], redo: [], max: 60 };
+  // --- 실행 취소/다시 실행 (docmodel.js) ---
+  const { deepClone, UndoHistory, serializeEditor: serializeEditorModel, attachSheetDefs } = window.DocModel;
+  const history = new UndoHistory(60);
   const docState = { filePath: null, dirty: false, autosaveTimer: null };
-
-  // sheetDef(정의서)는 바뀌지 않으므로 같은 객체를 그대로 쓰고, 나머지만 복사한다(문자열은 복사되지 않아 크롭본도 가볍다)
-  function deepClone(v) {
-    if (Array.isArray(v)) return v.map(deepClone);
-    if (v && typeof v === 'object') {
-      const o = {};
-      for (const k of Object.keys(v)) o[k] = k === 'sheetDef' ? v[k] : deepClone(v[k]);
-      return o;
-    }
-    return v;
-  }
 
   function recordUndo(label) {
     if (!state.editor) return;
-    history.undo.push({ editor: deepClone(state.editor), active: state.activeSheetIdx, block: state.selectedBlockIdx, label });
-    if (history.undo.length > history.max) history.undo.shift();
-    history.redo = [];
+    history.record(state.editor, { active: state.activeSheetIdx, block: state.selectedBlockIdx, label });
     markDirty();
   }
 
@@ -2711,18 +2698,16 @@
   }
 
   function undo() {
-    if (!history.undo.length) return showToast('되돌릴 작업이 없어요.');
-    const snap = history.undo.pop();
-    history.redo.push({ editor: deepClone(state.editor), active: state.activeSheetIdx, block: state.selectedBlockIdx, label: snap.label });
+    const snap = history.undo(state.editor, { active: state.activeSheetIdx, block: state.selectedBlockIdx });
+    if (!snap) return showToast('되돌릴 작업이 없어요.');
     restoreSnapshot(snap);
     markDirty();
     showToast(`되돌렸어요: ${snap.label}`);
   }
 
   function redo() {
-    if (!history.redo.length) return showToast('다시 할 작업이 없어요.');
-    const snap = history.redo.pop();
-    history.undo.push({ editor: deepClone(state.editor), active: state.activeSheetIdx, block: state.selectedBlockIdx, label: snap.label });
+    const snap = history.redo(state.editor, { active: state.activeSheetIdx, block: state.selectedBlockIdx });
+    if (!snap) return showToast('다시 할 작업이 없어요.');
     restoreSnapshot(snap);
     markDirty();
     showToast(`다시 했어요: ${snap.label}`);
@@ -2769,22 +2754,7 @@
   }
 
   function serializeEditor() {
-    const ed = deepClone(state.editor);
-    ed.sheets = ed.sheets.map((s) => {
-      const out = { ...s };
-      const tplDef = state.templateDef.sheets.find((d) => d === s.sheetDef);
-      if (tplDef) {
-        out.defName = tplDef.name;
-        delete out.sheetDef;
-      }
-      for (const b of out.blocks || []) {
-        for (const pa of Object.values(b.photoAreas || {})) {
-          for (const sl of (pa && pa.slots) || []) if (sl) delete sl.previewUrl;
-        }
-      }
-      return out;
-    });
-    return ed;
+    return serializeEditorModel(state.editor, state.templateDef);
   }
 
   function projectData() {
@@ -2851,15 +2821,7 @@
 
   // 저장한 작업을 연 뒤: 정의서 연결, 썸네일 다시 만들기, 없는 사진 알리기
   async function applyRestoredEditor(data) {
-    const ed = data.editor;
-    for (const s of ed.sheets) {
-      if (s.defName) {
-        s.sheetDef = state.templateDef.sheets.find((d) => d.name === s.defName);
-        delete s.defName;
-      }
-      if (!s.sheetDef) throw new Error(`정의서에 없는 시트: ${s.name}`);
-    }
-    ed.fontMap = ed.fontMap || {};
+    const ed = attachSheetDefs(data.editor, state.templateDef);
     state.editor = ed;
     state.activeSheetIdx = Math.min(data.activeSheetIdx || 0, ed.sheets.length - 1);
     const paths = new Set();

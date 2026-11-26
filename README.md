@@ -16,14 +16,23 @@ npm start
 
 ```bash
 cd app
-npm run test:export   # 1단계 내보내기 회귀 테스트 (5/5)
-node test-crop.js     # 2단계 A: 넣기 전 크롭·중복 제거·원본 불변 테스트
-node test-mybox.js    # 2단계 B: MYBOX 스텁 서버 테스트 (5/5)
-node test-print.js    # 인쇄 재현 (11/11)
-node test-rename.js   # 시트 이름 바꾸기 (5/5)
-node test-fonts.js    # 글꼴 바꾸기 내보내기 (6/6)
-node test-annotate.js # 사진 위 표시 도형·칸에 맞게 줄이기 (5/5)
+npm test              # 아래 자동 테스트 8가지를 한 번에
+npm run test:gui      # 실제 앱 창으로 화면 시나리오 4개(94개 확인, 약 2분, 맥 전용)
 ```
+
+| 명령 | 내용 |
+|---|---|
+| `npm run test:export` | 1단계 내보내기 회귀 (5/5) |
+| `npm run test:print` | 인쇄 재현 (11/11) |
+| `npm run test:rename` | 시트 이름 바꾸기 (5/5) |
+| `npm run test:fonts` | 글꼴 바꾸기 내보내기 (6/6) |
+| `npm run test:annotate` | 사진 위 표시 도형·칸에 맞게 줄이기 (5/5) |
+| `npm run test:project` | 작업 파일 .pbook 왕복(사진 묶음·내용 기준 중복 제거·옛 형식)·다시 연 작업 내보내기 동일·실행 취소 60단계 (9/9) |
+| `npm run test:mybox` | MYBOX 스텁 서버 (5/5) |
+| `npm run test:crop` | 넣기 전 크롭·중복 제거·원본 불변 (맥 전용 sips — 다른 OS에서는 건너뜀) |
+| `npm run test:gui` | `qa/run-gui.js` — 시험 사진을 만들어 앱을 띄우고 `qa/scenarios/`를 차례로 실행. 결과·화면 사진은 `qa/out/` |
+
+- 작업 파일 읽기·쓰기는 `project.js`, 실행 취소 기록·저장 형식 바꾸기는 `docmodel.js`로 나눠 두어 화면 없이 테스트합니다.
 
 ## 빈 양식 `.xlsx` 배치 방법
 

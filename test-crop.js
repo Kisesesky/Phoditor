@@ -8,6 +8,12 @@ const JSZip = require('jszip');
 const { execFileSync } = require('child_process');
 const { getImageInfoFromBuffer, exportWorkbook, cropPhotoToJpeg, makeCropPreview } = require('./export');
 
+// [2026-11-26] 자르기는 맥의 sips로 한다. 맥이 아니면 이 테스트는 건너뛴다(실패가 아님)
+if (process.platform !== 'darwin') {
+  console.log('크롭 자동 테스트: 맥 전용(sips) — 이 컴퓨터에서는 건너뜀');
+  process.exit(0);
+}
+
 const DEFS_DIR = path.join(__dirname, 'data', 'templateDefs');
 
 function sha256(buf) {

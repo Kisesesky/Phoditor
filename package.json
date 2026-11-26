@@ -5,11 +5,16 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "test": "node test-export.js && node test-print.js && node test-rename.js && node test-fonts.js && node test-annotate.js && node test-project.js && node test-mybox.js && node test-crop.js",
     "test:export": "node test-export.js",
     "test:crop": "node test-crop.js",
     "test:mybox": "node test-mybox.js",
     "test:print": "node test-print.js",
-    "test:rename": "node test-rename.js"
+    "test:rename": "node test-rename.js",
+    "test:fonts": "node test-fonts.js",
+    "test:annotate": "node test-annotate.js",
+    "test:project": "node test-project.js",
+    "test:gui": "node qa/run-gui.js"
   },
   "dependencies": {
     "exceljs": "4.4.0",
