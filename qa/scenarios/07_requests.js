@@ -146,7 +146,7 @@ try {
   await clickEl($('#addBlockEndBtn'), 500);
   await clickEl($('#addBlockEndBtn'), 500);
   showDocumentInspector(); await sleep(300);
-  await clickEl($('#saveMyTplBtn'), 300);
+  await clickEl($('#saveMyTplTopBtn'), 300);
   const nm = $('.dyn-modal input[type=text]');
   nm.value = 'QA 공용홀 기본';
   await clickEl($('#saveMyTplGoBtn'), 800);

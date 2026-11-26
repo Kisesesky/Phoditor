@@ -44,9 +44,9 @@ try {
   await waitFor(() => $('#cropSelection').style.display === 'block', 5000);
   await clickEl($('#confirmCropBtn'), 2500);
   await waitFor(() => !$('#cropModal').classList.contains('open'), 8000);
-  check('자른 사진(크롭 표시)', !!$('.pv-page .slot-uncrop-btn'));
-  await clickEl($('.pv-page .slot-uncrop-btn'), 500);
-  check('원본으로 되돌림', !$('.pv-page .slot-uncrop-btn') && !!$('.pv-page .photo-slot img'));
+  check('자른 사진(크롭 표시)', !!$('.pv-page .slot-conv-tag') && !$('#rbRevertBtn').disabled);
+  await clickEl($('#rbRevertBtn'), 500);
+  check('원본으로 되돌림(리본)', $('#rbRevertBtn').disabled && !!$('.pv-page .photo-slot img'));
   // 사진 크기: 작은 사진도 자리에 맞게
   const r = slot().getBoundingClientRect();
   const ir = slot().querySelector('img').getBoundingClientRect();
@@ -66,7 +66,7 @@ try {
   await shot('r01_hill');
 
   // 6. 내보내기
-  await clickEl($('#exportBtn'), 300);
+  await clickEl($('#exportBtn'), 300); await waitFor(() => $('#exportGoBtn')); await clickEl($('#exportGoBtn'), 300);
   const t = await waitFor(() => (toastText().includes('저장 완료') || toastText().includes('실패') ? toastText() : null), 60000);
   check('내보내기 성공', t && t.includes('저장 완료'), t);
 } catch (err) { check('예외 없음', false, String(err && err.stack || err)); }

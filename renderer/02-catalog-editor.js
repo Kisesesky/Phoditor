@@ -651,7 +651,7 @@ function updateToolbarButtons() {
   el.editRepeatedBtn.disabled = !hasRepeated;
   el.autoFillBtn.disabled = !isBlock;
   el.pasteTableBtn.disabled = !isBlock;
-  el.fillMenuBtn.disabled = !isBlock;
+  if (typeof updateRibbon === 'function') updateRibbon();
 }
 
 // --- Block Add / Insert / Delete ---

@@ -105,5 +105,60 @@ try {
   check('마우스를 올리면 짧은 설명', $('#tipBubble').classList.contains('show') && $('#tipBubble').textContent === '안 넣은 사진만', $('#tipBubble').textContent);
   document.body.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
   await shot('s06_done');
+
+  // --- [3차] 오른쪽 클릭 메뉴 ---
+  const slotEl = $$('.pv-page .photo-slot').find((s) => s.querySelector('img'));
+  slotEl.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 600, clientY: 400 })); await sleep(300);
+  const menuText = () => ($('.ctx-menu') ? $('.ctx-menu').textContent : '');
+  check('사진 오른쪽 클릭 메뉴(자르기·돌리기·크게 보기·빼기·블록 일)', ['자르기', '돌리기', '크게 보기', '사진 빼기', '블록 복제'].every((t) => menuText().includes(t)), menuText());
+  check('오른쪽 클릭한 사진이 선택됨(속성 패널)', !!state.selectedPhotoSlot && $('#inspKicker').textContent.includes('사진 자리'));
+  await shot('s07_ctxmenu');
+  const nb = sheet().blocks.length;
+  $$('.ctx-menu .ctx-item').find((b) => b.textContent.includes('블록 복제')).click(); await sleep(600);
+  check('메뉴에서 블록 복제', sheet().blocks.length === nb + 1 && !$('.ctx-menu'));
+  const row = $$('.pv-page tr[data-b]').find((t) => !t.querySelector('.photo-slot'));
+  row.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 700, clientY: 300 })); await sleep(300);
+  check('블록 칸 오른쪽 클릭 → 블록 메뉴', menuText().includes('아래에 블록 추가') && menuText().includes('블록 삭제'), menuText());
+  document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await sleep(200);
+  check('Esc로 메뉴 닫힘', !$('.ctx-menu'));
+  $('#photoGrid .photo-item').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 100, clientY: 500 })); await sleep(300);
+  check('사진 패널 오른쪽 클릭 메뉴(넣기·크게 보기·Finder)', menuText().includes('크게 보기') && menuText().includes('Finder에서 보기'), menuText());
+  closeContextMenu();
+
+  // --- [3차] 사진 패널 너비 조절·접기 ---
+  const sw0 = $('#sidebar').getBoundingClientRect().width;
+  const rz = $('#sideResizer').getBoundingClientRect();
+  $('#sideResizer').dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: rz.left + 3, clientY: 400 }));
+  window.dispatchEvent(new MouseEvent('mousemove', { clientX: rz.left + 3 + 120, clientY: 400 }));
+  window.dispatchEvent(new MouseEvent('mouseup', { clientX: rz.left + 3 + 120, clientY: 400 })); await sleep(600);
+  check('사진 패널 끌어서 넓히기(+120px)', Math.abs($('#sidebar').getBoundingClientRect().width - (sw0 + 120)) < 4, `${Math.round(sw0)} → ${Math.round($('#sidebar').getBoundingClientRect().width)}`);
+  check('넓힌 너비 기억', Number(localStorage.getItem('phoditor.sideW')) > sw0 + 100);
+  $('#sideResizer').dispatchEvent(new MouseEvent('dblclick', { bubbles: true })); await sleep(500);
+  check('두 번 누르면 기본 너비', Math.abs($('#sidebar').getBoundingClientRect().width - 268) < 3);
+  await clickEl($('#sideCollapseBtn'), 600);
+  check('사진 패널 접기', $('#sidebar').classList.contains('collapsed') && $('#sidebar').getBoundingClientRect().width <= 42);
+  await shot('s08_side_collapsed');
+  await clickEl($('#sideExpandBtn'), 600);
+  check('사진 패널 펼치기', !$('#sidebar').classList.contains('collapsed'));
+  const iw0 = $('#inspector').getBoundingClientRect().width;
+  const ir = $('#inspResizer').getBoundingClientRect();
+  $('#inspResizer').dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: ir.left + 3, clientY: 400 }));
+  window.dispatchEvent(new MouseEvent('mousemove', { clientX: ir.left + 3 - 80, clientY: 400 }));
+  window.dispatchEvent(new MouseEvent('mouseup', { clientX: ir.left + 3 - 80, clientY: 400 })); await sleep(600);
+  check('속성 패널도 끌어서 넓히기', Math.abs($('#inspector').getBoundingClientRect().width - (iw0 + 80)) < 4, `${Math.round(iw0)} → ${Math.round($('#inspector').getBoundingClientRect().width)}`);
+
+  // --- [3차] 내보내기: 앱 안에서 이름·저장할 곳 고르기 ---
+  await clickEl($('#exportBtn'), 600);
+  check('내보내기 창: 파일 이름·저장할 곳·바꾸기', !!$('#exportNameInput') && !!$('#exportDirText') && !!$('#exportPickDirBtn') && $('#exportNameInput').value.includes('공백'), $('#exportNameInput') && $('#exportNameInput').value);
+  await shot('s09_export');
+  await clickEl($('#exportPickDirBtn'), 600);
+  check('[바꾸기]로 폴더를 고르면 저장할 곳이 바뀜', $('#exportDirText').title.endsWith('photos'), $('#exportDirText').title);
+  $('#exportNameInput').value = 'QA_경로지정';
+  await clickEl($('#exportGoBtn'), 300);
+  const t = await waitFor(() => (toastText().includes('저장 완료') || toastText().includes('실패') ? toastText() : null), 60000);
+  check('고른 폴더·이름으로 저장', t && t.includes('저장 완료'), t);
+  await clickEl($('#exportBtn'), 600);
+  check('다음 내보내기는 지난 폴더를 기억', $('#exportDirText').title.endsWith('photos'), $('#exportDirText').title);
+  $('.dyn-modal.export-dlg').remove();
 } catch (err) { check('예외 없음', false, String(err && err.stack || err)); }
 return { checks, confirms };

@@ -78,21 +78,12 @@ document.getElementById('setMyboxClearBtn').addEventListener('click', async () =
 el.closeSettingsBtn.addEventListener('click', () => { if (document.getElementById('settingsPage').classList.contains('active')) renderSettingsPage(); });
 el.undoBtn.addEventListener('click', undo);
 el.redoBtn.addEventListener('click', redo);
-el.autoFillBtn.addEventListener('click', () => { el.fillMenu.hidden = true; openAutoFill(); });
-el.pasteTableBtn.addEventListener('click', () => { el.fillMenu.hidden = true; openPasteTable(); });
-// [채우기] 메뉴 열고 닫기
-el.fillMenuBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  el.fillMenu.hidden = !el.fillMenu.hidden;
-});
-document.addEventListener('mousedown', (e) => {
-  if (!el.fillMenu.hidden && !e.target.closest('.tb-menu-wrap')) el.fillMenu.hidden = true;
-});
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') el.fillMenu.hidden = true; });
+el.autoFillBtn.addEventListener('click', openAutoFill);
+el.pasteTableBtn.addEventListener('click', openPasteTable);
 // 쪽 이동 막대: 보이는 쪽 표시
 el.gridViewport.addEventListener('scroll', () => updateRailActive(), { passive: true });
 el.saveBtn.addEventListener('click', () => saveProject(false));
-el.pdfBtn.addEventListener('click', handleExportPdf);
+el.pdfBtn.addEventListener('click', () => openExportDialog('pdf'));
 el.overflowChip.addEventListener('click', () => {
   const list = state.overflowCells || [];
   if (!list.length) return;
@@ -133,6 +124,51 @@ function setInspectorCollapsed(on) {
 el.inspCollapseBtn.addEventListener('click', () => setInspectorCollapsed(true));
 el.inspExpandBtn.addEventListener('click', () => setInspectorCollapsed(false));
 try { if (localStorage.getItem('phoditor.inspCollapsed')) el.inspector.classList.add('collapsed'); } catch (_) {}
+// [2026-11-26] 사진 패널 접기·너비 조절, 속성 패널 너비 조절(기억해 둠)
+const PANE = { side: { min: 200, max: 560, def: 268, varName: '--sidebar-w', key: 'phoditor.sideW' }, insp: { min: 240, max: 520, def: 292, varName: '--inspector-w', key: 'phoditor.inspW' } };
+function setPaneWidth(which, w, save = true) {
+  const p = PANE[which];
+  const v = Math.round(Math.max(p.min, Math.min(p.max, w)));
+  document.documentElement.style.setProperty(p.varName, `${v}px`);
+  if (save) { try { localStorage.setItem(p.key, String(v)); } catch (_) {} }
+  return v;
+}
+function setSidebarCollapsed(on) {
+  el.sidebar.classList.toggle('collapsed', on);
+  try { localStorage.setItem('phoditor.sideCollapsed', on ? '1' : ''); } catch (_) {}
+  if (state.editor && el.editorView.classList.contains('active')) renderActiveSheet();
+}
+for (const which of ['side', 'insp']) {
+  try { const v = Number(localStorage.getItem(PANE[which].key)); if (v) setPaneWidth(which, v, false); } catch (_) {}
+  const handle = which === 'side' ? el.sideResizer : el.inspResizer;
+  handle.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    const pane = which === 'side' ? el.sidebar : el.inspector;
+    if (pane.classList.contains('collapsed')) return;
+    const startX = e.clientX;
+    const startW = pane.getBoundingClientRect().width;
+    handle.classList.add('dragging');
+    document.body.classList.add('resizing-panes');
+    const move = (ev) => setPaneWidth(which, which === 'side' ? startW + (ev.clientX - startX) : startW - (ev.clientX - startX), false);
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+      handle.classList.remove('dragging');
+      document.body.classList.remove('resizing-panes');
+      setPaneWidth(which, pane.getBoundingClientRect().width);
+      if (state.editor && el.editorView.classList.contains('active')) renderActiveSheet();
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  });
+  handle.addEventListener('dblclick', () => {
+    setPaneWidth(which, PANE[which].def);
+    if (state.editor && el.editorView.classList.contains('active')) renderActiveSheet();
+  });
+}
+el.sideCollapseBtn.addEventListener('click', () => setSidebarCollapsed(true));
+el.sideExpandBtn.addEventListener('click', () => setSidebarCollapsed(false));
+try { if (localStorage.getItem('phoditor.sideCollapsed')) el.sidebar.classList.add('collapsed'); } catch (_) {}
 // MYBOX 토큰 기간
 el.myboxDaysSeg.addEventListener('click', (e) => {
   const b = e.target.closest('button[data-days]');
@@ -170,8 +206,8 @@ window.api.onMenu(async (cmd) => {
   else if (cmd === 'save-as' && inEditor) saveProject(true);
   else if (cmd === 'open') openProject(null);
   else if (cmd === 'new') { if (inEditor) goToStart(); }
-  else if (cmd === 'export' && inEditor) handleExport();
-  else if (cmd === 'export-pdf' && inEditor) handleExportPdf();
+  else if (cmd === 'export' && inEditor) openExportDialog('xlsx');
+  else if (cmd === 'export-pdf' && inEditor) openExportDialog('pdf');
   else if (cmd === 'zoom-in' && inEditor) el.zoomInBtn.click();
   else if (cmd === 'zoom-out' && inEditor) el.zoomOutBtn.click();
   else if (cmd === 'zoom-fit' && inEditor) el.zoomLabel.click();
@@ -187,7 +223,7 @@ el.editRepeatedBtn.addEventListener('click', openRepeatedModal);
 el.siteNameInput.addEventListener('input', () => {
   if (state.editor) state.editor.siteName = el.siteNameInput.value;
 });
-el.exportBtn.addEventListener('click', handleExport);
+el.exportBtn.addEventListener('click', () => openExportDialog('xlsx'));
 
 el.dismissFontBannerBtn.addEventListener('click', () => {
   el.fontBanner.classList.remove('visible');
@@ -279,6 +315,7 @@ document.addEventListener('keydown', (e) => {
   if (cmd && e.key === 'Backspace' && isBlock) { done(); return deleteSelectedBlock(); }
   if (cmd && e.key === '[') { done(); return switchSheetBy(-1); }
   if (cmd && e.key === ']') { done(); return switchSheetBy(1); }
+  if (cmd && e.shiftKey && (e.key === '\\' || e.key === '|')) { done(); return setSidebarCollapsed(!el.sidebar.classList.contains('collapsed')); }
   if (cmd && e.key === '\\') { done(); return setInspectorCollapsed(!el.inspector.classList.contains('collapsed')); }
   if (cmd && /^[1-4]$/.test(e.key)) { done(); photoView.cols = Number(e.key); savePhotoView(); return syncPhotoViewControls(); }
   if (e.altKey && !cmd && (e.key === 'ArrowUp' || e.key === 'ArrowDown') && isBlock) { done(); return moveBlock(e.key === 'ArrowUp' ? -1 : 1); }

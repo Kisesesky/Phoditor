@@ -48,7 +48,7 @@ try {
 
   // 3. 사진 위 표시
   $('.pv-page .photo-slot').click(); await sleep(400);
-  await clickEl($$('#inspBody button').find((b) => b.textContent.includes('사진 위 표시')), 800);
+  await clickEl($('#rbAnnoBtn'), 800);
   const modal = $('.anno-modal');
   check('표시 편집 창', !!modal);
   await waitFor(() => $('.anno-edit-layer') && $('.anno-edit-layer').offsetWidth > 50, 5000);
@@ -77,7 +77,7 @@ try {
   const lineRel = () => { const l = $('.pv-page .anno-layer line'); const L = $('.pv-page .anno-layer'); return l ? [l.x1.baseVal.value / L.offsetWidth, l.y1.baseVal.value / L.offsetHeight] : null; };
   const before = lineRel();
   $('.pv-page .photo-slot').click(); await sleep(400);
-  await clickEl($$('#inspBody button').find((b) => b.textContent.includes('돌리기')), 300);
+  await clickEl($('#rbRotateBtn'), 300);
   await waitFor(() => $('.pv-page .photo-slot img') && $('.pv-page .photo-slot img').alt.startsWith('[회전]'), 10000);
   await sleep(800);
   const after = lineRel();

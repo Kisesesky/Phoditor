@@ -89,7 +89,7 @@ try {
   check('목차 칸을 직접 고치면 자동 맞춤 꺼짐', toastText().includes('자동 맞춤을 껐어요') && !$$('#inspBody .check-row input').some((i) => i.checked && i.parentElement.textContent.includes('목차도 자동')), toastText());
 
   // 7. 내보내기(파일 이름은 report.json saveCalls로 확인)
-  await clickEl($('#exportBtn'), 300);
+  await clickEl($('#exportBtn'), 300); await waitFor(() => $('#exportGoBtn')); await clickEl($('#exportGoBtn'), 300);
   const t = await waitFor(() => (toastText().includes('저장 완료') || toastText().includes('실패') ? toastText() : null), 60000);
   check('목차를 채운 뒤에도 내보내기 성공', t && t.includes('저장 완료'), t);
 } catch (err) { check('예외 없음', false, String(err && err.stack || err)); }

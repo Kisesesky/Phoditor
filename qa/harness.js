@@ -6,6 +6,9 @@ const [appDir, scenarioPath, outDir, photosDir, W, H] = process.argv.slice(2);
 fs.mkdirSync(outDir, { recursive: true });
 const { app, dialog, BrowserWindow } = require('electron');
 app.setPath('userData', path.join(outDir, 'userData'));
+// 내보내기 기본 폴더(바탕화면)도 테스트 폴더로
+app.setPath('desktop', outDir);
+require('electron').shell.showItemInFolder = () => {};
 process.chdir(appDir);
 
 const saveCalls = [];

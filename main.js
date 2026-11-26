@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, safeStorage, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, safeStorage, Menu, shell } = require('electron');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -877,18 +877,57 @@ function runOsa(lines, timeoutMs) {
     });
   });
 }
-ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggestedName }) => {
+// --- [2026-11-26] 내보내기 저장 위치: 앱 안 창에서 이름·폴더를 고르고, 마지막 폴더를 기억한다 ---
+function prefsPath() { return path.join(app.getPath('userData'), 'prefs.json'); }
+function readPrefs() { try { return JSON.parse(fs.readFileSync(prefsPath(), 'utf-8')) || {}; } catch (_) { return {}; } }
+function writePrefs(patch) { const p = { ...readPrefs(), ...patch }; fs.writeFileSync(prefsPath(), JSON.stringify(p, null, 1)); return p; }
+ipcMain.handle('export-target-info', (_event, kind) => {
+  const prefs = readPrefs();
+  const key = kind === 'pdf' ? 'pdfDir' : 'xlsxDir';
+  const dir = prefs[key] && fs.existsSync(prefs[key]) ? prefs[key] : app.getPath('desktop');
+  return { dir, revealAfter: prefs.revealAfterExport !== false };
+});
+ipcMain.handle('pick-folder', async (_event, startDir) => {
+  const res = await dialog.showOpenDialog(mainWindow, { title: '저장할 폴더 고르기', defaultPath: startDir || app.getPath('desktop'), properties: ['openDirectory', 'createDirectory'], buttonLabel: '이 폴더에 저장' });
+  if (res.canceled || !res.filePaths.length) return null;
+  return res.filePaths[0];
+});
+ipcMain.handle('reveal-file', (_event, p) => { if (p && fs.existsSync(p)) shell.showItemInFolder(p); return true; });
+// 앱 안 창에서 정한 경로(outputDir + fileName) → 최종 경로. 이미 있으면 덮어쓸지 묻는다
+async function resolveExportTarget({ outputDir, fileName }, ext, kind) {
+  if (!outputDir || !fileName) return null;
+  if (!fs.existsSync(outputDir)) throw new Error('저장할 폴더가 없어요. 폴더를 다시 골라 주세요.');
+  let name = String(fileName).replace(/[\\/:*?"<>|]/g, '_').trim();
+  if (!name.toLowerCase().endsWith(`.${ext}`)) name += `.${ext}`;
+  const target = path.join(outputDir, name);
+  if (fs.existsSync(target)) {
+    const r = await dialog.showMessageBox(mainWindow, { type: 'question', buttons: ['덮어쓰기', '취소'], defaultId: 1, cancelId: 1, message: `"${name}" 파일이 이미 있어요. 덮어쓸까요?` });
+    if (r.response !== 0) return { canceled: true };
+  }
+  writePrefs({ [kind === 'pdf' ? 'pdfDir' : 'xlsxDir']: outputDir });
+  return { target };
+}
+ipcMain.handle('set-reveal-after-export', (_event, on) => { writePrefs({ revealAfterExport: !!on }); return true; });
+
+ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggestedName, outputDir, fileName }) => {
   const def = templateDefCache.get(templateId);
   if (!def) return { ok: false, error: '템플릿 정의서를 찾을 수 없습니다.' };
   if (!fs.existsSync(EXCEL_APP)) return { ok: false, error: 'PDF는 Mac용 Microsoft Excel로 만들어요. 이 Mac에 Excel이 없어요.' };
-  const saveRes = await dialog.showSaveDialog(mainWindow, {
-    title: 'PDF로 내보내기',
-    defaultPath: path.join(os.homedir(), 'Desktop', `${(suggestedName || `${def.type}_${def.company}`).replace(/[\\/:*?"<>|]/g, '_')}.pdf`),
-    filters: [{ name: 'PDF', extensions: ['pdf'] }],
-    properties: ['showOverwriteConfirmation']
-  });
-  if (saveRes.canceled || !saveRes.filePath) return { ok: false, canceled: true };
-  const target = saveRes.filePath.toLowerCase().endsWith('.pdf') ? saveRes.filePath : `${saveRes.filePath}.pdf`;
+  let target;
+  const chosen = await resolveExportTarget({ outputDir, fileName }, 'pdf', 'pdf').catch((e) => ({ error: e.message }));
+  if (chosen && chosen.error) return { ok: false, error: chosen.error };
+  if (chosen && chosen.canceled) return { ok: false, canceled: true };
+  if (chosen) target = chosen.target;
+  else {
+    const saveRes = await dialog.showSaveDialog(mainWindow, {
+      title: 'PDF로 내보내기',
+      defaultPath: path.join(app.getPath('desktop'), `${(suggestedName || `${def.type}_${def.company}`).replace(/[\\/:*?"<>|]/g, '_')}.pdf`),
+      filters: [{ name: 'PDF', extensions: ['pdf'] }],
+      properties: ['showOverwriteConfirmation']
+    });
+    if (saveRes.canceled || !saveRes.filePath) return { ok: false, canceled: true };
+    target = saveRes.filePath.toLowerCase().endsWith('.pdf') ? saveRes.filePath : `${saveRes.filePath}.pdf`;
+  }
   const work = path.join(EXCEL_CONTAINER, 'Phoditor-pdf', crypto.randomBytes(6).toString('hex'));
   const xlsx = path.join(work, 'photobook.xlsx');
   const pdf = path.join(work, 'photobook.pdf');
@@ -929,7 +968,7 @@ ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggested
   }
 });
 
-ipcMain.handle('export-xlsx', async (_event, { templateId, editorState, suggestedName }) => {
+ipcMain.handle('export-xlsx', async (_event, { templateId, editorState, suggestedName, outputDir, fileName }) => {
   const def = templateDefCache.get(templateId);
   if (!def) return { ok: false, error: '템플릿 정의서를 찾을 수 없습니다.' };
 
@@ -942,20 +981,21 @@ ipcMain.handle('export-xlsx', async (_event, { templateId, editorState, suggeste
   const base = String(suggestedName || `${def.type}_${def.company}`).replace(/[\\/:*?"<>|]/g, '_').trim();
   const defaultFileName = `${base}_${yyyymmdd}.xlsx`;
 
-  const saveRes = await dialog.showSaveDialog(mainWindow, {
-    title: '.xlsx 다른 이름으로 저장',
-    defaultPath: path.join(os.homedir(), 'Desktop', defaultFileName),
-    filters: [{ name: 'Excel Workbook', extensions: ['xlsx'] }],
-    properties: ['showOverwriteConfirmation']
-  });
-
-  if (saveRes.canceled || !saveRes.filePath) {
-    return { ok: false, canceled: true };
-  }
-
-  let outputPath = saveRes.filePath;
-  if (!outputPath.toLowerCase().endsWith('.xlsx')) {
-    outputPath += '.xlsx';
+  let outputPath;
+  const chosen = await resolveExportTarget({ outputDir, fileName }, 'xlsx', 'xlsx').catch((e) => ({ error: e.message }));
+  if (chosen && chosen.error) return { ok: false, error: chosen.error };
+  if (chosen && chosen.canceled) return { ok: false, canceled: true };
+  if (chosen) outputPath = chosen.target;
+  else {
+    const saveRes = await dialog.showSaveDialog(mainWindow, {
+      title: '.xlsx 다른 이름으로 저장',
+      defaultPath: path.join(app.getPath('desktop'), defaultFileName),
+      filters: [{ name: 'Excel Workbook', extensions: ['xlsx'] }],
+      properties: ['showOverwriteConfirmation']
+    });
+    if (saveRes.canceled || !saveRes.filePath) return { ok: false, canceled: true };
+    outputPath = saveRes.filePath;
+    if (!outputPath.toLowerCase().endsWith('.xlsx')) outputPath += '.xlsx';
   }
 
   const blankPath = path.join(BLANKS_DIR, `${def.id}.xlsx`);

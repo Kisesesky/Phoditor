@@ -236,8 +236,6 @@ function documentSections() {
   const notes = Object.values(state.editor.fontMap).map(installNoteFor).filter(Boolean);
   out.push(sec('문서 글꼴 바꾸기', h('div', { class: 'insp-note', text: '이 양식에서 쓰는 글꼴을 다른 글꼴로 한꺼번에 바꿉니다. 내보낸 엑셀에도 그대로 들어가요.' }), ...rows, ...notes,
     missing.size ? h('div', { class: 'insp-note warn', text: `⚠ 표시 글꼴은 이 Mac에 없어서 비슷한 글꼴로 보여요. 다른 글꼴로 바꾸거나, 그 글꼴을 설치해 주세요.` }) : null));
-  out.push(sec('내 양식', h('button', { id: 'saveMyTplBtn', onclick: openSaveMyTemplate }, '내 양식으로 저장…'),
-    h('div', { class: 'insp-note', text: '자주 쓰는 구성(블록 수·배치·표지·반복값)을 저장해 두면 시작 화면에서 바로 다시 시작해요.' })));
   out.push(sec('양식 정보', h('dl', { class: 'insp-kv' },
     h('dt', { text: '종류' }), h('dd', { text: def.type }),
     h('dt', { text: '업체' }), h('dd', { text: def.company }),
@@ -264,14 +262,13 @@ function renderInspector() {
     if (photo) {
       const img = h('img', { style: 'width:100%;max-height:170px;object-fit:contain;background:var(--chrome);border-radius:8px;border:1px solid var(--line)' });
       img.src = slotPreviewSrc(photo, img);
-      body.push(sec(null, img, h('div', { class: 'insp-actions' },
-        h('button', { onclick: () => openSlotCropEditor(slot) }, photo.cropRect ? '다시 자르기' : '자르기'),
-        h('button', { title: '오른쪽으로 90° 돌리기', onclick: () => rotateSlot(slot) }, '↻ 돌리기'),
-        photo.isCropped ? h('button', { onclick: () => revertSlotCrop(slot) }, '원본으로') : null,
-        h('button', { onclick: () => openLightbox([photo], 0) }, '크게 보기'),
-        h('button', { onclick: () => openAnnotationEditor(slot) }, photo.annotations && photo.annotations.length ? `표시 고치기 (${photo.annotations.length})` : '사진 위 표시…'),
-        h('button', { class: 'danger', onclick: () => removePhotoFromSlot(slot.sheetIdx, slot.blockIdx, slot.paIdx, slot.slotIdx) }, '빼기')),
-        h('div', { class: 'insp-note', text: photo.isCropped ? `${photo.cropRect ? '자름' : ''}${photo.cropRect && photo.rotation ? ' · ' : ''}${photo.rotation ? `${photo.rotation}° 돌림` : ''} ${photo.croppedWidth}×${photo.croppedHeight}px · 원본 파일은 그대로` : '왼쪽 사진을 누르면 이 자리 사진이 바뀌어요.' })));
+      // [2026-11-26 리본] 사진 일(자르기·돌리기·표시·빼기)은 리본 [사진] 탭과 오른쪽 클릭에. 여기는 정보만
+      body.push(sec(null, img,
+        h('dl', { class: 'insp-kv' },
+          h('dt', { text: '상태' }), h('dd', { text: photo.isCropped ? `${photo.cropRect ? '자름' : ''}${photo.cropRect && photo.rotation ? ' · ' : ''}${photo.rotation ? `${photo.rotation}° 돌림` : ''}` : '원본 그대로' }),
+          h('dt', { text: '크기' }), h('dd', { text: photo.isCropped ? `${photo.croppedWidth}×${photo.croppedHeight}px` : (photo.sizeBytes ? `${(photo.sizeBytes / 1048576).toFixed(1)}MB` : '-') }),
+          h('dt', { text: '사진 위 표시' }), h('dd', { text: photo.annotations && photo.annotations.length ? `${photo.annotations.length}개` : '없음' })),
+        h('div', { class: 'insp-note', text: '자르기·돌리기·표시는 위 [사진] 탭이나 오른쪽 클릭으로. 원본 파일은 바뀌지 않아요.' })));
     } else {
       body.push(sec(null, h('div', { class: 'insp-note', text: '왼쪽 사진 패널에서 사진을 누르거나 이 자리로 끌어 넣으세요.' })));
     }
@@ -296,20 +293,7 @@ function renderInspector() {
       const unit = sheet.sheetDef.block.addUnit === 'page' ? '쪽' : '블록';
       kicker = sheetLabel(sheet);
       title = `${unit} ${b + 1} / ${sheet.blocks.length}`;
-      body.push(sec(`${unit} 편집`, h('div', { class: 'insp-actions' },
-        h('button', { onclick: () => addBlock(true) }, `아래에 ${unit} 추가`),
-        h('button', { onclick: () => addBlock(false) }, `맨 끝에 추가`)),
-        h('div', { class: 'insp-actions' },
-        h('button', { disabled: b <= 0, onclick: () => moveBlock(-1), title: '위로 옮기기' }, '↑ 위로'),
-        h('button', { disabled: b >= sheet.blocks.length - 1, onclick: () => moveBlock(1), title: '아래로 옮기기' }, '↓ 아래로'),
-        h('button', { onclick: duplicateBlock, title: '글자·사진까지 복제' }, '복제'),
-        h('button', { class: 'danger', disabled: sheet.blocks.length <= 1, onclick: deleteSelectedBlock }, '삭제')),
-        el.editRepeatedBtn.disabled ? null : h('button', { onclick: openRepeatedModal }, '머리 행·반복값 입력…')));
       body.push(photoScaleSection(sheet));
-      body.push(sec('한꺼번에 채우기',
-        h('button', { onclick: openAutoFill }, '사진 자동 채우기…'),
-        h('button', { onclick: openPasteTable }, '표 붙여넣기 (위치·품목 등)…'),
-        h('div', { class: 'insp-note', text: '사진 폴더의 사진을 빈 자리에 차례로 넣거나, 엑셀에서 복사한 목록으로 칸을 채워요. 잘못되면 ⌘Z로 되돌릴 수 있어요.' })));
     } else {
       kicker = sheet.role === 'cover' ? '표지' : '목차';
       title = sheetLabel(sheet);
@@ -335,6 +319,7 @@ function renderInspector() {
   el.inspTitle.textContent = title;
   el.inspBody.innerHTML = '';
   body.forEach((n) => { if (n) el.inspBody.appendChild(n); });
+  if (typeof updateRibbon === 'function') updateRibbon();
 }
 
 function updateFontChip() {

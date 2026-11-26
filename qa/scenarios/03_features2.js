@@ -40,9 +40,9 @@ try {
   const tdInBlock = (b) => $(`.pv-page tr[data-b="${b}"]`);
   tdInBlock(0).dispatchEvent(new MouseEvent('mousedown', { bubbles: true })); await sleep(300);
   check('블록 1 선택', insp().includes('블록 1 / 5'), insp());
-  await clickEl($$('#inspBody button').find((b) => b.textContent.includes('아래로')), 700);
+  await clickEl($('#moveDownBtn'), 700);
   check('↓ 아래로: 1·2번 사진 순서 바뀜', slotImgs()[0].startsWith('portrait') && slotImgs()[1].startsWith('landscape'), slotImgs().join(','));
-  await clickEl($$('#inspBody button').find((b) => b.textContent === '복제'), 700);
+  await clickEl($('#dupBlockBtn'), 700);
   check('복제 → 블록 6개(사진 포함)', blocks() === 6 && slotImgs().length === 6, `${blocks()} ${slotImgs().length}`);
   await clickEl($('#undoBtn'), 600);
   await clickEl($('#undoBtn'), 600);
@@ -73,12 +73,12 @@ try {
 
   // 6. 사진 돌리기·크게 보기
   $('.pv-page .photo-slot').click(); await sleep(500);
-  await clickEl($$('#inspBody button').find((b) => b.textContent.includes('돌리기')), 300);
+  await clickEl($('#rbRotateBtn'), 300);
   await waitFor(() => $('.pv-page .photo-slot img') && $('.pv-page .photo-slot img').alt.startsWith('[회전]'), 10000);
   const im = $('.pv-page .photo-slot img');
   await sleep(300);
   check('90° 돌림(가로 사진 → 세로)', im.alt.startsWith('[회전]') && im.naturalHeight > im.naturalWidth, `${im.alt} ${im.naturalWidth}x${im.naturalHeight}`);
-  await clickEl($$('#inspBody button').find((b) => b.textContent === '크게 보기'), 600);
+  await clickEl($('#rbZoomBtn'), 600);
   check('크게 보기 창', !!$('.lightbox .lightbox-img'));
   await shot('f03_lightbox');
   document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await sleep(300);
@@ -129,7 +129,7 @@ try {
   await shot('f04_toc');
 
   // 10. 내보내기
-  await clickEl($('#exportBtn'), 300);
+  await clickEl($('#exportBtn'), 300); await waitFor(() => $('#exportGoBtn')); await clickEl($('#exportGoBtn'), 300);
   const t = await waitFor(() => (toastText().includes('저장 완료') || toastText().includes('실패') ? toastText() : null), 60000);
   check('내보내기 성공', t && t.includes('저장 완료'), t);
 } catch (err) { check('예외 없음', false, String(err && err.stack || err)); }

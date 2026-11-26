@@ -7,7 +7,7 @@
 // =====================================================================
 
 // --- PDF 내보내기 (Mac Excel로 인쇄) ---
-async function handleExportPdf() {
+async function handleExportPdf(opt = {}) {
   if (!state.editor) return;
   el.pdfBtn.disabled = true;
   showToast('PDF 만드는 중… Excel이 잠시 열렸다 닫혀요(처음이면 "Excel 제어 허용"을 눌러 주세요).', 60000);
@@ -15,9 +15,12 @@ async function handleExportPdf() {
     const res = await window.api.exportPdf({
       templateId: state.templateDef.id,
       editorState: state.editor,
-      suggestedName: `${currentSiteName() || state.templateDef.company}_${state.templateDef.type}`
+      suggestedName: `${currentSiteName() || state.templateDef.company}_${state.templateDef.type}`,
+      outputDir: opt.outputDir,
+      fileName: opt.fileName
     });
     if (res.canceled) return hideToast();
+    if (res.ok && opt.reveal) window.api.revealFile(res.filePath);
     if (res.ok) showToast(`PDF 저장 완료: ${res.filePath.split('/').pop()} (${res.pages || '?'}쪽, ${(res.sizeBytes / 1048576).toFixed(1)}MB)`, 5000);
     else showToast(`PDF를 만들지 못했어요: ${res.error}`, 8000);
   } finally {
@@ -342,7 +345,7 @@ async function duplicateProject(filePath) {
     h('div', { class: 'insp-note', text: `"${data.title || filePath.split('/').pop()}"을(를) 바탕으로 새 작업을 만들어요. 사진은 비우고, 원래 작업 파일은 바뀌지 않아요.` }),
     h('div', { class: 'form-row' }, h('label', { text: '새 현장명' }), nameIn),
     h('label', { class: 'check-row' }, keepText, ' 위치·품목 등 글자 남기기'),
-    h('label', { class: 'check-row' }, keepBlocks, ' 블록 개수·사진 배치(1~4장) 남기기')
+    h('label', { class: 'check-row' }, keepBlocks, ' 블록 개수·사진 배치 남기기')
   ], [
     h('button', { onclick: () => back.remove() }, '취소'),
     h('button', { class: 'primary', id: 'dupGoBtn', onclick: async () => {

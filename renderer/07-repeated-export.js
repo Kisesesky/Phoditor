@@ -102,7 +102,58 @@ async function refreshSizeEstimate() {
   el.sizeEstimateBadge.classList.toggle('warn', !!est.exceeds500MB);
 }
 
-async function handleExport() {
+// [2026-11-26] 내보내기 창: 파일 이름과 저장할 폴더를 앱 안에서 고른다(마지막 폴더 기억)
+function exportBaseName(kind) {
+  const site = currentSiteName();
+  const d = new Date();
+  const ymd = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+  return kind === 'pdf'
+    ? `${site || state.templateDef.company}_${state.templateDef.type}`
+    : `${site ? `${site}_` : ''}${state.templateDef.type}_${state.templateDef.company}_${ymd}`;
+}
+// 긴 경로는 앞을 줄여 끝 폴더가 보이게: ~/…/현장/사진첩
+function shortDir(p) {
+  const t = String(p || '').replace(/^\/Users\/[^/]+/, '~');
+  const parts = t.split('/');
+  return parts.length > 4 ? `${parts[0]}/…/${parts.slice(-3).join('/')}` : t;
+}
+async function openExportDialog(kind = 'xlsx') {
+  if (!state.editor) return;
+  if (document.querySelector('.dyn-modal.export-dlg')) return;
+  const info = await window.api.exportTargetInfo(kind);
+  let dir = info.dir;
+  const ext = kind === 'pdf' ? 'pdf' : 'xlsx';
+  const nameIn = h('input', { type: 'text', value: exportBaseName(kind), id: 'exportNameInput' });
+  const dirText = h('div', { class: 'export-dir', id: 'exportDirText', title: dir, text: shortDir(dir) });
+  const reveal = h('input', { type: 'checkbox', checked: info.revealAfter ? true : null });
+  const back = openModal(kind === 'pdf' ? 'PDF로 내보내기' : '엑셀로 내보내기', [
+    h('div', { class: 'form-row' }, h('label', { text: '파일 이름' }), h('div', { class: 'name-row' }, nameIn, h('span', { class: 'ext', text: `.${ext}` }))),
+    h('div', { class: 'form-row' }, h('label', { text: '저장할 곳' }), h('div', { class: 'dir-row' },
+      h('span', { class: 'dir-ico' }, iconSvgFolder()), dirText,
+      h('button', { id: 'exportPickDirBtn', onclick: async () => {
+        const p = await window.api.pickFolder(dir);
+        if (p) { dir = p; dirText.textContent = shortDir(p); dirText.title = p; }
+      } }, '바꾸기'))),
+    h('label', { class: 'check-row' }, reveal, ' 다 되면 Finder에서 보여 주기'),
+    kind === 'pdf' ? h('div', { class: 'insp-note', text: 'PDF는 Mac용 Excel로 만들어요. Excel이 잠시 열렸다 닫혀요.' }) : null
+  ], [
+    h('button', { onclick: () => back.remove() }, '취소'),
+    h('button', { class: 'primary', id: 'exportGoBtn', onclick: async () => {
+      const fileName = nameIn.value.trim();
+      if (!fileName) return nameIn.focus();
+      back.remove();
+      window.api.setRevealAfterExport(reveal.checked);
+      const opt = { outputDir: dir, fileName, reveal: reveal.checked };
+      if (kind === 'pdf') await handleExportPdf(opt);
+      else await handleExport(opt);
+    } }, '내보내기')
+  ], 520);
+  back.classList.add('export-dlg');
+  nameIn.addEventListener('keydown', (e) => { if (e.key === 'Enter') back.querySelector('#exportGoBtn').click(); });
+  setTimeout(() => { nameIn.focus(); nameIn.select(); }, 0);
+}
+
+async function handleExport(opt = {}) {
   await refreshSizeEstimate();
   if (state.lastSizeEstimate.exceeds500MB) {
     const proceed = confirm(
@@ -117,10 +168,13 @@ async function handleExport() {
     const res = await window.api.exportXlsx({
       templateId: state.templateDef.id,
       editorState: state.editor,
-      suggestedName: `${currentSiteName() ? `${currentSiteName()}_` : ''}${state.templateDef.type}_${state.templateDef.company}`
+      suggestedName: `${currentSiteName() ? `${currentSiteName()}_` : ''}${state.templateDef.type}_${state.templateDef.company}`,
+      outputDir: opt.outputDir,
+      fileName: opt.fileName
     });
     if (res.canceled) return;
     if (res.ok) {
+      if (opt.reveal) window.api.revealFile(res.filePath);
       const mb = (res.stats.sizeBytes / (1024 * 1024)).toFixed(2);
       showToast(
         `저장 완료 (${mb}MB · 사진 ${res.stats.totalPhotoPlacements}개 배치 / 고유 ${res.stats.uniqueImagesEmbedded}장 저장)`,
@@ -131,7 +185,7 @@ async function handleExport() {
       if (retry) {
         el.exportBtn.disabled = false;
         el.exportBtn.innerHTML = EXPORT_BTN_HTML;
-        return handleExport();
+        return handleExport(opt);
       }
     }
   } catch (err) {
@@ -139,7 +193,7 @@ async function handleExport() {
     if (retry) {
       el.exportBtn.disabled = false;
       el.exportBtn.innerHTML = EXPORT_BTN_HTML;
-      return handleExport();
+      return handleExport(opt);
     }
   } finally {
     el.exportBtn.disabled = false;

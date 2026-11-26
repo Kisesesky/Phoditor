@@ -6,13 +6,14 @@
 function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
   const box = document.createElement('div');
   box.className = 'photo-area-box';
+  box.dataset.areaKey = `${sheetIdx}-${blockIdx}-${paIdx}`;
 
   const paState = blockData.photoAreas[paIdx];
 
   if (!paState || !paState.layout) {
     const emptyBtn = document.createElement('div');
     emptyBtn.className = 'photo-area-empty';
-    emptyBtn.innerHTML = '<strong>사진 넣기</strong><span>왼쪽 사진을 끌어 놓거나<br/>눌러서 배치(1~4장)를 고르세요</span>';
+    emptyBtn.innerHTML = '<strong>사진 넣기</strong><span>왼쪽 사진을 끌어 놓거나<br/>눌러서 배치(1×1 ~ 5×5)를 고르세요</span>';
     const sa = state.selectedPhotoArea;
     if (sa && sa.sheetIdx === sheetIdx && sa.blockIdx === blockIdx && sa.paIdx === paIdx) emptyBtn.classList.add('selected');
 
@@ -64,7 +65,7 @@ function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
     renderActiveSheet();
   });
   toolbar.appendChild(changeBtn);
-  box.appendChild(toolbar);
+  void toolbar; // [2026-11-26 리본] 영역 위 "배치" 단추는 뺐다 → 리본 [사진] > 배치·오른쪽 클릭
 
   // Slots grid
   const grid = document.createElement('div');
@@ -105,51 +106,8 @@ function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
         slotEl.appendChild(tag);
       }
 
-      const remBtn = document.createElement('button');
-      remBtn.className = 'slot-remove-btn';
-      remBtn.textContent = '×';
-      remBtn.title = '사진 삭제';
-      remBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        removePhotoFromSlot(sheetIdx, blockIdx, paIdx, sIdx);
-      });
-      slotEl.appendChild(remBtn);
-
-      // [사진 자리 크롭 2026-11-25] 넣은 뒤에도 자리에서 바로 다시 자른다(원본에서 다시 자르므로 화질 손실 없음)
-      const slotActs = document.createElement('div');
-      slotActs.className = 'slot-actions';
-      const target = { sheetIdx, blockIdx, paIdx, slotIdx: sIdx };
-      const cropBtn = document.createElement('button');
-      cropBtn.className = 'slot-crop-btn';
-      cropBtn.textContent = photo.isCropped ? '다시 크롭' : '크롭';
-      cropBtn.title = '이 자리의 사진만 자릅니다. 원본 파일은 그대로입니다.';
-      cropBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openSlotCropEditor(target);
-      });
-      slotActs.appendChild(cropBtn);
-      const annoBtn = document.createElement('button');
-      annoBtn.className = 'slot-anno-btn';
-      annoBtn.textContent = photo.annotations && photo.annotations.length ? `표시 ${photo.annotations.length}` : '표시';
-      annoBtn.title = '사진 위에 화살표·네모·글상자 넣기';
-      annoBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        state.selectedPhotoSlot = target;
-        openAnnotationEditor(target);
-      });
-      slotActs.appendChild(annoBtn);
-      if (photo.isCropped) {
-        const origBtn = document.createElement('button');
-        origBtn.className = 'slot-uncrop-btn';
-        origBtn.textContent = '원본';
-        origBtn.title = '이 자리를 자르기 전 사진으로 되돌립니다.';
-        origBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          revertSlotCrop(target);
-        });
-        slotActs.appendChild(origBtn);
-      }
-      slotEl.appendChild(slotActs);
+      // [2026-11-26 리본] 사진 위 단추(×·크롭·표시·원본)는 뺐다 → 리본 [사진] 탭·오른쪽 클릭·⌫
+      slotEl.dataset.tip = '오른쪽 클릭: 자르기·돌리기·빼기 …';
     } else {
       const ph = document.createElement('div');
       ph.className = 'slot-placeholder';
@@ -370,6 +328,7 @@ function switchPhotoSource(source) {
 function createPhotoCardElement(photo, idx, sourceKey, listRef) {
   const item = document.createElement('div');
   item.className = 'photo-item';
+  item.addEventListener('contextmenu', (e) => openPhotoCardMenu(e, photo, idx, listRef));
   const zoomBtn = document.createElement('button');
   zoomBtn.className = 'photo-zoom-btn';
   zoomBtn.title = '크게 보기';
@@ -378,7 +337,7 @@ function createPhotoCardElement(photo, idx, sourceKey, listRef) {
     e.stopPropagation();
     openLightbox(listRef, idx);
   });
-  item.appendChild(zoomBtn);
+  void zoomBtn; // [2026-11-26 리본] 크게 보기는 오른쪽 클릭으로
   // [UI 개편 2026-11-25] 이미 넣은 사진은 몇 곳에 넣었는지 표시
   const used = countPhotoUses(photo);
   if (used) {
@@ -477,7 +436,8 @@ function createPhotoCardElement(photo, idx, sourceKey, listRef) {
     });
     actionsRow.appendChild(cropBtn);
   }
-  item.appendChild(actionsRow);
+  // [2026-11-26 리본] 사진마다 붙던 [크롭]/[원본으로] 단추는 뺐다 → 두 번 누르기·오른쪽 클릭
+  item.__actionBtn = actionsRow.querySelector('button');
 
   item.addEventListener('dragstart', (e) => {
     e.dataTransfer.setData('text/photo-index', String(idx));

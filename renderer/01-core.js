@@ -180,6 +180,11 @@ const el = {
   photoSortName: document.getElementById('photoSortName'),
   photoSortTime: document.getElementById('photoSortTime'),
   inspector: document.getElementById('inspector'),
+  sidebar: document.getElementById('sidebar'),
+  sideResizer: document.getElementById('sideResizer'),
+  inspResizer: document.getElementById('inspResizer'),
+  sideCollapseBtn: document.getElementById('sideCollapseBtn'),
+  sideExpandBtn: document.getElementById('sideExpandBtn'),
   localUpBtn: document.getElementById('localUpBtn'),
   inspCollapseBtn: document.getElementById('inspCollapseBtn'),
   inspExpandBtn: document.getElementById('inspExpandBtn'),
@@ -188,8 +193,6 @@ const el = {
   myboxDaysSeg: document.getElementById('myboxDaysSeg'),
   myboxIssuedInput: document.getElementById('myboxIssuedInput'),
   myboxExpiryPreview: document.getElementById('myboxExpiryPreview'),
-  fillMenuBtn: document.getElementById('fillMenuBtn'),
-  fillMenu: document.getElementById('fillMenu'),
   pageRail: document.getElementById('pageRail'),
   pdfBtn: document.getElementById('pdfBtn'),
   overflowChip: document.getElementById('overflowChip')
@@ -236,6 +239,7 @@ const SHORTCUTS = [
   ['⌫', '선택한 사진 빼기'],
   ['↵', '선택한 칸 입력 시작'],
   ['⌘ \\', '속성 패널 접기/펼치기'],
+  ['⇧ ⌘ \\', '사진 패널 접기/펼치기'],
   ['⌘ 1~4', '사진 보기 1~4열'],
   ['⌘ +', '확대 (⌘- 축소, ⌘0 맞춤)'],
   ['?', '단축키 보기']

@@ -51,12 +51,12 @@ try {
 
   // 자르기(속성 패널 단추)
   $$('.pv-page .photo-slot')[0].click(); await sleep(500);
-  await clickEl($$('#inspBody button').find((b) => b.textContent === '자르기'), 1500);
-  check('속성 패널 [자르기] → 편집기', $('#cropModal').classList.contains('open'));
+  await clickEl($('#rbCropBtn'), 1500);
+  check('리본 [사진] > 자르기 → 편집기', $('#cropModal').classList.contains('open'));
   await waitFor(() => $('#cropSelection').style.display === 'block', 5000);
   await clickEl($('#confirmCropBtn'), 2500);
   await waitFor(() => !$('#cropModal').classList.contains('open'), 8000);
-  check('자른 사진으로 바뀜(원본으로 단추)', $$('#inspBody button').some((b) => b.textContent === '원본으로'), insp());
+  check('자른 사진으로 바뀜(리본 원본으로 켜짐)', !$('#rbRevertBtn').disabled, insp());
 
   // 값 칸 입력 + 칸 글꼴
   const posLabel = $$('.pv-page td').find((t) => t.textContent.replace(/[■\s]/g, '') === '위치');
@@ -112,7 +112,7 @@ try {
   await clickEl($('#cancelRepeatedBtn'), 300);
 
   // 내보내기
-  await clickEl($('#exportBtn'), 300);
+  await clickEl($('#exportBtn'), 300); await waitFor(() => $('#exportGoBtn')); await clickEl($('#exportGoBtn'), 300);
   const t = await waitFor(() => (toastText().includes('저장 완료') || toastText().includes('실패') ? toastText() : null), 60000);
   check('내보내기 성공', t && t.includes('저장 완료'), t);
   check('내보내기 단추 모양 되돌아옴', $('#exportBtn').textContent.includes('엑셀로 내보내기'), $('#exportBtn').textContent);
