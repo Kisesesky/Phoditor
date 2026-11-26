@@ -188,7 +188,7 @@ window.api.onThumbReady(({ path: p, thumbUrl, done, total }) => {
     wrap.appendChild(img);
   }
   if (el.folderPathText && state.photoFolder) {
-    el.folderPathText.textContent = done < total ? `미리보기 만드는 중 ${done}/${total}` : state.photoFolder;
+    setFolderPathText(el.folderPathText, done < total ? `미리보기 만드는 중 ${done}/${total}` : state.photoFolder);
   }
 });
 

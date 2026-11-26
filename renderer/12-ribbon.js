@@ -15,6 +15,8 @@ function setRibbonTab(tab) {
 function setRibbonCollapsed(on) {
   $id('ribbon').classList.toggle('collapsed', on);
   document.body.classList.toggle('rb-collapsed', on);
+  $id('ribbonCollapseBtn').dataset.tip = on ? '리본 펼치기' : '리본 접기';
+  $id('ribbonCollapseBtn').setAttribute('aria-expanded', on ? 'false' : 'true');
   try { localStorage.setItem('phoditor.ribbonCollapsed', on ? '1' : ''); } catch (_) {}
 }
 
@@ -131,7 +133,7 @@ $id('ribbonTabs').addEventListener('click', (e) => {
   if (e.detail === 2) return setRibbonCollapsed(!$id('ribbon').classList.contains('collapsed'));
   setRibbonTab(b.dataset.tab);
 });
-$id('ribbonCollapseBtn').addEventListener('click', () => setRibbonCollapsed(true));
+$id('ribbonCollapseBtn').addEventListener('click', () => setRibbonCollapsed(!$id('ribbon').classList.contains('collapsed')));
 try { if (localStorage.getItem('phoditor.ribbonCollapsed')) setRibbonCollapsed(true); } catch (_) {}
 
 const withBlockSel = (fn) => () => { if (state.editor) fn(); };
