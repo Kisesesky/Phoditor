@@ -13,6 +13,7 @@ const OUT = path.join(__dirname, 'out');
 const W = process.env.QA_W || '1440';
 const H = process.env.QA_H || '900';
 const filter = process.argv[2] || '';
+// QA_SCROLLBARS=WhenScrolling|Always: 이 실행에만 맥 스크롤바 설정을 덮어씀(시스템 설정은 그대로)
 
 if (process.platform !== 'darwin') {
   console.log('GUI 테스트는 맥에서만 돌려요(사진 변환·글꼴에 맥 기능을 씀). 건너뜀.');
@@ -66,7 +67,7 @@ function runOne(name) {
     const reportFile = path.join(out, 'report.json');
     if (fs.existsSync(reportFile)) fs.unlinkSync(reportFile);
     const electron = path.join(APP, 'node_modules', '.bin', 'electron');
-    const child = spawn(electron, [path.join(__dirname, 'harness.js'), APP, script, out, photos, W, H], { cwd: APP, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env } });
+    const child = spawn(electron, [path.join(__dirname, 'harness.js'), APP, script, out, photos, W, H, ...(process.env.QA_SCROLLBARS ? ['-AppleShowScrollBars', process.env.QA_SCROLLBARS] : [])], { cwd: APP, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env } });
     let log = '';
     child.stdout.on('data', (d) => { log += d; });
     child.stderr.on('data', (d) => { log += d; });
