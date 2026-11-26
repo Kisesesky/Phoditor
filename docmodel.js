@@ -87,5 +87,76 @@
     return editor;
   }
 
-  return { deepClone, UndoHistory, serializeEditor, attachSheetDefs };
+  // --- 사진 위 표시 좌표 바꾸기 (2026-11-26) ---
+  // 표시는 "지금 보이는 사진"(자르고 돌린 결과) 기준 0~1 좌표로 저장된다.
+  // 자르기 영역(rect, 원본 픽셀)이나 돌린 각도(rot: 0·90·180·270, 시계 방향)가 바뀌면
+  // 원본 좌표를 거쳐 새 사진 기준 좌표로 옮긴다. 글상자는 글자가 바로 서도록 크기(픽셀)를 유지하고 위치만 옮긴다.
+  const norm = (r) => ((Number(r) || 0) % 360 + 360) % 360;
+  function rotFwd(u, v, rot) {
+    switch (norm(rot)) {
+      case 90: return [1 - v, u];
+      case 180: return [1 - u, 1 - v];
+      case 270: return [v, 1 - u];
+      default: return [u, v];
+    }
+  }
+  function rotInv(x, y, rot) {
+    switch (norm(rot)) {
+      case 90: return [y, 1 - x];
+      case 180: return [1 - x, 1 - y];
+      case 270: return [1 - y, x];
+      default: return [x, y];
+    }
+  }
+  const visSize = (s) => (norm(s.rot) % 180 ? [s.rect.h, s.rect.w] : [s.rect.w, s.rect.h]);
+  function toOrig(x, y, s) {
+    const [u, v] = rotInv(x, y, s.rot);
+    return [s.rect.x + u * s.rect.w, s.rect.y + v * s.rect.h];
+  }
+  function fromOrig(X, Y, s) {
+    return rotFwd((X - s.rect.x) / s.rect.w, (Y - s.rect.y) / s.rect.h, s.rot);
+  }
+  const mapPt = (x, y, from, to) => {
+    const [X, Y] = toOrig(x, y, from);
+    return fromOrig(X, Y, to);
+  };
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  /**
+   * @param items 표시 목록
+   * @param from { rect:{x,y,w,h}(원본 픽셀), rot }  지금 사진
+   * @param to   { rect, rot }                      바뀐 사진
+   * @returns 옮긴 표시(새 사진 밖으로 완전히 나간 것은 뺌)
+   */
+  function transformAnnotations(items, from, to) {
+    const out = [];
+    const [fw, fh] = visSize(from);
+    const [tw, th] = visSize(to);
+    for (const a of items || []) {
+      if (a.t === 'arrow') {
+        const [x1, y1] = mapPt(a.x1, a.y1, from, to);
+        const [x2, y2] = mapPt(a.x2, a.y2, from, to);
+        const inside = (x, y) => x >= 0 && x <= 1 && y >= 0 && y <= 1;
+        if (!inside(x1, y1) && !inside(x2, y2)) continue;
+        out.push({ ...a, x1: clamp01(x1), y1: clamp01(y1), x2: clamp01(x2), y2: clamp01(y2) });
+      } else if (a.t === 'box') {
+        const [ax, ay] = mapPt(a.x, a.y, from, to);
+        const [bx, by] = mapPt(a.x + a.w2, a.y + a.h2, from, to);
+        const x0 = clamp01(Math.min(ax, bx)), x1 = clamp01(Math.max(ax, bx));
+        const y0 = clamp01(Math.min(ay, by)), y1 = clamp01(Math.max(ay, by));
+        if (x1 - x0 < 0.005 || y1 - y0 < 0.005) continue;
+        out.push({ ...a, x: x0, y: y0, w2: x1 - x0, h2: y1 - y0 });
+      } else if (a.t === 'text') {
+        const cx = a.x + a.w2 / 2;
+        const cy = a.y + a.h2 / 2;
+        const [nx, ny] = mapPt(cx, cy, from, to);
+        if (nx < 0 || nx > 1 || ny < 0 || ny > 1) continue;
+        const w = (Math.abs(a.w2) * fw) / tw;
+        const h = (Math.abs(a.h2) * fh) / th;
+        out.push({ ...a, x: clamp01(nx - w / 2), y: clamp01(ny - h / 2), w2: Math.min(1, w), h2: Math.min(1, h) });
+      } else out.push({ ...a });
+    }
+    return out;
+  }
+
+  return { deepClone, UndoHistory, serializeEditor, attachSheetDefs, transformAnnotations };
 });

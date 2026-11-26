@@ -184,16 +184,71 @@ function extractSheetVisualModel(ws) {
   return { rowCount, colCount, colWidths, rowHeights, merges, cells, usedFonts: [...usedFonts] };
 }
 
-function ensureThumbnail(filePath, maxSide = 240) {
-  if (!fs.existsSync(THUMB_CACHE_DIR)) {
-    fs.mkdirSync(THUMB_CACHE_DIR, { recursive: true });
-  }
+function thumbPathFor(filePath, maxSide = 240) {
   const stat = fs.statSync(filePath);
   const key = crypto
     .createHash('md5')
     .update(`${filePath}:${stat.mtimeMs}:${stat.size}${maxSide === 240 ? '' : `:${maxSide}`}`)
     .digest('hex');
-  const thumbPath = path.join(THUMB_CACHE_DIR, `${key}.jpg`);
+  return path.join(THUMB_CACHE_DIR, `${key}.jpg`);
+}
+
+function fallbackThumbUrl(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  return ['.jpg', '.jpeg', '.png', '.webp', '.gif'].includes(ext) ? `file://${encodeURI(filePath)}` : null;
+}
+
+// [2026-11-26] 썸네일을 뒤에서 만든다(한꺼번에 4장). 사진 수백 장 폴더를 열 때 앱이 멈추지 않게
+const thumbQueue = { running: 0, waiting: [], max: 4 };
+function ensureThumbnailAsync(filePath, maxSide = 240) {
+  return new Promise((resolve) => {
+    const job = () => {
+      thumbQueue.running++;
+      let thumbPath;
+      try {
+        if (!fs.existsSync(THUMB_CACHE_DIR)) fs.mkdirSync(THUMB_CACHE_DIR, { recursive: true });
+        thumbPath = thumbPathFor(filePath, maxSide);
+      } catch (_) {
+        thumbQueue.running--;
+        next();
+        return resolve(null);
+      }
+      const finish = (url) => {
+        thumbQueue.running--;
+        next();
+        resolve(url);
+      };
+      if (fs.existsSync(thumbPath)) return finish(`file://${encodeURI(thumbPath)}`);
+      if (process.platform !== 'darwin') return finish(fallbackThumbUrl(filePath));
+      require('child_process').execFile(
+        'sips',
+        ['-Z', String(maxSide), '-s', 'format', 'jpeg', '-s', 'formatOptions', maxSide > 240 ? '88' : '80', filePath, '--out', thumbPath],
+        (err) => finish(!err && fs.existsSync(thumbPath) ? `file://${encodeURI(thumbPath)}` : fallbackThumbUrl(filePath))
+      );
+    };
+    const next = () => {
+      while (thumbQueue.running < thumbQueue.max && thumbQueue.waiting.length) thumbQueue.waiting.shift()();
+    };
+    thumbQueue.waiting.push(job);
+    next();
+  });
+}
+
+// 이미 만들어 둔 썸네일만 바로 돌려준다(없으면 null)
+function cachedThumbnail(filePath, maxSide = 240) {
+  try {
+    const p = thumbPathFor(filePath, maxSide);
+    return fs.existsSync(p) ? `file://${encodeURI(p)}` : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function ensureThumbnail(filePath, maxSide = 240) {
+  if (!fs.existsSync(THUMB_CACHE_DIR)) {
+    fs.mkdirSync(THUMB_CACHE_DIR, { recursive: true });
+  }
+  const thumbPath = thumbPathFor(filePath, maxSide);
 
   if (fs.existsSync(thumbPath)) {
     return `file://${encodeURI(thumbPath)}`;
@@ -366,13 +421,13 @@ ipcMain.handle('close-now', () => {
 });
 
 // 썸네일 다시 만들기(저장한 작업을 열 때: 임시 폴더의 썸네일이 지워졌을 수 있음)
-ipcMain.handle('make-thumbs', (_event, paths) => {
+ipcMain.handle('make-thumbs', async (_event, paths) => {
   const out = {};
-  for (const p of paths || []) {
+  await Promise.all((paths || []).map(async (p) => {
     try {
-      if (p && fs.existsSync(p)) out[p] = ensureThumbnail(p);
+      if (p && fs.existsSync(p)) out[p] = await ensureThumbnailAsync(p);
     } catch (_) {}
-  }
+  }));
   return out;
 });
 ipcMain.handle('files-exist', (_event, paths) => (paths || []).map((p) => !!p && fs.existsSync(p)));
@@ -621,6 +676,22 @@ ipcMain.handle('refresh-photo-folder', async (_event, folderPath) => {
 });
 
 function scanPhotoFolder(folderPath) {
+  const pendingThumbs = [];
+  const result = scanPhotoFolderInner(folderPath, pendingThumbs);
+  // 없는 썸네일은 뒤에서 만들고, 하나씩 화면에 알린다
+  const sender = mainWindow && mainWindow.webContents;
+  let done = 0;
+  for (const p of pendingThumbs) {
+    ensureThumbnailAsync(p).then((url) => {
+      done++;
+      if (sender && !sender.isDestroyed()) sender.send('thumb-ready', { path: p, thumbUrl: url, done, total: pendingThumbs.length });
+    });
+  }
+  result.pendingThumbs = pendingThumbs.length;
+  return result;
+}
+
+function scanPhotoFolderInner(folderPath, pendingThumbs) {
   const entries = fs.readdirSync(folderPath).sort((a, b) => a.localeCompare(b, 'ko'));
   const photos = [];
   for (const name of entries) {
@@ -637,7 +708,8 @@ function scanPhotoFolder(folderPath) {
     }
     const needsConversion = CONVERT_EXTS.has(ext);
     const extUpper = ext.replace('.', '').toUpperCase();
-    const thumbUrl = ensureThumbnail(fullPath);
+    const thumbUrl = cachedThumbnail(fullPath);
+    if (!thumbUrl) pendingThumbs.push(fullPath);
     photos.push({
       name,
       path: fullPath,
@@ -747,7 +819,7 @@ ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggested
   }
 });
 
-ipcMain.handle('export-xlsx', async (_event, { templateId, editorState }) => {
+ipcMain.handle('export-xlsx', async (_event, { templateId, editorState, suggestedName }) => {
   const def = templateDefCache.get(templateId);
   if (!def) return { ok: false, error: '템플릿 정의서를 찾을 수 없습니다.' };
 
@@ -756,7 +828,9 @@ ipcMain.handle('export-xlsx', async (_event, { templateId, editorState }) => {
     String(now.getFullYear()) +
     String(now.getMonth() + 1).padStart(2, '0') +
     String(now.getDate()).padStart(2, '0');
-  const defaultFileName = `${def.type}_${def.company}_${yyyymmdd}.xlsx`;
+  // [2026-11-26] 파일 이름에 현장명을 넣는다(예: 부천 상동 롯데캐슬_공용홀_롯데_20261126.xlsx)
+  const base = String(suggestedName || `${def.type}_${def.company}`).replace(/[\\/:*?"<>|]/g, '_').trim();
+  const defaultFileName = `${base}_${yyyymmdd}.xlsx`;
 
   const saveRes = await dialog.showSaveDialog(mainWindow, {
     title: '.xlsx 다른 이름으로 저장',
@@ -802,7 +876,7 @@ ipcMain.handle('export-xlsx', async (_event, { templateId, editorState }) => {
 ipcMain.handle('get-slot-preview', async (_event, filePath) => {
   try {
     if (!filePath || !fs.existsSync(filePath)) return null;
-    return ensureThumbnail(filePath, 1200);
+    return await ensureThumbnailAsync(filePath, 1200);
   } catch (_) {
     return null;
   }

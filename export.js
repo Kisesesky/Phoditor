@@ -43,6 +43,26 @@ function fillSimpleFormulaResults(ws) {
   return n;
 }
 
+// [2026-11-26] 공유 수식(한 칸의 수식을 아래로 복사한 것)은 기준 칸을 다른 값으로 바꾸면 나머지 칸이 깨진다
+// (ExcelJS가 번역할 기준 수식을 잃어 내보내기가 멈춤). 고친 칸을 넣기 전에 모든 수식 칸을 "자기 수식"으로 풀어 둔다.
+function unshareFormulas(ws) {
+  const own = [];
+  ws.eachRow({ includeEmpty: false }, (row) => {
+    row.eachCell({ includeEmpty: false }, (cell) => {
+      if (cell.type !== ExcelJS.ValueType.Formula) return;
+      let f = null;
+      try {
+        f = cell.formula;
+      } catch (_) {
+        f = null;
+      }
+      if (f) own.push([cell.address, f]);
+    });
+  });
+  for (const [addr, f] of own) ws.getCell(addr).value = { formula: f };
+  return own.length;
+}
+
 // --- Column / Cell Address Utilities ---
 
 function colToNum(colStr) {
@@ -1079,6 +1099,7 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
 
     if (sState.role === 'cover' || sState.role === 'toc') {
       // Apply edited cells
+      unshareFormulas(ws);
       for (const [addr, val] of Object.entries(sState.cells || {})) {
         ws.getCell(addr).value = val;
       }

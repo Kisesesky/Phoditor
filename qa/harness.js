@@ -24,6 +24,15 @@ app.on('browser-window-created', (_e, win) => {
   if (W && H) win.setContentSize(Number(W), Number(H));
   const wc = win.webContents;
   wc.on('console-message', async (_ev, level, message, line, sourceId) => {
+    // 화면 일부를 잘라 저장(표지 미리보기 만들기 등): __QA_RECT__:{"file","x","y","w","h","width"}
+    if (typeof message === 'string' && message.startsWith('__QA_RECT__:')) {
+      const o = JSON.parse(message.slice('__QA_RECT__:'.length));
+      const img = await wc.capturePage({ x: Math.round(o.x), y: Math.round(o.y), width: Math.round(o.w), height: Math.round(o.h) });
+      fs.mkdirSync(path.dirname(o.file), { recursive: true });
+      fs.writeFileSync(o.file, (o.width ? img.resize({ width: o.width, quality: 'best' }) : img).toPNG());
+      shotN++;
+      return;
+    }
     if (typeof message === 'string' && message.startsWith('__QA_SHOT__:')) {
       const name = message.slice('__QA_SHOT__:'.length);
       const img = await wc.capturePage();

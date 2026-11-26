@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld('api', {
   transformPhoto: (payload) => ipcRenderer.invoke('transform-photo', payload),
   exportPdf: (payload) => ipcRenderer.invoke('export-pdf', payload),
   onMenu: (cb) => ipcRenderer.on('menu', (_e, cmd) => cb(cmd)),
+  onThumbReady: (cb) => ipcRenderer.on('thumb-ready', (_e, info) => cb(info)),
   installFont: (family) => ipcRenderer.invoke('install-font', family),
   openTemplate: (templateId) => ipcRenderer.invoke('open-template', templateId),
   selectPhotoFolder: () => ipcRenderer.invoke('select-photo-folder'),

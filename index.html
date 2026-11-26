@@ -343,6 +343,28 @@
     .lb-prev { left: 24px; } .lb-next { right: 24px; }
     .lb-close { position: fixed; top: 20px; right: 24px; background: rgba(255,255,255,.14); color: #fff; border: none; }
 
+    .thumb-wait { font-size: 10.5px; color: var(--ink-muted); animation: pulse 1.2s ease-in-out infinite; }
+    @keyframes pulse { 50% { opacity: .45; } }
+    /* [디자인 2026-11-26] 채우기 메뉴 · 쪽 이동 막대 · 빈 종류 · 표지 미리보기 */
+    .tb-menu-wrap { position: relative; }
+    .tb-menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 60; background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow-pop); padding: 5px; min-width: 250px; display: flex; flex-direction: column; gap: 2px; }
+    .tb-menu[hidden] { display: none; }
+    .tb-menu-item { justify-content: flex-start; gap: 10px; border: none; padding: 8px 10px; text-align: left; border-radius: 7px; }
+    .tb-menu-item span { display: flex; flex-direction: column; gap: 1px; }
+    .tb-menu-item strong { font-size: 13px; font-weight: 600; }
+    .tb-menu-item em { font-style: normal; font-size: 11.5px; color: var(--ink-muted); }
+    .tb-menu-item:disabled em { color: inherit; }
+    .canvas-wrap { flex-direction: row; }
+    .page-rail { width: 58px; flex: none; overflow-y: auto; padding: 14px 6px 40px; display: flex; flex-direction: column; gap: 4px; border-right: 1px solid var(--line); background: var(--chrome); }
+    .page-rail:empty { display: none; }
+    .rail-item { border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 5px 0 4px; display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
+    .rail-item small { font-size: 9.5px; font-weight: 500; color: var(--ink-muted); }
+    .rail-item.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+    .rail-item.on small { color: var(--accent); }
+    .grid-viewport { flex: 1; min-width: 0; }
+    .type-btn.empty-type { opacity: .45; }
+    .company-card .card-art img.cover-thumb { height: 76px; width: auto; border-radius: 2px; box-shadow: 0 1px 4px rgba(16,24,40,.22); background: #fff; }
+
     /* [3순위 2026-11-25] */
     #pdfBtn { font-size: 12.5px; }
     @media (max-width: 1420px) { #pdfBtn { font-size: 0; gap: 0; } }
@@ -528,13 +550,20 @@
         </button>
       </div>
       <div class="tb-sep"></div>
-      <div class="tb-group">
-        <button id="autoFillBtn" class="tb-btn" title="사진 폴더의 사진을 빈 자리에 차례로 넣기">
-          <svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><path d="M17 14v6M14 17h6"/></svg>사진 채우기
+      <div class="tb-group tb-menu-wrap">
+        <button id="fillMenuBtn" class="tb-btn" title="한꺼번에 채우기: 사진 자동 채우기 · 표 붙여넣기">
+          <svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><path d="M17 14v6M14 17h6"/></svg>채우기 ▾
         </button>
-        <button id="pasteTableBtn" class="tb-btn" title="엑셀에서 복사한 목록으로 칸 채우기">
-          <svg class="i" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8 10h8M8 14h8M8 18h5"/></svg>표 붙여넣기
-        </button>
+        <div id="fillMenu" class="tb-menu" hidden>
+          <button id="autoFillBtn" class="tb-menu-item">
+            <svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><path d="M17 14v6M14 17h6"/></svg>
+            <span><strong>사진 자동 채우기</strong><em>폴더 사진을 빈 자리에 차례로</em></span>
+          </button>
+          <button id="pasteTableBtn" class="tb-menu-item">
+            <svg class="i" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8 10h8M8 14h8M8 18h5"/></svg>
+            <span><strong>표 붙여넣기</strong><em>엑셀 목록으로 위치·품목 채우기</em></span>
+          </button>
+        </div>
       </div>
       <div class="tb-sep"></div>
       <div class="tb-group">
@@ -618,6 +647,7 @@
       </aside>
 
       <main class="canvas-wrap">
+        <nav id="pageRail" class="page-rail" aria-label="쪽 이동"></nav>
         <div id="gridViewport" class="grid-viewport"></div>
       </main>
 
@@ -768,6 +798,16 @@
   <div id="toast" class="toast"></div>
   <script src="./pageview.js"></script>
   <script src="./docmodel.js"></script>
-  <script src="./renderer.js"></script>
+  <script src="./renderer/01-core.js"></script>
+  <script src="./renderer/02-catalog-editor.js"></script>
+  <script src="./renderer/03-pages.js"></script>
+  <script src="./renderer/04-photos.js"></script>
+  <script src="./renderer/05-mybox-settings.js"></script>
+  <script src="./renderer/06-inspector.js"></script>
+  <script src="./renderer/07-repeated-export.js"></script>
+  <script src="./renderer/08-project-undo.js"></script>
+  <script src="./renderer/09-fill-tools.js"></script>
+  <script src="./renderer/10-extras.js"></script>
+  <script src="./renderer/99-wiring.js"></script>
 </body>
 </html>

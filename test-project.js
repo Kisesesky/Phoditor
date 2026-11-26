@@ -9,7 +9,7 @@ const path = require('path');
 const assert = require('assert');
 const JSZip = require('jszip');
 const { writeProjectZip, readProjectFile } = require('./project');
-const { deepClone, UndoHistory, serializeEditor, attachSheetDefs } = require('./docmodel');
+const { deepClone, UndoHistory, serializeEditor, attachSheetDefs, transformAnnotations } = require('./docmodel');
 const { exportWorkbook } = require('./export');
 
 const DEFS = path.join(__dirname, 'data', 'templateDefs');
@@ -200,6 +200,27 @@ async function run() {
   assert.strictEqual(c3.n, 15, '가장 오래된 15단계는 버림');
   ok('실행 취소는 60단계까지(75번 바꾸면 처음 15단계는 버림)');
 
-  console.log(`\n작업 파일·실행 취소 테스트 ${pass}/9 통과`);
+  // --- 사진 위 표시: 돌리기·다시 자르기에 따라 옮겨지는지 ---
+  {
+    const full = { x: 0, y: 0, w: 400, h: 300 };
+    const items = [
+      { t: 'arrow', x1: 0.1, y1: 0.2, x2: 0.5, y2: 0.5, c: '#E11D48', w: 3 },
+      { t: 'box', x: 0.6, y: 0.1, w2: 0.2, h2: 0.3, c: '#2563EB', w: 2 },
+      { t: 'text', x: 0.1, y: 0.7, w2: 0.3, h2: 0.1, text: 'A', c: '#000', size: 10 }
+    ];
+    let cur2 = items;
+    for (let k = 0; k < 4; k++) cur2 = transformAnnotations(cur2, { rect: full, rot: k * 90 }, { rect: full, rot: (k + 1) * 90 });
+    const close = (a, b) => Math.abs(a - b) < 1e-9;
+    assert(cur2.every((a, i) => Object.keys(items[i]).every((k) => typeof items[i][k] !== 'number' || close(a[k], items[i][k]))), '네 번 돌리면 제자리');
+    const r90 = transformAnnotations(items, { rect: full, rot: 0 }, { rect: full, rot: 90 });
+    assert(close(r90[0].x1, 0.8) && close(r90[0].y1, 0.1), '90° 돌리면 (x,y) → (1-y, x)');
+    assert(close(r90[2].w2, 0.4) && close(r90[2].h2, 0.075), '글상자는 바로 선 채 크기(픽셀) 유지');
+    const crop = transformAnnotations(items, { rect: full, rot: 0 }, { rect: { x: 0, y: 0, w: 200, h: 300 }, rot: 0 });
+    assert.strictEqual(crop.length, 2, '잘린 영역 밖으로 나간 네모는 빠짐');
+    assert(close(crop[0].x1, 0.2) && close(crop[0].x2, 1), '자른 영역 기준으로 다시 계산');
+    ok('사진 위 표시: 90°씩 네 번 돌리면 제자리, 다시 자르면 새 영역 기준으로 옮기고 밖으로 나간 것은 뺌');
+  }
+
+  console.log(`\n작업 파일·실행 취소 테스트 ${pass}/10 통과`);
 }
 run().catch((e) => { console.error('FAIL:', e && e.stack || e); process.exit(1); });

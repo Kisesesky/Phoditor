@@ -189,6 +189,21 @@ async function run() {
     ok('포스코 대형 드레스룸 블록 높이 381.5pt (원본 블록 20개 중 가장 흔한 높이)');
   }
 
+  // [2026-11-26] 목차의 공유 수식 기준 칸(B5 = B4+1, 아래 B36까지 복사)을 직접 고쳐도 내보내기가 멈추지 않고,
+  // 아래 칸은 자기 수식으로 계속 이어진다
+  {
+    const id = '준공사진첩_롯데';
+    const def = loadDef(id);
+    const st = stateFor(def, 1, { 목차: { B5: '7', E5: '' } });
+    const out = path.join(tmp, `${id}_shared.xlsx`);
+    await exportWorkbook({ templateDef: def, editorState: st, blankXlsxPath: path.join(BLANKS, `${id}.xlsx`), outputPath: out });
+    const x = await sheetXml(fs.readFileSync(out), '목차');
+    assert(/<c r="B5"[^>]*><v>7<\/v>|<c r="B5"[^>]*t="[^"]*"[^>]*>.*?7/.test(x) || /<c r="B5"[^>]*>(?:<is>)?.*?7/.test(x), 'B5에 고친 값');
+    assert(/<c r="B6"[^>]*><f>B5\+1<\/f><v>8<\/v>/.test(x), `B6은 자기 수식 B5+1, 계산값 8: ${(/<c r="B6"[^>]*>.*?<\/c>/.exec(x) || [''])[0]}`);
+    assert(!/t="shared"/.test(x), '공유 수식이 남지 않음');
+    ok('목차 공유 수식 기준 칸(B5)을 고쳐도 내보내기 성공, B6은 B5+1 = 8로 이어짐');
+  }
+
   console.log(`\n인쇄 재현 테스트 ${pass}/${pass} 통과`);
 }
 

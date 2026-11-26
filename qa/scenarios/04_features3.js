@@ -41,7 +41,10 @@ try {
   check('속성 패널: 칸에 맞게 줄이기', !!shrinkCb);
   shrinkCb.checked = true; shrinkCb.dispatchEvent(new Event('change')); await sleep(600);
   const ov2 = relCell('L{+4}', 0);
-  check('줄이면 넘침 표시 사라지고 글자 작아짐', ov2.dataset.shrink === '1' && !ov2.classList.contains('overflow') && parseFloat(ov2.style.fontSize) < 14, `${ov2.style.fontSize} ${ov2.className}`);
+  check('줄이면 글자가 작아지고, 너무 작게(60% 미만) 줄면 따로 경고', ov2.dataset.shrink === '1' && parseFloat(ov2.style.fontSize) < 14 && ov2.classList.contains('too-small') && $('#overflowChip').textContent.includes('너무 작게'), `${ov2.style.fontSize} ${ov2.className} ${$('#overflowChip').textContent.trim()}`);
+  await edit(relCell('L{+4}', 0), '조금 긴 품목 이름입니다');
+  const ov3 = relCell('L{+4}', 0);
+  check('조금 긴 글은 줄여서 맞추고 경고 없음', ov3.dataset.shrink === '1' && !ov3.classList.contains('overflow'), `${ov3.style.fontSize} ${ov3.className}`);
 
   // 3. 사진 위 표시
   $('.pv-page .photo-slot').click(); await sleep(400);
@@ -70,6 +73,15 @@ try {
   check('되돌리면 표시 사라짐', !$('.pv-page .anno-layer'));
   await clickEl($('#redoBtn'), 600);
   check('다시 하면 표시 다시 보임', !!$('.pv-page .anno-layer'));
+  // 표시가 있는 사진을 돌리면 표시도 같이 돈다: 화살표 시작점 (x,y) → (1-y, x)
+  const lineRel = () => { const l = $('.pv-page .anno-layer line'); const L = $('.pv-page .anno-layer'); return l ? [l.x1.baseVal.value / L.offsetWidth, l.y1.baseVal.value / L.offsetHeight] : null; };
+  const before = lineRel();
+  $('.pv-page .photo-slot').click(); await sleep(400);
+  await clickEl($$('#inspBody button').find((b) => b.textContent.includes('돌리기')), 300);
+  await waitFor(() => $('.pv-page .photo-slot img') && $('.pv-page .photo-slot img').alt.startsWith('[회전]'), 10000);
+  await sleep(800);
+  const after = lineRel();
+  check('사진을 돌리면 표시도 같이 돎', before && after && Math.abs(after[0] - (1 - before[1])) < 0.03 && Math.abs(after[1] - before[0]) < 0.03, `${before && before.map((v) => v.toFixed(2))} → ${after && after.map((v) => v.toFixed(2))}`);
 
   // 4. 저장(.pbook = 사진 포함) → 지난 현장 복제
   await clickEl($('#saveBtn'), 1500);
@@ -84,7 +96,7 @@ try {
   check('복제: 새 현장명이 표지에', $$('.pv-page td').some((t) => t.textContent.includes('QA 새 현장')), $$('.pv-page td.field-cell').map((t) => t.textContent).join('|'));
   await clickEl(tabByName('1.외관'), 800);
   check('복제: 머리 행 현장명도 새 이름', $$('.pv-page td.field-cell').some((t) => t.textContent.includes('QA 새 현장')), $$('.pv-page td.field-cell').map((t) => t.textContent).join('|'));
-  check('복제: 사진은 비고 글자는 남음', $$('.pv-page .photo-slot img').length === 0 && relCell('L{+4}', 0).textContent.includes('아주아주'), `${$$('.pv-page .photo-slot img').length}`);
+  check('복제: 사진은 비고 글자는 남음', $$('.pv-page .photo-slot img').length === 0 && relCell('L{+4}', 0).textContent.includes('조금 긴'), `${$$('.pv-page .photo-slot img').length}`);
   check('복제: 저장 안 된 새 작업', $('#editorKicker').textContent.includes('저장 안 됨'), $('#editorKicker').textContent);
 
   // 5. 원래 작업 다시 열기(사진이 파일 안에서 풀려 나옴)
