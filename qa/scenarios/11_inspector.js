@@ -74,6 +74,8 @@ try {
   const labels = menuItems().map((b) => b.textContent);
   check('3. 채워진 자리 메뉴 9개 이하·비활성 안내 없음', labels.length <= 9 && !menuItems().some((b) => b.disabled && !/삭제/.test(b.textContent)), labels.join(' / '));
   check('3. 사진 일이 위, 구분선 아래 블록 복제·삭제만', /자르기/.test(labels[0]) && labels.slice(-2).every((t) => /복제|삭제/.test(t)) && !/아래에 블록 추가|옮기기/.test(menuText()), labels.join(' / '));
+  check('3. 채워진 자리 메뉴에 [사진 위 표시] 있음(사진 일 그룹)', labels.findIndex((t) => /사진 위 표시/.test(t)) > 0 && labels.findIndex((t) => /사진 위 표시/.test(t)) < labels.length - 2, labels.join(' / '));
+  await shot('i05_slot_menu');
   closeContextMenu();
   // 빈 사진 자리 메뉴: 안내 항목 없음
   await clickEl(acts().find((b) => b.dataset.act === 'remove'), 600);
