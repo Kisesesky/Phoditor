@@ -193,5 +193,5 @@ $id('fmtResetBtn').addEventListener('click', () => {
 
 $id('rbSideBtn').addEventListener('click', () => { setSidebarCollapsed(!el.sidebar.classList.contains('collapsed')); updateRibbon(); });
 $id('rbInspBtn').addEventListener('click', () => { setInspectorCollapsed(!el.inspector.classList.contains('collapsed')); updateRibbon(); });
-$id('rbKeysBtn').addEventListener('click', openShortcutHelp);
+$id('helpBtn').addEventListener('click', openShortcutHelp); // [9.3 R4] 도움말 입구는 상단 바 ? 단추 하나(+ ? 키)
 $id('saveMyTplTopBtn').addEventListener('click', openSaveMyTemplate);

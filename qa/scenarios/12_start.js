@@ -26,7 +26,16 @@ try {
   check('3. 카드마다 [열기] 단추', cards.length > 0 && cards.every((c) => c.querySelector('.card-open') && c.querySelector('.card-open').textContent === '열기'));
   check('3. 카드 그림 배경 chrome-2(#EFEFF1)', getComputedStyle(cards[0].querySelector('.card-art')).backgroundColor === 'rgb(239, 239, 241)', getComputedStyle(cards[0].querySelector('.card-art')).backgroundColor);
   const metas = cards.map((c) => c.querySelector('.company-meta').textContent).join(' | ');
-  check('3. 카드 설명에 블록·항목 같은 내부 말 없음, 잘리지 않음', !/블록|항목/.test(metas) && /사진 칸/.test(metas) && cards.every((c) => { const m = c.querySelector('.company-meta'); return m.scrollHeight <= m.clientHeight + 1; }), metas);
+  check('3. 카드 설명에 블록·항목 같은 내부 말 없음', !/블록|항목/.test(metas) && /칸/.test(metas), metas);
+  // [9.3 R4] 메타 한 줄 고정: 줄바꿈·말줄임 없음, 카드 높이 모두 같음(모든 종류 탭에서)
+  for (const ty of $$('#typeTabs button').map((b) => b.firstChild.textContent.trim())) {
+    await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === ty), 300);
+    const cs = $$('#companyGrid .company-card');
+    const one = cs.every((c) => { const m = c.querySelector('.company-meta'); const lh = parseFloat(getComputedStyle(m).lineHeight) || 16; return m.getBoundingClientRect().height <= lh + 2 && m.scrollWidth <= m.clientWidth + 1 && getComputedStyle(m).whiteSpace === 'nowrap'; });
+    const hs = [...new Set(cs.map((c) => Math.round(c.getBoundingClientRect().height)))];
+    check(`R4. [${ty}] 카드 메타 한 줄(잘림 없음)·카드 높이 같음`, one && hs.length === 1, `${cs.map((c) => c.querySelector('.company-meta').textContent).join(' | ')} / 높이 ${hs.join(',')}`);
+  }
+  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '준공사진첩'), 400);
   // 그림 누르면 넘기기(열리지 않음), [열기]는 연다
   const art = cards[0].querySelector('.card-art');
   const r = art.getBoundingClientRect();

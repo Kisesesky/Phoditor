@@ -84,6 +84,8 @@ el.autoFillBtn.addEventListener('click', openAutoFill);
 el.pasteTableBtn.addEventListener('click', openPasteTable);
 // 쪽 이동 막대: 보이는 쪽 표시
 el.gridViewport.addEventListener('scroll', () => updateRailActive(), { passive: true });
+el.sheetTabsBar.addEventListener('scroll', updateSheetTabsFade, { passive: true });
+window.addEventListener('resize', updateSheetTabsFade);
 el.saveBtn.addEventListener('click', () => saveProject(false));
 el.pdfBtn.addEventListener('click', () => openExportDialog('pdf'));
 el.printBtn.addEventListener('click', () => handlePrint());
@@ -341,7 +343,10 @@ function openShortcutHelp() {
   void panes;
   const back = openModal('도움말', [tabs, flow, list], [h('button', { class: 'primary', onclick: () => back.remove() }, '닫기')], 680);
   back.classList.add('sc-help');
+  const moreFade = () => flow.classList.toggle('more', flow.scrollTop + flow.clientHeight < flow.scrollHeight - 4);
+  flow.addEventListener('scroll', moreFade, { passive: true });
   pick('flow');
+  requestAnimationFrame(moreFade);
 }
 // 시작 화면에서도 ?로 같은 도움말
 document.addEventListener('keydown', (e) => {

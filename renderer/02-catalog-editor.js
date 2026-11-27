@@ -51,7 +51,7 @@ function renderCatalog() {
         item,
         name: comp,
         color: COMPANY_COLORS[comp] || '#64748B',
-        meta: `시트 ${item.sheetCount}개 · ${item.addUnit === 'page' ? '쪽당 사진 칸 2개' : '사진 칸 1개씩'}`,
+        meta: `시트 ${item.sheetCount}개 · ${item.addUnit === 'page' ? '쪽당 2칸' : '1칸씩'}`,
         onOpen: () => openTemplate(item.id)
       }));
     }
@@ -291,6 +291,14 @@ function openSaveMyTemplate() {
   setTimeout(() => { nameIn.focus(); nameIn.select(); }, 0);
 }
 
+// [9.3 R4] 시트 탭이 넘치면 오른쪽(왼쪽) 끝을 흐리게: 더 있다는 표시
+function updateSheetTabsFade() {
+  const b = el.sheetTabsBar;
+  if (!b) return;
+  b.classList.toggle('fade-r', b.scrollLeft + b.clientWidth < b.scrollWidth - 2);
+  b.classList.toggle('fade-l', b.scrollLeft > 2);
+}
+
 // --- 설정 화면 ---
 function showStartPage(page) {
   for (const b of document.querySelectorAll('.start-nav .nav-btn[data-page]')) b.classList.toggle('active', b.dataset.page === page);
@@ -521,7 +529,7 @@ function renderSheetTabs() {
   addBtn.setAttribute('aria-label', '새 블록 시트 추가');
   addBtn.title = '새 블록 시트 추가';
   addBtn.addEventListener('click', openAddSheetModal);
-  el.sheetTabsBar.appendChild(addBtn);
+  { const slot = document.getElementById('sheetAddSlot'); if (slot) slot.replaceChildren(addBtn); else el.sheetTabsBar.appendChild(addBtn); } updateSheetTabsFade();
 }
 
 // [시트 이름 바꾸기 2026-11-25] 탭 이름은 현장마다 다르다(공용홀1층·가구공사 …).

@@ -152,6 +152,20 @@ try {
   // 9. [9.3 R2] 공간: 리본 중복 제거 · 접힘 표시 · 사진 패널 헤더 · 1280px 패널 접힘 · 경고 띠
   const resizeTo = async (w, h) => { console.log('__QA_RESIZE__:' + JSON.stringify({ w, h })); await waitFor(() => innerWidth === w, 4000); await sleep(700); };
   const fitPct = () => parseInt(($('#zoomLabel').textContent.match(/(\d+)%/) || [])[1] || '0', 10);
+  // [9.3 R4] 도움말 입구 1곳: 상단 바 ? 단추(홈 탭에서도 보임), 리본 [보기]의 도움말 단추 없음
+  await clickEl($('#ribbonTabs [data-tab="home"]'), 200);
+  const hb = $('#helpBtn');
+  check('R4. 홈 탭에서 상단 바 ? 단추가 보임(접기 단추 옆)', !!hb && hb.getBoundingClientRect().width > 0 && hb.nextElementSibling && hb.nextElementSibling.id === 'ribbonCollapseBtn' && !$('#rbKeysBtn'));
+  await shot('a15_home_help_btn');
+  await clickEl(hb, 400);
+  check('R4. ? 단추 → 도움말 창(사용 흐름|단축키)', !!$('.dyn-modal.sc-help') && /사용 흐름/.test($('.dyn-modal.sc-help').textContent));
+  const hf = $('#helpFlow');
+  check('R4. 도움말: 끝이 아니면 아래 페이드', hf.classList.contains('more'));
+  hf.scrollTop = hf.scrollHeight; hf.dispatchEvent(new Event('scroll')); await sleep(200);
+  const lastLi = [...hf.querySelectorAll('li')].pop();
+  check('R4. 도움말: 끝까지 내리면 페이드 없음·마지막 문장이 다 보임', !hf.classList.contains('more') && lastLi.getBoundingClientRect().bottom <= hf.getBoundingClientRect().bottom - 8, `${Math.round(lastLi.getBoundingClientRect().bottom)} / ${Math.round(hf.getBoundingClientRect().bottom)}`);
+  await shot('a16_help_end');
+  { const m = $('.dyn-modal.sc-help'); (m.closest('.modal-backdrop') || m).remove(); }
   check('9. 리본에 줌·사진 칸 높이·배치·MYBOX 설정 단추 없음(푸터·속성 패널·사진 패널에만)', !$('#rbZoomOutBtn') && !$('#rbZoomInBtn') && !$('#rbZoomFitBtn') && !$('#rbScaleUpBtn') && !$('#rbLayoutBtn') && !$('#openSettingsBtn') && !!$('#zoomInBtn') && !!$('#myboxSettingsBtn'));
   check('9. 리본 그룹 캡션 없이 높이 그대로(54px 이하)', $('#ribbon').getBoundingClientRect().height <= 55 && !$('.rb-panel .rb-caption'), $('#ribbon').getBoundingClientRect().height);
   await clickEl($('#ribbonCollapseBtn'), 300);
@@ -206,6 +220,15 @@ try {
   last.scrollIntoView({ inline: 'nearest' }); await sleep(200);
   await clickEl(last, 700);
   check('9. 포스코 1280px: 마지막 시트 탭까지 가서 열림', state.activeSheetIdx === 16, state.activeSheetIdx);
+  // [9.3 R4] 시트 탭 끝 처리: [+]는 스크롤 밖 고정, 넘치면 끝 페이드
+  const addB = $('#sheetAddSlot .sheet-add-btn');
+  check('R4. 시트 추가 [+]는 탭 줄 밖에 고정(항상 보임)', !!addB && !addB.closest('#sheetTabsBar') && addB.getBoundingClientRect().right <= $('.status-right').getBoundingClientRect().left + 1 && addB.getBoundingClientRect().width > 0);
+  el.sheetTabsBar.scrollLeft = 0; el.sheetTabsBar.dispatchEvent(new Event('scroll')); await sleep(150);
+  check('R4. 탭이 넘치면 오른쪽 끝 페이드', el.sheetTabsBar.classList.contains('fade-r') && /gradient/.test(getComputedStyle(el.sheetTabsBar).webkitMaskImage || getComputedStyle(el.sheetTabsBar).maskImage || ''), el.sheetTabsBar.className);
+  // [9.3 R4] 1280px 상단 바: PDF 단추에 PDF 배지(내 양식과 구분), 도움말 ? 단추 상시
+  const badge = $('#pdfBtn .pdf-badge');
+  check('R4. 1280px: PDF 단추에 "PDF" 배지(브랜드 블루), 내 양식 단추엔 없음', !!badge && getComputedStyle(badge).display !== 'none' && badge.textContent === 'PDF' && getComputedStyle(badge).backgroundColor === 'rgb(37, 99, 235)' && !$('#saveMyTplTopBtn .pdf-badge'), badge && getComputedStyle(badge).backgroundColor);
+  await shot('a14_topbar_1280');
   await clickEl($$('#sheetTabsBar .sheet-tab')[0], 600);
   await shot('a13_posco_1280');
   await resizeTo(wasW, wasH);
