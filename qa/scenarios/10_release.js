@@ -1,4 +1,4 @@
-// [2026-11-27 출시 준비] 내보내기 사진 크기(인쇄용/원본) 선택 · Finder에서 .pbook 두 번 눌러 열기
+// [2026-11-27 출시 준비] 내보내기 사진 크기(원본 그대로 기본 / 인쇄용) 선택 · Finder에서 .pbook 두 번 눌러 열기
 try {
   await waitFor(() => $$('#companyGrid .company-card').length > 0);
   await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '공용홀'), 300);
@@ -10,19 +10,21 @@ try {
   await dragTo(big, $('.photo-area-empty'));
   await sleep(900);
   await refreshSizeEstimate();
-  check('1. 상태 막대 예상 용량: 인쇄용은 "최대"로 표시', /최대 .* 인쇄용으로 줄여 넣음/.test($('#sizeEstimateBadge').textContent), $('#sizeEstimateBadge').textContent);
+  check('1. 상태 막대 예상 용량: 기본은 원본 그대로', /원본 그대로/.test($('#sizeEstimateBadge').textContent), $('#sizeEstimateBadge').textContent);
 
-  // 내보내기 창: 사진 크기 선택(기본 인쇄용)
+  // 내보내기 창: 사진 크기 선택(기본 원본 그대로) → 인쇄용 고르기
   await clickEl($('#exportBtn'), 300);
   await waitFor(() => $('#exportGoBtn'));
   const seg = $('#exportPhotoModeSeg');
-  check('2. 내보내기 창에 사진 크기 선택, 기본은 인쇄용', !!seg && seg.querySelector('button.on').dataset.v === 'print', seg && seg.textContent);
+  check('2. 내보내기 창에 사진 크기 선택, 기본은 원본 그대로', !!seg && seg.querySelector('button.on').dataset.v === 'original', seg && seg.textContent);
   await shot('r01_export_dialog');
+  await clickEl($('#exportPhotoModeSeg [data-v="print"]'), 100);
   await clickEl($('#exportGoBtn'), 300);
   await waitFor(() => /저장 완료/.test(toastText()), 30000);
   check('3. 인쇄용 내보내기: 큰 사진을 줄였다고 알림', /인쇄용으로 줄인 사진 1장/.test(toastText()), toastText());
+  check('3. 인쇄용을 고르면 기억, 상태 막대는 "최대"로 표시', getPhotoMode() === 'print' && /최대 .* 인쇄용으로 줄여 넣음/.test($('#sizeEstimateBadge').textContent), $('#sizeEstimateBadge').textContent);
 
-  // 원본 그대로를 고르면 기억하고, 줄이지 않는다
+  // 다시 원본 그대로를 고르면 기억하고, 줄이지 않는다
   await sleep(4200);
   await clickEl($('#exportBtn'), 300);
   await waitFor(() => $('#exportGoBtn'));
@@ -31,7 +33,6 @@ try {
   await waitFor(() => /저장 완료/.test(toastText()), 30000);
   check('4. 원본 그대로: 줄인 사진 없음', /저장 완료/.test(toastText()) && !/인쇄용으로 줄인/.test(toastText()), toastText());
   check('4. 고른 사진 크기를 기억', getPhotoMode() === 'original' && /원본 그대로/.test($('#sizeEstimateBadge').textContent), $('#sizeEstimateBadge').textContent);
-  setPhotoMode('print');
 
   // .pbook 저장 → 시작 화면으로 → Finder에서 두 번 누른 것처럼 열기
   const cell = $$('td.editable-cell').find((td) => !td.textContent.trim());

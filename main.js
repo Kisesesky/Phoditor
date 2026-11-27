@@ -975,7 +975,7 @@ ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggested
       return { ok: false, error: `Excel 작업 폴더를 쓸 수 없어요(시스템 설정 > 개인정보 보호 및 보안 > 앱 관리 권한 확인): ${err.message}` };
     }
     const blankPath = path.join(BLANKS_DIR, `${def.id}.xlsx`);
-    await exportWorkbook({ templateDef: def, editorState, blankXlsxPath: fs.existsSync(blankPath) ? blankPath : null, outputPath: xlsx, photoMode: photoMode === 'original' ? 'original' : 'print' });
+    await exportWorkbook({ templateDef: def, editorState, blankXlsxPath: fs.existsSync(blankPath) ? blankPath : null, outputPath: xlsx, photoMode: photoMode === 'print' ? 'print' : 'original' });
     const hfs = await runOsa([`POSIX file "${pdf}" as string`], 20000);
     await runOsa([
       'with timeout of 300 seconds',
@@ -1049,7 +1049,7 @@ ipcMain.handle('export-xlsx', async (_event, { templateId, editorState, suggeste
       editorState,
       blankXlsxPath: fs.existsSync(blankPath) ? blankPath : null,
       outputPath,
-      photoMode: photoMode === 'original' ? 'original' : 'print' // 앱 기본은 인쇄용
+      photoMode: photoMode === 'print' ? 'print' : 'original' // 앱 기본은 원본 그대로
     });
     return { ok: true, filePath: outputPath, stats };
   } catch (err) {

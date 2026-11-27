@@ -91,10 +91,10 @@ function collectAllPlacedPhotoInfo() {
 
 // [2026-11-27 인쇄용 사진] 내보낼 때 사진 크기: print(자리 크기 × 300dpi로 줄임, 기본) | original(원본 그대로)
 function getPhotoMode() {
-  try { return localStorage.getItem('phoditor.photoMode') === 'original' ? 'original' : 'print'; } catch (_) { return 'print'; }
+  try { return localStorage.getItem('phoditor.photoMode') === 'print' ? 'print' : 'original'; } catch (_) { return 'original'; }
 }
 function setPhotoMode(m) {
-  try { localStorage.setItem('phoditor.photoMode', m === 'original' ? 'original' : 'print'); } catch (_) {}
+  try { localStorage.setItem('phoditor.photoMode', m === 'print' ? 'print' : 'original'); } catch (_) {}
 }
 
 async function refreshSizeEstimate() {
@@ -139,7 +139,7 @@ async function openExportDialog(kind = 'xlsx') {
   const nameIn = h('input', { type: 'text', value: exportBaseName(kind), id: 'exportNameInput' });
   const dirText = h('div', { class: 'export-dir', id: 'exportDirText', title: dir, text: shortDir(dir) });
   const reveal = h('input', { type: 'checkbox', checked: info.revealAfter ? true : null });
-  const modeSeg = radioGroup('photoMode', [['print', '인쇄용 (권장)'], ['original', '원본 그대로']], getPhotoMode());
+  const modeSeg = radioGroup('photoMode', [['original', '원본 그대로'], ['print', '인쇄용 (파일 작게)']], getPhotoMode());
   modeSeg.id = 'exportPhotoModeSeg';
   const back = openModal(kind === 'pdf' ? 'PDF로 내보내기' : '엑셀로 내보내기', [
     h('div', { class: 'form-row' }, h('label', { text: '파일 이름' }), h('div', { class: 'name-row' }, nameIn, h('span', { class: 'ext', text: `.${ext}` }))),
@@ -150,7 +150,7 @@ async function openExportDialog(kind = 'xlsx') {
         if (p) { dir = p; dirText.textContent = shortDir(p); dirText.title = p; }
       } }, '바꾸기'))),
     h('div', { class: 'form-row' }, h('label', { text: '사진 크기' }), modeSeg),
-    h('div', { class: 'insp-note', text: '인쇄용: 사진을 들어갈 자리 크기에 맞춰 300dpi로 줄여 넣어요. 인쇄 화질은 같고 파일이 훨씬 작아져요. 원본 사진 파일은 바뀌지 않아요.' }),
+    h('div', { class: 'insp-note', text: '원본 그대로: 받은 사진을 그대로 넣어요. 인쇄용: 들어갈 자리 크기에 맞춰 300dpi로 줄여 넣어 파일이 훨씬 작아져요. 어느 쪽이든 원본 사진 파일은 바뀌지 않아요.' }),
     h('label', { class: 'check-row' }, reveal, ' 다 되면 Finder에서 보여 주기'),
     kind === 'pdf' ? h('div', { class: 'insp-note', text: 'PDF는 Mac용 Excel로 만들어요. Excel이 잠시 열렸다 닫혀요.' }) : null
   ], [
