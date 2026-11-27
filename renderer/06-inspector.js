@@ -234,7 +234,8 @@ function documentSections() {
     state.editor.siteName = site.value.trim();
     renderActiveSheet();
   });
-  out.push(sec('현장명', site, h('div', { class: 'insp-note', text: '머리말·바닥글·글상자의 {{현장명}} 자리에 들어가요. 비우면 표지에 적은 현장명을 씁니다.' })));
+  site.title = '머리말·바닥글·글상자에 들어가요. 비우면 표지에 적은 현장명을 씁니다.';
+  out.push(sec('현장명', site));
   // 문서 글꼴 바꾸기
   const used = [...new Set(state.usedFonts || [])].sort();
   const missing = new Set(state.missingFonts || []);
@@ -251,13 +252,11 @@ function documentSections() {
   const notes = Object.values(state.editor.fontMap).map(installNoteFor).filter(Boolean);
   out.push(sec('문서 글꼴 바꾸기', h('div', { class: 'insp-note', text: '이 양식에서 쓰는 글꼴을 다른 글꼴로 한꺼번에 바꿉니다. 내보낸 엑셀에도 그대로 들어가요.' }), ...rows, ...notes,
     missing.size ? h('div', { class: 'insp-note warn' }, iconWarn(), '표시 글꼴은 이 Mac에 없어서 비슷한 글꼴로 보여요. 다른 글꼴로 바꾸거나, 그 글꼴을 설치해 주세요.') : null));
-  out.push(sec('양식 정보', h('dl', { class: 'insp-kv' },
-    h('dt', { text: '종류' }), h('dd', { text: def.type }),
-    h('dt', { text: '업체' }), h('dd', { text: def.company }),
+  // [2026-11-27 9.3 R1] 정의서 버전·확인 상태·빈 양식 연결은 시작 화면 [설정] > 양식 정보로 옮김
+  void def;
+  out.push(sec('문서', h('dl', { class: 'insp-kv' },
     h('dt', { text: '시트' }), h('dd', { text: `${state.editor.sheets.length}개` }),
-    h('dt', { text: '전체 쪽' }), h('dd', { text: `${total}쪽` }),
-    h('dt', { text: '빈 양식' }), h('dd', { text: state.hasBlankXlsx ? '연결됨' : '없음(정의서로 그림)' }),
-    h('dt', { text: '정의서' }), h('dd', { text: def.verified ? `v${def.version} · 승인됨${def.verifiedAt ? ` (${def.verifiedAt})` : ''}` : `v${def.version} · 사람 확인 전` }))));
+    h('dt', { text: '전체 쪽' }), h('dd', { text: `${total}쪽` }))));
   return out;
 }
 
@@ -277,13 +276,25 @@ function renderInspector() {
     if (photo) {
       const img = h('img', { style: 'width:100%;max-height:170px;object-fit:contain;background:var(--chrome);border-radius:8px;border:1px solid var(--line)' });
       img.src = slotPreviewSrc(photo, img);
-      // [2026-11-26 리본] 사진 일(자르기·돌리기·표시·빼기)은 리본 [사진] 탭과 오른쪽 클릭에. 여기는 정보만
+      // [2026-11-27 9.3 R1] 고른 사진에 할 일을 그 자리에서: 리본 [사진] 탭과 같은 처리기(runSlotAction)
+      const act = (key, label, rb, extra = {}) => {
+        const icon = $id(rb) && $id(rb).querySelector('svg');
+        return h('button', { class: `insp-act${extra.danger ? ' danger' : ''}`, 'data-act': key, disabled: extra.disabled ? true : null, onclick: () => runSlotAction(key) },
+          icon ? icon.cloneNode(true) : null, h('span', { text: label }));
+      };
       body.push(sec(null, img,
         h('dl', { class: 'insp-kv' },
           h('dt', { text: '상태' }), h('dd', { text: photo.isCropped ? `${photo.cropRect ? '자름' : ''}${photo.cropRect && photo.rotation ? ' · ' : ''}${photo.rotation ? `${photo.rotation}° 돌림` : ''}` : '원본 그대로' }),
           h('dt', { text: '크기' }), h('dd', { text: photo.isCropped ? `${photo.croppedWidth}×${photo.croppedHeight}px` : (photo.sizeBytes ? `${(photo.sizeBytes / 1048576).toFixed(1)}MB` : '-') }),
           h('dt', { text: '사진 위 표시' }), h('dd', { text: photo.annotations && photo.annotations.length ? `${photo.annotations.length}개` : '없음' })),
-        h('div', { class: 'insp-note', text: '자르기·돌리기·표시는 위 [사진] 탭이나 오른쪽 클릭으로. 원본 파일은 바뀌지 않아요.' })));
+        h('div', { class: 'insp-acts', id: 'inspPhotoActs' },
+          act('crop', photo.cropRect ? '다시 자르기' : '자르기', 'rbCropBtn'),
+          act('rotate', '돌리기', 'rbRotateBtn'),
+          act('anno', '표시', 'rbAnnoBtn'),
+          act('revert', '원본으로', 'rbRevertBtn', { disabled: !photo.isCropped }),
+          act('zoom', '크게 보기', 'rbZoomBtn'),
+          act('remove', '빼기', 'rbRemoveBtn', { danger: true })),
+        h('div', { class: 'insp-note', text: '원본 사진 파일은 바뀌지 않아요.' })));
     } else {
       body.push(sec(null, h('div', { class: 'insp-note', text: '왼쪽 사진 패널에서 사진을 누르거나 이 자리로 끌어 넣으세요.' })));
     }
@@ -312,7 +323,6 @@ function renderInspector() {
     } else {
       kicker = sheet.role === 'cover' ? '표지' : '목차';
       title = sheetLabel(sheet);
-      body.push(sec(null, h('div', { class: 'insp-note', text: '파란 칸을 눌러 바로 입력하세요. 시트 이름은 아래 탭을 두 번 눌러 바꿉니다.' })));
       if (sheet.role === 'toc') {
         const ok = tocGroups(state.sheetVisuals[sheet.visualKey]).length > 0;
         const autoOn = !!(state.editor.tocAuto && state.editor.tocAuto[sheet.name]);

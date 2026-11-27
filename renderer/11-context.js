@@ -86,16 +86,14 @@ el.gridViewport.addEventListener('contextmenu', (e) => {
       { label: photo.cropRect ? '다시 자르기' : '자르기', onClick: () => openSlotCropEditor(target) },
       { label: '오른쪽으로 90° 돌리기', onClick: () => rotateSlot(target) },
       photo.isCropped ? { label: '원본으로 되돌리기', onClick: () => revertSlotCrop(target) } : null,
-      { label: '크게 보기', onClick: () => openLightbox([photo], 0) },
       { label: photo.annotations && photo.annotations.length ? `사진 위 표시 고치기 (${photo.annotations.length})` : '사진 위 표시…', onClick: () => openAnnotationEditor(target) },
-      'sep',
+      { label: '크게 보기', onClick: () => openLightbox([photo], 0) },
       { label: '배치 바꾸기…', onClick: () => openLayoutModal(s, b, p, null) },
+      { label: '사진 빼기', keys: '⌫', danger: true, onClick: () => removePhotoFromSlot(s, b, p, i) },
       'sep',
-      ...blockMenuItems(s, b),
-      'sep',
-      { label: '사진 빼기', keys: '⌫', danger: true, onClick: () => removePhotoFromSlot(s, b, p, i) }
+      // [2026-11-27 9.3 R1] 블록 조작은 복제·삭제만(추가·옮기기는 블록 행 오른쪽 클릭·단축키)
+      ...blockMenuItems(s, b).filter((x) => x !== 'sep' && /복제|삭제/.test(x.label))
     ] : [
-      { label: '왼쪽 사진을 누르면 이 자리에 들어가요', disabled: true, onClick: () => {} },
       { label: '배치 바꾸기…', onClick: () => openLayoutModal(s, b, p, null) },
       { label: '사진 자동 채우기…', onClick: openAutoFill },
       'sep',
@@ -125,7 +123,7 @@ function openPhotoCardMenu(e, photo, idx, listRef) {
   const card = e.currentTarget;
   const slot = state.selectedPhotoSlot;
   const items = [
-    { label: slot ? `선택한 자리(블록 ${slot.blockIdx + 1})에 넣기` : '자리를 먼저 고르면 바로 넣을 수 있어요', disabled: !slot, onClick: () => placePhotoInSlot(slot.sheetIdx, slot.blockIdx, slot.paIdx, slot.slotIdx, photo) },
+    slot && { label: `선택한 자리(블록 ${slot.blockIdx + 1})에 넣기`, onClick: () => placePhotoInSlot(slot.sheetIdx, slot.blockIdx, slot.paIdx, slot.slotIdx, photo) },
     { label: '크게 보기', onClick: () => openLightbox(listRef, idx) },
     !photo.isCropped ? { label: '잘라서 쓰기…', onClick: () => openCropEditor(listRef, idx) } : { label: '자른 사진 지우고 원본으로', onClick: () => { const b = card && card.__actionBtn; if (b) b.click(); } },
     photo.path && !photo.isCropped ? { label: 'Finder에서 보기', onClick: () => window.api.revealFile(photo.path) } : null

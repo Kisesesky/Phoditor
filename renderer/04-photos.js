@@ -501,7 +501,7 @@ function renderPhotoPanel() {
     el.photoGrid.innerHTML = `<div class="photo-empty">${
       state.photoFolder
         ? '이 폴더에 지원하는 사진 파일이 없습니다.'
-        : '[폴더 열기]로 사진 폴더를 고르세요.<br/>JPG · PNG · HEIC · WEBP · TIFF'
+        : '[폴더 열기]로 사진 폴더를 고르세요.<br/>JPG · PNG · HEIC · WEBP · TIFF<br/>사진 자리를 먼저 고르고 사진을 누르면 바로 들어가요.'
     }</div>`;
     return;
   }

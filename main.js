@@ -690,6 +690,8 @@ ipcMain.handle('get-catalog', () => {
       company: d.company,
       status: d.status,
       verified: d.verified,
+      version: d.version,
+      verifiedAt: d.verifiedAt || null,
       blockRows: firstBlock && firstBlock.block ? firstBlock.block.rows : null,
       addUnit: firstBlock && firstBlock.block ? firstBlock.block.addUnit : 'block',
       sheetCount: d.sheets.filter((s) => s.role !== 'remove').length,

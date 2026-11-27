@@ -71,7 +71,8 @@ try {
   // 7. 초점 링·커서·비활성 대비
   check('7. 누를 수 있는 칸들에 초점 링 규칙(안쪽 2px 강조색)', /inset/.test(cssRuleText('.sheet-tab:focus-visible, .photo-slot:focus-visible, .photo-item:focus-visible, .photo-area-empty:focus-visible, .af-folder:focus-visible, .suggest-item:focus-visible, .suggest-item.on, .layout-grid i:focus-visible') || '') && /var\(--accent\)/.test(cssRuleText('.sheet-tab:focus-visible, .photo-slot:focus-visible, .photo-item:focus-visible, .photo-area-empty:focus-visible, .af-folder:focus-visible, .suggest-item:focus-visible, .suggest-item.on, .layout-grid i:focus-visible') || ''), cssRuleText('.sheet-tab:focus-visible, .photo-slot:focus-visible, .photo-item:focus-visible, .photo-area-empty:focus-visible, .af-folder:focus-visible, .suggest-item:focus-visible, .suggest-item.on, .layout-grid i:focus-visible'));
   check('7. 사진을 끄는 동안 grabbing', /grabbing/.test(cssRuleText('.photo-item:active') || ''));
-  $('#photoGrid .photo-item').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 100, clientY: 500 })); await sleep(300);
+  // [9.3 R1] 사진 패널 메뉴의 비활성 안내 항목은 없앰 → 첫 블록 행 메뉴의 [위로 옮기기](비활성)로 확인
+  $$('.pv-page tr[data-b]').find((t) => !t.querySelector('.photo-slot')).dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: 700, clientY: 300 })); await sleep(300);
   const dis = $('.ctx-menu .ctx-item:disabled');
   check('7. 비활성 메뉴 항목은 투명도 1(색으로만 흐림)', dis && getComputedStyle(dis).opacity === '1', dis && getComputedStyle(dis).opacity);
   await shot('a04_ctx');

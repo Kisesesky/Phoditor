@@ -13,7 +13,10 @@ const mouse = (target, type, x, y) => target.dispatchEvent(new MouseEvent(type, 
 try {
   await waitFor(() => $$('#companyGrid .company-card').length > 0);
   await openTpl('공용홀', '롯데');
-  check('양식 정보: 승인됨 표시', $('#inspBody').textContent.includes('승인됨 (2026-11-25)'), $$('#inspBody dd').map((d) => d.textContent).join('|'));
+  // [9.3 R1] 승인 상태는 작업 화면이 아니라 시작 화면 [설정] > 양식 정보에서 보여 줌
+  await renderSettingsPage();
+  const tplRow = $$('#setTemplates span.name').find((x) => x.textContent === '공용홀 · 롯데');
+  check('양식 정보: 승인됨 표시(설정 > 양식 정보, 편집 패널에는 없음)', !!tplRow && tplRow.nextElementSibling.textContent.includes('승인됨 (2026-11-25)') && !$('#inspBody').textContent.includes('승인됨'), tplRow && tplRow.nextElementSibling.textContent);
   await clickEl(tabByName('1.외관'), 700);
   await clickEl($('#selectFolderBtn'), 2500);
   await waitFor(() => $$('#photoGrid .photo-item').length >= 5, 15000);

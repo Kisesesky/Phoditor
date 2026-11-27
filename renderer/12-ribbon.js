@@ -142,12 +142,27 @@ $id('moveUpBtn').addEventListener('click', withBlockSel(() => moveBlock(-1)));
 $id('moveDownBtn').addEventListener('click', withBlockSel(() => moveBlock(1)));
 
 $id('rbLayoutBtn').addEventListener('click', () => { const a = ribbonArea(); if (a) openLayoutModal(a.sheetIdx, a.blockIdx, a.paIdx, null); });
-$id('rbCropBtn').addEventListener('click', () => { const s = ribbonSlot(); if (s && s.photo) openSlotCropEditor(s.target); });
-$id('rbRotateBtn').addEventListener('click', () => { const s = ribbonSlot(); if (s && s.photo) rotateSlot(s.target); });
-$id('rbRevertBtn').addEventListener('click', () => { const s = ribbonSlot(); if (s && s.photo) revertSlotCrop(s.target); });
-$id('rbAnnoBtn').addEventListener('click', () => { const s = ribbonSlot(); if (s && s.photo) openAnnotationEditor(s.target); });
-$id('rbZoomBtn').addEventListener('click', () => { const s = ribbonSlot(); if (s && s.photo) openLightbox([s.photo], 0); });
-$id('rbRemoveBtn').addEventListener('click', () => { const s = ribbonSlot(); if (s && s.photo) { const t = s.target; removePhotoFromSlot(t.sheetIdx, t.blockIdx, t.paIdx, t.slotIdx); } });
+// [2026-11-27 9.3 R1] 사진 편집 행동: 리본 [사진] 탭과 속성 패널이 같은 처리기를 쓴다
+const SLOT_ACTIONS = {
+  crop: (s) => openSlotCropEditor(s.target),
+  rotate: (s) => rotateSlot(s.target),
+  anno: (s) => openAnnotationEditor(s.target),
+  revert: (s) => revertSlotCrop(s.target),
+  zoom: (s) => openLightbox([s.photo], 0),
+  remove: (s) => { const t = s.target; removePhotoFromSlot(t.sheetIdx, t.blockIdx, t.paIdx, t.slotIdx); }
+};
+function runSlotAction(key) {
+  const s = ribbonSlot();
+  if (!s || !s.photo || !SLOT_ACTIONS[key]) return;
+  if (key === 'revert' && !s.photo.isCropped) return;
+  SLOT_ACTIONS[key](s);
+}
+$id('rbCropBtn').addEventListener('click', () => runSlotAction('crop'));
+$id('rbRotateBtn').addEventListener('click', () => runSlotAction('rotate'));
+$id('rbRevertBtn').addEventListener('click', () => runSlotAction('revert'));
+$id('rbAnnoBtn').addEventListener('click', () => runSlotAction('anno'));
+$id('rbZoomBtn').addEventListener('click', () => runSlotAction('zoom'));
+$id('rbRemoveBtn').addEventListener('click', () => runSlotAction('remove'));
 const curSheet = () => state.editor && state.editor.sheets[state.activeSheetIdx];
 $id('rbScaleDownBtn').addEventListener('click', () => { const s = curSheet(); if (s) setPhotoScale(s, window.DocModel.clampPhotoScale(s.photoScale) - 0.05); });
 $id('rbScaleUpBtn').addEventListener('click', () => { const s = curSheet(); if (s) setPhotoScale(s, window.DocModel.clampPhotoScale(s.photoScale) + 0.05); });

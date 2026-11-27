@@ -286,6 +286,19 @@ async function renderSettingsPage() {
   document.getElementById('setMyboxDetail').textContent = t.long;
   document.getElementById('setMyboxTokenBtn').textContent = myboxUi.hasToken ? '토큰·기간 바꾸기' : '토큰 넣기';
   document.getElementById('setMyboxClearBtn').disabled = !myboxUi.hasToken;
+  // [2026-11-27 9.3 R1] 양식 정보(편집 화면 속성 패널에서 옮겨 옴)
+  const tl = document.getElementById('setTemplates');
+  if (tl && state.catalog) {
+    tl.innerHTML = '';
+    tl.append(h('span', { class: 'head', text: '양식' }), h('span', { class: 'head', text: '정의서' }), h('span', { class: 'head', text: '빈 양식' }));
+    const list = Object.values(state.catalog.available).sort((a, b) => `${a.type} ${a.company}`.localeCompare(`${b.type} ${b.company}`, 'ko'));
+    for (const t of list) {
+      tl.append(
+        h('span', { class: 'name', text: t.generic ? (t.title || t.company) : `${t.type} · ${t.company}` }),
+        h('span', { class: t.verified ? '' : 'todo', text: t.verified ? `v${t.version} · 승인됨${t.verifiedAt ? ` (${t.verifiedAt})` : ''}` : `v${t.version} · 사람 확인 전` }),
+        h('span', { text: t.hasBlankXlsx ? '있음' : '없음(정의서로 그림)' }));
+    }
+  }
   const sc = document.getElementById('setShortcuts');
   sc.innerHTML = '';
   for (const [k, d] of SHORTCUTS) sc.appendChild(h('div', { class: 'sc-row' }, h('span', { class: 'sc-keys' }, ...k.split(' ').map((x) => h('kbd', { text: x }))), h('span', { text: d })));
