@@ -135,7 +135,7 @@ function photoScaleSection(sheet) {
       h('button', { title: '쪽 수가 늘지 않는 가장 큰 높이로', onclick: () => fitPhotoScaleToPage(sheet) }, '쪽에 꽉 차게')),
     split.length && cur !== 1
       ? h('div', { class: 'insp-note warn', text: `블록 ${split.map((b) => b + 1).join(', ')}이(가) 두 쪽에 걸쳐 잘려요. 높이를 줄이거나 [쪽에 꽉 차게]를 눌러 주세요.` })
-      : h('div', { class: 'insp-note', text: `사진이 들어가는 행만 높이를 바꿔요. 엑셀에도 같은 높이로 들어가요.${before ? ` 지금 이 시트 ${before.count}쪽.` : ''}` }));
+      : (before ? h('div', { class: 'insp-note', text: `지금 이 시트 ${before.count}쪽` }) : null)); // 설명은 도움말 > 사용 흐름
 }
 
 // 쪽 수가 원래(100%)보다 늘지 않고, 블록이 쪽에 걸쳐 잘리지 않는 가장 큰 비율을 찾는다
@@ -250,7 +250,7 @@ function documentSections() {
       updateFontChip();
     }, '그대로')));
   const notes = Object.values(state.editor.fontMap).map(installNoteFor).filter(Boolean);
-  out.push(sec('문서 글꼴 바꾸기', h('div', { class: 'insp-note', text: '이 양식에서 쓰는 글꼴을 다른 글꼴로 한꺼번에 바꿉니다. 내보낸 엑셀에도 그대로 들어가요.' }), ...rows, ...notes,
+  out.push(sec('문서 글꼴 바꾸기', ...rows, ...notes,
     missing.size ? h('div', { class: 'insp-note warn' }, iconWarn(), '표시 글꼴은 이 Mac에 없어서 비슷한 글꼴로 보여요. 다른 글꼴로 바꾸거나, 그 글꼴을 설치해 주세요.') : null));
   // [2026-11-27 9.3 R1] 정의서 버전·확인 상태·빈 양식 연결은 시작 화면 [설정] > 양식 정보로 옮김
   void def;
@@ -303,15 +303,13 @@ function renderInspector() {
   } else if (area && sheet && area.sheetIdx === state.activeSheetIdx) {
     kicker = `블록 ${area.blockIdx + 1}`;
     title = '사진 영역';
-    body.push(sec('배치 고르기', layoutPicker(area.sheetIdx, area.blockIdx, area.paIdx, null),
-      h('div', { class: 'insp-note', text: '사진을 바로 끌어 넣으면 1장 배치로 들어가요.' })));
+    body.push(sec('배치 고르기', layoutPicker(area.sheetIdx, area.blockIdx, area.paIdx, null)));
     body.push(photoScaleSection(sheet));
   } else if (state.selectedCell && sheet && state.selectedCell.sheetIdx === state.activeSheetIdx) {
     const sc = state.selectedCell;
     kicker = sc.rel ? `블록 ${sc.blockIdx + 1} · 칸` : sc.header ? '머리 행 · 칸' : `${sheetLabel(sheet)} · 칸`;
     title = sc.label || sc.key.replace(/\{\+(\d+)\}/, (_m, n) => ` (블록 ${+n + 1}행)`);
     if (sc.repeated) body.push(sec(null, h('div', { class: 'insp-note warn', text: `반복값 칸이에요. 고치면 ${sc.rvScope === 'document' ? '문서 전체' : '이 시트의 모든 블록'}에 같이 바뀝니다.` })));
-    if (sc.header) body.push(sec(null, h('div', { class: 'insp-note', text: '머리 행 칸은 모든 시트의 같은 칸에 같이 들어가요.' })));
     body.push(sec(sc.rel ? '글꼴 (모든 블록의 같은 칸)' : '글꼴', ...cellFontEditor(sheet, sc.key, sc.cm)));
   } else if (sheet) {
     if (sheet.role === 'block') {

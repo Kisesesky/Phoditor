@@ -1,7 +1,7 @@
 // [2026-11-26 2차 요청] 폴더 들어가기 · 폴더별 자동 채우기(위치=폴더 이름) · 사용자 지정 배치(최대 5×5) · 자르기 비율(자리에 맞춤) · 단축키 · 말풍선
 try {
   await waitFor(() => $$('#companyGrid .company-card').length > 0);
-  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '공백·내 양식'), 800);
+  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '공백'), 800);
   await clickEl($$('#companyGrid .company-card').find((c) => c.textContent.includes('공백 양식')), 1800);
   await waitFor(() => $('#editorView').classList.contains('active'));
   await clickEl($$('#sheetTabsBar .sheet-tab')[1], 700);

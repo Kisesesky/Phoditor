@@ -308,12 +308,48 @@ function switchSheetBy(d) {
   renderActiveSheet();
   updateToolbarButtons();
 }
+// [9.3 R3] 도움말 = 사용 흐름 | 단축키 (패널·화면에서 걷어낸 설명을 여기로 모음)
+const HELP_FLOW = [
+  ['시작하기', [
+    '시작 화면에서 종류와 업체를 골라 [열기]를 누르면 그 양식으로 시작해요. 회사 표시 없이 쓰려면 [공백] 탭의 공백 양식으로.',
+    '작업은 ⌘S로 저장(.pbook)해 두면 시작 화면 [최근 작업]에서 이어 열어요. 자주 쓰는 구성은 위쪽 [내 양식]으로 저장해 두면 [내 양식] 목록에서 바로 시작해요.']],
+  ['사진 넣기', [
+    '왼쪽 [폴더 열기]로 사진을 불러와요. MYBOX 탭에서는 MYBOX 사진을 바로 불러와요(암호 폴더·공유받은 폴더는 열 수 없어요).',
+    '사진 자리를 먼저 고르고 왼쪽 사진을 누르면 그 자리에 들어가요. 끌어 넣어도 돼요. 빈 사진 영역에 바로 끌어 넣으면 1장 배치로 들어가요.',
+    '배치(1×1 ~ 5×5, 큰 사진 섞기)는 속성 패널에서 바꿔요. 사진 자리 오른쪽 클릭 [배치 바꾸기]로도 돼요. 폴더마다 한 번에 넣으려면 [사진 자동 채우기].']],
+  ['사진 다듬기', [
+    '사진 자리를 고르면 속성 패널(또는 리본 [사진] 탭)에 자르기·돌리기·표시·원본으로·크게 보기·빼기가 나와요. 사진 자리를 두 번 누르면 바로 자르기.',
+    '자르기·돌리기·표시를 해도 원본 사진 파일은 바뀌지 않아요.']],
+  ['글자·칸', [
+    '파란 칸을 눌러 바로 입력해요. 반복값 칸은 고치면 같은 칸이 함께 바뀌고, 머리 행 칸은 모든 시트의 같은 칸에 같이 들어가요.',
+    '현장명은 머리말·바닥글·글상자에 들어가요. 비우면 표지에 적은 현장명을 써요. 시트 이름은 아래 시트 탭을 두 번 눌러 바꿔요.']],
+  ['쪽·글꼴', [
+    '사진 칸 높이(속성 패널)는 사진이 들어가는 행만 바꾸고, 엑셀에도 같은 높이로 들어가요. [쪽에 꽉 차게]는 쪽 수가 늘지 않는 가장 큰 높이예요.',
+    '문서 글꼴 바꾸기(속성 패널)는 이 양식에서 쓰는 글꼴을 한꺼번에 바꾸고, 내보낸 엑셀에도 그대로 들어가요. 이 Mac에 없는 글꼴은 쪽 위 띠로 알려 줘요.']],
+  ['내보내기', [
+    '[엑셀로 내보내기]: 사진 크기는 원본 그대로(기본) 또는 인쇄용(300dpi로 줄여 파일이 작음) 중에서 골라요.',
+    'PDF·인쇄는 Mac용 Excel로 만들어요. 처음 한 번 "Excel 제어 허용"을 눌러 주세요.']]
+];
 function openShortcutHelp() {
   if (document.querySelector('.dyn-modal.sc-help')) return;
+  const flow = h('div', { class: 'help-flow', id: 'helpFlow' }, ...HELP_FLOW.map(([t, items]) => h('div', { class: 'help-sec' }, h('h4', { text: t }), h('ul', {}, ...items.map((x) => h('li', { text: x }))))));
   const list = h('div', { class: 'shortcut-list' }, ...SHORTCUTS.map(([k, d]) => h('div', { class: 'sc-row' }, h('span', { text: d }), h('span', { class: 'sc-keys' }, ...k.split(' ').map((x) => h('kbd', { text: x }))))));
-  const back = openModal('단축키', [list], [h('button', { class: 'primary', onclick: () => back.remove() }, '닫기')], 620);
+  const tabs = h('div', { class: 'work-tabs help-tabs', role: 'tablist' });
+  const panes = { flow, keys: list };
+  const pick = (k) => { for (const b of tabs.children) b.classList.toggle('on', b.dataset.tab === k); flow.hidden = k !== 'flow'; list.hidden = k !== 'keys'; };
+  for (const [k, label] of [['flow', '사용 흐름'], ['keys', '단축키']]) tabs.appendChild(h('button', { 'data-tab': k, role: 'tab', onclick: () => pick(k) }, label));
+  void panes;
+  const back = openModal('도움말', [tabs, flow, list], [h('button', { class: 'primary', onclick: () => back.remove() }, '닫기')], 680);
   back.classList.add('sc-help');
+  pick('flow');
 }
+// 시작 화면에서도 ?로 같은 도움말
+document.addEventListener('keydown', (e) => {
+  if (el.editorView.classList.contains('active') || document.querySelector('.modal-backdrop.open')) return;
+  const t = e.target;
+  if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+  if (e.key === '?' || (e.shiftKey && e.key === '/')) { e.preventDefault(); openShortcutHelp(); }
+});
 document.addEventListener('keydown', (e) => {
   if (!el.editorView.classList.contains('active') || !state.editor) return;
   const t = e.target;

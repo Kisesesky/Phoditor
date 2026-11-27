@@ -23,15 +23,17 @@ async function initCatalog() {
 }
 
 // [2026-11-26 시작 화면 개편] 왼쪽 메뉴(홈·열기·설정) + 위: 종류 탭과 양식 카드 한 줄 + 아래: 최근 작업 / 내 양식 목록
-const MINE_TAB = '__mine';
+const MINE_TAB = '__blank'; // [9.3 R3] 종류 탭의 '공백'(공백 양식만). 내 양식은 아래 [내 양식] 목록 전용
 const startUi = { workTab: 'recent' };
 
 function renderCatalog() {
   const { types, companies, available } = state.catalog;
   el.typeTabs.innerHTML = '';
-  const tabs = [[MINE_TAB, '공백·내 양식', null], ...types.map((t) => [t, t, companies.filter((c) => available[`${t}__${c}`]).length])];
+  // [9.3 R3] 양식이 있는 종류만 탭으로(빈 종류는 숨김 — PLAN D11·D14 표시 방식 변경)
+  const tabs = [[MINE_TAB, '공백', null], ...types.map((t) => [t, t, companies.filter((c) => available[`${t}__${c}`]).length]).filter(([, , n]) => n > 0)];
+  if (state.selectedType !== MINE_TAB && !tabs.some(([k]) => k === state.selectedType)) state.selectedType = tabs[1] ? tabs[1][0] : MINE_TAB;
   for (const [key, label, cnt] of tabs) {
-    const btn = h('button', { class: 'type-btn' + (state.selectedType === key ? ' selected' : '') + (cnt === 0 ? ' empty-type' : ''), title: cnt === 0 ? '아직 이 종류의 양식이 없어요' : null });
+    const btn = h('button', { class: 'type-btn' + (state.selectedType === key ? ' selected' : '') });
     btn.append(label);
     if (cnt !== null) btn.appendChild(h('span', { class: 'cnt', text: String(cnt) }));
     btn.addEventListener('click', () => { state.selectedType = key; renderCatalog(); });
@@ -49,11 +51,10 @@ function renderCatalog() {
         item,
         name: comp,
         color: COMPANY_COLORS[comp] || '#64748B',
-        meta: `시트 ${item.sheetCount}개 · ${item.addUnit === 'page' ? '쪽마다 2항목' : '블록마다 1항목'}`,
+        meta: `시트 ${item.sheetCount}개 · ${item.addUnit === 'page' ? '쪽당 사진 칸 2개' : '사진 칸 1개씩'}`,
         onOpen: () => openTemplate(item.id)
       }));
     }
-    if (!list.length) el.companyGrid.appendChild(h('div', { class: 'strip-empty', text: '아직 이 종류의 양식이 없어요. 새 원본이 오면 추가할게요. 지금은 [공백·내 양식]의 공백 양식으로 시작할 수 있어요.' }));
   }
   updateStripButtons();
 }
@@ -118,32 +119,28 @@ function templateCard({ item, name, color, meta, onOpen, kicker }) {
     else if (e.key === 'Enter' && e.target === card) onOpen();
   });
   show();
+  // [9.3 R3] 여는 방법을 눈에 보이게: [열기] 단추(이름 부분 누르기·두 번 누르기·Enter도 그대로)
+  const openBtn = h('button', { class: 'card-open', tabindex: '-1', onclick: (e) => { e.stopPropagation(); onOpen(); } }, '열기');
   const body = h('div', { class: 'card-body', 'data-tip': '이 양식으로 시작' },
-    kicker ? h('div', { class: 'card-kicker', text: kicker }) : null,
-    h('div', { class: 'company-name', text: name }),
-    h('div', { class: 'company-meta', text: meta }));
+    h('div', { class: 'card-text' },
+      kicker ? h('div', { class: 'card-kicker', text: kicker }) : null,
+      h('div', { class: 'company-name', text: name }),
+      h('div', { class: 'company-meta', text: meta })),
+    openBtn);
   card.addEventListener('click', (e) => { if (!e.target.closest('.card-art')) onOpen(); });
   card.append(art, body);
   return card;
 }
 
-// --- 공백 양식 · 내 양식 ---
-async function renderMineStrip() {
-  const list = await window.api.myTemplatesList().catch(() => []);
-  if (state.selectedType !== MINE_TAB) return;
+// --- 공백 양식(종류 탭 '공백') — 내 양식은 아래 [내 양식] 목록에서만 ---
+function renderMineStrip() {
   el.companyGrid.innerHTML = '';
   for (const g of state.catalog.generic || []) {
     el.companyGrid.appendChild(templateCard({ item: g, name: g.title || '공백 양식', color: '#475467', kicker: '기본', meta: `시트 ${g.sheetCount}개 · 회사 표시 없음`, onOpen: () => openTemplate(g.id) }));
   }
-  const byId = Object.fromEntries(Object.values(state.catalog.available).map((x) => [x.id, x]));
-  for (const t of list) {
-    const base = byId[t.templateId];
-    el.companyGrid.appendChild(templateCard({ item: base || null, name: t.name, color: '#7C3AED', kicker: '내 양식', meta: `${t.baseLabel} · 블록 ${t.blockCount}개`, onOpen: base ? () => startFromMyTemplate(t.id) : () => showToast('바탕 양식이 없어져 열 수 없어요.') }));
-  }
   updateStripButtons();
 }
 async function renderMyTemplates() {
-  if (state.selectedType === MINE_TAB) await renderMineStrip();
   if (startUi.workTab === 'mine') await renderWorkList();
 }
 
@@ -188,9 +185,13 @@ async function renderWorkList() {
   if (!box) return;
   for (const b of document.querySelectorAll('#workTabs button')) b.classList.toggle('on', b.dataset.tab === startUi.workTab);
   const rows = [];
+  // [9.3 R3] 최근 작업이 1건 이상이면 최근 작업을 위, 새 사진첩 줄을 아래로(0건이면 양식 줄이 위)
+  const recent = await window.api.projectRecent().catch(() => []);
+  const home = document.getElementById('homePage');
+  if (home) home.classList.toggle('recent-first', recent.length > 0);
   if (startUi.workTab === 'recent') {
-    const recent = await window.api.projectRecent();
-    for (const r of recent.slice(0, 12)) {
+    const shown = startUi.recentAll ? recent.slice(0, 12) : recent.slice(0, 5);
+    for (const r of shown) {
       const dir = r.path.split('/').slice(0, -1).join('/').replace(/^\/Users\/[^/]+/, '~');
       const row = h('div', { class: 'work-row', role: 'button', tabindex: '0', title: r.path },
         h('span', { class: 'work-ico' }),
@@ -202,7 +203,8 @@ async function renderWorkList() {
       row.addEventListener('keydown', (e) => { if (e.key === 'Enter') openProject(r.path); });
       rows.push(row);
     }
-    if (!rows.length) rows.push(h('div', { class: 'work-empty', text: '저장한 작업이 여기에 나와요. 편집 중에 ⌘S로 저장하세요.' }));
+    if (recent.length > shown.length) rows.push(h('button', { class: 'ghost work-more', onclick: () => { startUi.recentAll = true; renderWorkList(); } }, `최근 작업 더 보기 (${Math.min(recent.length, 12)}개)`));
+    if (!rows.length) rows.push(flowGuide());
   } else {
     const list = await window.api.myTemplatesList().catch(() => []);
     for (const t of list) {
@@ -216,10 +218,28 @@ async function renderWorkList() {
       row.addEventListener('click', () => (t.missingBase ? showToast('바탕 양식이 없어져 열 수 없어요.') : startFromMyTemplate(t.id)));
       rows.push(row);
     }
-    if (!rows.length) rows.push(h('div', { class: 'work-empty', text: '자주 쓰는 구성을 편집 화면 속성 패널의 [내 양식으로 저장]으로 모아 두면 여기서 바로 시작해요.' }));
+    if (!rows.length) rows.push(h('div', { class: 'work-empty', text: '자주 쓰는 구성을 편집 화면 위쪽 [내 양식] 단추로 저장해 두면 여기서 바로 시작해요.' }));
   }
   box.innerHTML = '';
   rows.forEach((r) => box.appendChild(r));
+}
+
+// [9.3 R3] 최근 작업이 없을 때: 3단계 흐름 안내(실제로 누를 수 있는 단추는 1단계에만)
+function flowGuide() {
+  const blank = (state.catalog && state.catalog.generic && state.catalog.generic[0]) || null;
+  const step = (n, title, text, ...acts) => h('div', { class: 'flow-step' },
+    h('div', { class: 'flow-num', text: String(n) }),
+    h('div', { class: 'flow-title', text: title }),
+    h('div', { class: 'flow-text', text }),
+    acts.length ? h('div', { class: 'flow-acts' }, ...acts) : null);
+  return h('div', { class: 'flow-guide', id: 'flowGuide' },
+    h('div', { class: 'flow-head', text: '사진첩은 이렇게 만들어요' }),
+    h('div', { class: 'flow-steps' },
+      step(1, '양식 고르기', '위에서 종류와 업체를 고르거나, 공백 양식으로 바로 시작해요. 저장해 둔 작업 파일을 열어도 돼요.',
+        blank ? h('button', { id: 'flowBlankBtn', onclick: () => openTemplate(blank.id) }, '공백 양식으로 시작') : null,
+        h('button', { id: 'flowOpenBtn', onclick: () => openProject(null) }, '작업 파일 열기')),
+      step(2, '사진 폴더 열고 채우기', '왼쪽 [폴더 열기]로 사진을 불러와 사진 자리에 끌어 넣거나, [사진 자동 채우기]로 폴더별로 한 번에 넣어요.'),
+      step(3, '엑셀·PDF로 내보내기', '[엑셀로 내보내기]로 결과 파일을 만들어요. 작업은 ⌘S로 저장해 두면 다음에 여기서 이어 열 수 있어요.')));
 }
 
 // 작은 선 아이콘 모음(아이콘 단추용)

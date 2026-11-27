@@ -17,7 +17,7 @@ try {
   // 7. 카드 초점 링 = accent-ring
   check('7. 카드 초점 링이 accent-ring', /accent-ring/.test(cssRuleText('.company-card:focus-visible') || ''), cssRuleText('.company-card:focus-visible'));
 
-  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '공백·내 양식'), 600);
+  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '공백'), 600);
   await clickEl($$('#companyGrid .company-card').find((c) => c.textContent.includes('공백 양식')), 1800);
   await waitFor(() => $('#editorView').classList.contains('active'));
   await clickEl($$('#sheetTabsBar .sheet-tab')[1], 700);

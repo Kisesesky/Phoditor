@@ -12,7 +12,7 @@ try {
   await waitFor(() => $$('#companyGrid .company-card').length > 0);
   await waitFor(() => $$('#companyGrid .card-art img.cover-thumb').length >= 6, 4000);
   check('시작 화면: 업체 카드(표지 미리보기)와 종류별 개수', $$('#companyGrid .card-art img.cover-thumb').length >= 6 && /\d/.test($('#typeTabs').textContent), `${$$('#companyGrid .card-art img.cover-thumb').length} / ${$('#typeTabs').textContent}`);
-  check('양식 없는 종류(기타) 흐리게', !!$$('#typeTabs .type-btn').find((b) => b.classList.contains('empty-type') && b.textContent.includes('기타')));
+  check('양식 없는 종류(기타)는 탭에 안 보임(9.3 R3, D11·D14 표시 변경)', !$$('#typeTabs .type-btn').some((b) => b.firstChild.textContent.trim() === '기타') && $$('#typeTabs .type-btn').length >= 4, $('#typeTabs').textContent);
   await shot('u01_start');
 
   await openTpl('공용홀', '롯데');

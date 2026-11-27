@@ -40,7 +40,7 @@ try {
   $('#settingsModal').classList.remove('open');
   await shot('r00_settings');
   await clickEl($('.start-nav .nav-btn[data-page="home"]'), 400);
-  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '공백·내 양식'), 800);
+  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '공백'), 800);
   check('공백 양식 카드', !!$$('#companyGrid .company-card').find((c) => c.textContent.includes('공백 양식')));
   await shot('r01_start');
 
@@ -153,9 +153,10 @@ try {
   check('내 양식 저장 안내', toastText().includes('QA 공용홀 기본'), toastText());
   startUi.workTab = 'mine';
   await renderMyTemplates(); await sleep(500);
-  const myCard = $$('#companyGrid .company-card').find((c) => c.textContent.includes('QA 공용홀 기본'));
-  check('아래 "내 양식" 목록에도 나옴', $$('#workList .work-row').some((r) => r.textContent.includes('QA 공용홀 기본')));
-  check('시작 화면 "내 양식"에 나옴(블록 3개)', myCard && myCard.textContent.includes('블록 3개'), myCard && myCard.textContent);
+  // [9.3 R3] 내 양식은 아래 [내 양식] 목록 한 곳에만(위 양식 줄에는 없음)
+  const myRow = $$('#workList .work-row').find((r) => r.textContent.includes('QA 공용홀 기본'));
+  check('아래 "내 양식" 목록에도 나옴', !!myRow);
+  check('시작 화면 "내 양식"에 나옴(블록 3개)', myRow && myRow.textContent.includes('블록 3개') && !$$('#companyGrid .company-card').some((c) => c.textContent.includes('QA 공용홀 기본')), myRow && myRow.textContent);
   const list = await window.api.myTemplatesList();
   await startFromMyTemplate(list[0].id); await sleep(1200);
   const blockSheet = state.editor.sheets.find((s) => s.role === 'block');
