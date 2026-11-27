@@ -247,6 +247,33 @@ el.siteNameInput.addEventListener('input', () => {
   if (state.editor) state.editor.siteName = el.siteNameInput.value;
 });
 el.exportBtn.addEventListener('click', () => openExportDialog('xlsx'));
+// [9.3 R5] 상단 바 펼침 메뉴: [저장 ▾](다른 이름으로·내 양식), [엑셀로 내보내기 ▾](PDF·인쇄)
+function closeDropMenus() {
+  for (const m of document.querySelectorAll('.drop-menu')) m.hidden = true;
+  for (const b of document.querySelectorAll('[aria-haspopup="menu"]')) b.setAttribute('aria-expanded', 'false');
+}
+function toggleDropMenu(btn, menuId, alignRight) {
+  const menu = document.getElementById(menuId);
+  const open = menu.hidden;
+  closeDropMenus();
+  if (!open) return;
+  menu.hidden = false;
+  btn.setAttribute('aria-expanded', 'true');
+  const r = (btn.closest('.split-btn') || btn).getBoundingClientRect();
+  const w = menu.offsetWidth;
+  menu.style.top = `${Math.round(r.bottom + 4)}px`;
+  menu.style.left = `${Math.round(alignRight ? Math.max(6, r.right - w) : Math.min(r.left, window.innerWidth - w - 6))}px`;
+  const first = menu.querySelector('button:not(:disabled)');
+  if (first) first.focus({ preventScroll: true });
+}
+document.getElementById('saveMenuBtn').addEventListener('click', (e) => { e.stopPropagation(); toggleDropMenu(e.currentTarget, 'saveMenu', false); });
+document.getElementById('exportMenuBtn').addEventListener('click', (e) => { e.stopPropagation(); toggleDropMenu(e.currentTarget, 'exportMenu', true); });
+document.getElementById('saveAsBtn').addEventListener('click', () => saveProject(true));
+for (const m of document.querySelectorAll('.drop-menu')) m.addEventListener('click', (e) => { if (e.target.closest('.drop-item')) closeDropMenus(); });
+document.addEventListener('mousedown', (e) => { if (!e.target.closest('.drop-menu') && !e.target.closest('[aria-haspopup="menu"]')) closeDropMenus(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.querySelector('.drop-menu:not([hidden])')) { e.stopPropagation(); closeDropMenus(); } }, true);
+window.addEventListener('resize', closeDropMenus);
+window.addEventListener('resize', () => { if (el.catalogView.classList.contains('active')) fitStartCards(); });
 
 el.dismissFontBannerBtn.addEventListener('click', (e) => {
   e.stopPropagation(); // 닫기만(띠를 누른 것으로 치지 않음)

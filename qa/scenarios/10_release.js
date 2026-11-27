@@ -73,7 +73,7 @@ try {
 
   // 인쇄·PDF 전 Excel 확인 (하니스가 Excel 상태만 바꿔 줌 — 진짜 Excel은 움직이지 않음)
   const setExcel = async (st) => { const n = window.__qaExcelSet || 0; console.log('__QA_EXCEL__:' + JSON.stringify(st)); await waitFor(() => (window.__qaExcelSet || 0) > n, 3000); };
-  check('6. 도구 막대에 [인쇄] 단추, 창 안에 들어감', !!$('#printBtn') && $('#printBtn').getBoundingClientRect().right <= innerWidth && $('#exportBtn').getBoundingClientRect().right <= innerWidth, `${Math.round($('#exportBtn').getBoundingClientRect().right)} / ${innerWidth}`);
+  check('6. [인쇄]는 [엑셀로 내보내기 ▾] 메뉴 안(⌘P), 도구 막대가 창 안에 들어감', !!$('#exportMenu #printBtn') && $('#exportMenuBtn').getBoundingClientRect().right <= innerWidth && $('#exportBtn').getBoundingClientRect().right <= innerWidth, `${Math.round($('#exportMenuBtn').getBoundingClientRect().right)} / ${innerWidth}`);
   await setExcel({ installed: false, automation: 'unknown' });
   await clickEl($('#printBtn'), 500);
   const m1 = $('.dyn-modal');

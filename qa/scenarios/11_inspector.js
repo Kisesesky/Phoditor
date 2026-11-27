@@ -22,7 +22,7 @@ try {
 
   // 편집 화면 진한 파랑은 [엑셀로 내보내기] 하나
   const prim = () => $$('#editorView button.primary').filter((b) => b.offsetParent);
-  check('5. 편집 화면 primary 단추는 [엑셀로 내보내기] 하나(폴더 열기는 보통 단추)', prim().length === 1 && prim()[0].id === 'exportBtn' && !$('#selectFolderBtn').classList.contains('primary'), prim().map((b) => b.id).join());
+  check('5. 편집 화면 primary 단추는 [엑셀로 내보내기] 하나(폴더 열기는 보통 단추)', prim().every((b) => b.closest('#exportSplit')) && prim()[0].id === 'exportBtn' && !$('#selectFolderBtn').classList.contains('primary'), prim().map((b) => b.id).join());
   check('3. 사진 패널 빈 상태에 "자리 먼저 고르고 누르면 들어감" 안내', /사진 자리를 먼저 고르고/.test($('#photoGrid').textContent), $('#photoGrid').textContent.trim().slice(0, 80));
 
   // 시트 선택 상태: 내부 정보 없음, 메모 3개 이하
@@ -93,6 +93,7 @@ try {
   setInspectorCollapsed(true); await sleep(500);
   slotEl().dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 })); await sleep(300);
   check('2. 패널 접힘: 사진 자리 고르면 [사진] 탭에 파란 점(ctx-on)', $('#ribbonTabs [data-tab="photo"]').classList.contains('ctx-on'));
+  check('R5. 사진 자리를 고르면 상황 탭 [사진]이 나타남', !$('#ribbonTabs [data-tab="photo"]').hidden);
   slotEl().dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 2 })); await sleep(1200);
   check('2. 패널 접힘: 사진 자리 더블클릭 → 자르기 편집기', $('#cropModal').classList.contains('open'));
   await shot('i04_collapsed_crop');

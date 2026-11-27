@@ -78,15 +78,22 @@ function updateRibbon() {
   const photo = sl && sl.photo;
   for (const id of ['rbCropBtn', 'rbRotateBtn', 'rbAnnoBtn', 'rbZoomBtn', 'rbRemoveBtn']) $id(id).disabled = !photo;
   $id('rbRevertBtn').disabled = !(photo && photo.isCropped);
-  $id('ribbonTabs').querySelector('[data-tab="photo"]').classList.toggle('ctx-on', !!area);
+  // [9.3 R5] [사진]은 상황 탭: 사진 자리(영역)를 골랐을 때만 나타남
+  const photoTab = $id('ribbonTabs').querySelector('[data-tab="photo"]');
+  photoTab.classList.toggle('ctx-on', !!area);
+  photoTab.hidden = !area;
+  if (!area && ribbonUi.tab === 'photo') setRibbonTab('home');
   // 서식
   const c = ribbonCell();
-  $id('ribbonTabs').querySelector('[data-tab="format"]').classList.toggle('ctx-on', !!c);
   const fmtIds = ['fmtBoldBtn', 'fmtWrapBtn', 'fmtShrinkBtn', 'fmtResetBtn'];
   if (!c) {
     for (const id of fmtIds) { $id(id).disabled = true; $id(id).classList.remove('on'); }
-    $id('fmtFontSel').disabled = true;
-    $id('fmtSizeSel').disabled = true;
+    for (const [id, ph] of [['fmtFontSel', '글꼴'], ['fmtSizeSel', '크기']]) {
+      const sl = $id(id);
+      sl.innerHTML = '';
+      sl.appendChild(h('option', { value: '', text: ph }));
+      sl.disabled = true;
+    }
   } else {
     const csheet = state.editor.sheets[c.sheetIdx];
     const cur = fontOverrideOf(csheet, c.key) || {};

@@ -63,6 +63,10 @@ try {
   await goToStart(); await sleep(1200);
   check('5. 최근 작업 1건 → 최근 작업이 위, 새 사진첩 줄이 아래', $('#homePage').classList.contains('recent-first') && $('.work-head').getBoundingClientRect().top < $('.tpl-head').getBoundingClientRect().top && $$('#workList .work-row').length === 1);
   check('5. 최근 작업이 생기면 흐름 안내는 사라짐', !$('#flowGuide'));
+  // [9.3 R5] 최근 작업이 적어 아래가 남으면 양식 카드를 여러 줄로 다 보여 줌(빈 회색 대신 실제 양식)
+  const strip = $('#companyGrid'); const mainB = $('.start-main').getBoundingClientRect().bottom;
+  const cardsAll = $$('#companyGrid .company-card');
+  check('R5. 최근 작업 1건: 양식 카드가 여러 줄로 모두 보임(가로 넘김 없음, 화면 안)', strip.classList.contains('as-grid') && strip.scrollWidth <= strip.clientWidth + 1 && cardsAll.every((c) => c.getBoundingClientRect().bottom <= mainB + 1) && $('#stripNext').hidden, `${innerWidth}x${innerHeight} grid=${strip.classList.contains('as-grid')} cards=${cardsAll.length}`);
   check('5. 자동 저장 복원 안내 자리는 맨 위 그대로', order('#recoverSlot') === 0 && $('#homePage').firstElementChild.id === 'recoverSlot');
   await shot('t02_start_recent');
   // 시작 화면에서도 ?로 같은 도움말

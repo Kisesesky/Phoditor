@@ -15,23 +15,23 @@ try {
   const r5 = $$('.pv-page')[4].getBoundingClientRect();
   const vp = $('#gridViewport').getBoundingClientRect();
   check('누르면 그 쪽으로 이동하고 표시됨', Math.abs(r5.top - vp.top) < 120 && rail()[4].classList.contains('on'), `${Math.round(r5.top - vp.top)} ${rail().findIndex((b) => b.classList.contains('on'))}`);
-  // [리본] 홈 · 사진 · 서식 · 보기 — 같은 일 하는 단추는 리본에 한 번만
-  check('리본 탭 4개(홈·사진·서식·보기)', $$('#ribbonTabs button').map((b) => b.textContent).join() === '홈,사진,서식,보기');
+  // [리본 · 9.3 R5] 홈 · 보기 + 상황 탭 [사진](사진 자리를 골랐을 때만) — 같은 일 하는 단추는 리본에 한 번만
+  check('리본 탭: 늘 보이는 건 홈·보기, [사진]은 상황 탭(지금은 숨김), [서식] 탭 없음', $$('#ribbonTabs button').filter((b) => !b.hidden).map((b) => b.textContent).join() === '홈,보기' && $('#ribbonTabs [data-tab="photo"]').hidden && !$('#ribbonTabs [data-tab="format"]'), $$('#ribbonTabs button').map((b) => b.textContent + (b.hidden ? '(숨김)' : '')).join());
+  check('홈: 큰 단추(블록 추가·사진 자동 채우기)와 작은 단추 쌓기, 글꼴 묶음이 홈에', !$('#addBlockEndBtn').classList.contains('sm') && !$('#autoFillBtn').classList.contains('sm') && $('#moveUpBtn').classList.contains('sm') && !!$('.rb-panel.on .rb-font2 #fmtFontSel') && !!$('.rb-panel.on #fmtBoldBtn'));
+  check('리본 높이 그대로(55px 이하)', $('#ribbon').getBoundingClientRect().height <= 55, $('#ribbon').getBoundingClientRect().height);
   check('홈: 채우기 단추가 바로 보임(메뉴 없이)', !!$('.rb-panel.on #autoFillBtn') && !!$('.rb-panel.on #pasteTableBtn') && !$('#fillMenu'));
   await clickEl($('#pasteTableBtn'), 400);
   check('표 붙여넣기 창', !!$('.dyn-modal textarea'));
   $('.dyn-modal').remove();
-  await clickEl($('#ribbonTabs [data-tab="photo"]'), 300);
-  check('사진 탭: 자리를 안 고르면 꺼져 있음(안내문 없이)', $('#rbCropBtn').disabled && !$('#rbPhotoHint') && !$('.rb-panel.on .rb-hint'));
+  check('사진 탭: 자리를 안 고르면 탭이 안 보임(꺼진 단추를 보여 주지 않음)', $('#ribbonTabs [data-tab="photo"]').hidden && $('#rbCropBtn').disabled && !$('#rbPhotoHint'));
   await shot('d02_ribbon_photo');
-  await clickEl($('#ribbonTabs [data-tab="format"]'), 300);
-  check('서식 탭: 칸을 안 고르면 꺼짐(안내문 없이)', $('#fmtBoldBtn').disabled && !$('#rbFormatHint') && !$('.rb-panel.on .rb-hint'));
+  check('글꼴(홈): 칸을 안 고르면 꺼짐(안내문 없이)', $('#fmtBoldBtn').disabled && !$('#rbFormatHint') && !$('.rb-panel.on .rb-hint'));
   const cell = $$('.pv-page td.editable-cell').find((t) => t.textContent.trim() === '' && t.offsetWidth > 60);
   cell.click(); await sleep(300);
   const ed = cell.querySelector('.cell-editor-input');
   if (ed) ed.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   await sleep(300);
-  check('칸을 고르면 서식 탭 켜짐(탭에 점 표시)', !$('#fmtBoldBtn').disabled && $('#ribbonTabs [data-tab="format"]').classList.contains('ctx-on'));
+  check('칸을 고르면 홈의 글꼴 단추가 켜짐', !$('#fmtBoldBtn').disabled && $('#fmtBoldBtn').closest('.rb-panel').dataset.tab === 'home');
   const before = JSON.stringify(state.editor.sheets[state.activeSheetIdx].cellFonts || {});
   await clickEl($('#fmtBoldBtn'), 500);
   check('서식 > 굵게 적용', JSON.stringify(state.editor.sheets[state.activeSheetIdx].cellFonts || {}) !== before && $('#fmtBoldBtn').classList.contains('on'));

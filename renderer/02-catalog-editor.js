@@ -36,7 +36,7 @@ function renderCatalog() {
     const btn = h('button', { class: 'type-btn' + (state.selectedType === key ? ' selected' : '') });
     btn.append(label);
     if (cnt !== null) btn.appendChild(h('span', { class: 'cnt', text: String(cnt) }));
-    btn.addEventListener('click', () => { state.selectedType = key; renderCatalog(); });
+    btn.addEventListener('click', () => { state.selectedType = key; renderCatalog(); fitStartCards(); });
     el.typeTabs.appendChild(btn);
   }
   el.companyGrid.innerHTML = '';
@@ -64,8 +64,8 @@ function updateStripButtons() {
   const prev = document.getElementById('stripPrev');
   const next = document.getElementById('stripNext');
   if (!prev) return;
-  prev.hidden = s.scrollLeft <= 2;
-  next.hidden = s.scrollLeft + s.clientWidth >= s.scrollWidth - 2;
+  prev.hidden = s.scrollLeft <= 2 || s.classList.contains('as-grid');
+  next.hidden = s.scrollLeft + s.clientWidth >= s.scrollWidth - 2 || s.classList.contains('as-grid');
 }
 
 // 양식 카드: 미리보기(‹ › 또는 그림 왼쪽·오른쪽을 눌러 시트 넘겨 보기) + 이름. 그림을 눌러도 열리지 않고, 아래 이름 부분·두 번 누르기·Enter로 연다
@@ -222,6 +222,31 @@ async function renderWorkList() {
   }
   box.innerHTML = '';
   rows.forEach((r) => box.appendChild(r));
+  fitStartCards();
+}
+
+// [9.3 R5] 최근 작업이 위에 있고 아래가 남으면, 남는 높이만큼 양식 카드(미리보기)를 키운다(안내문으로 채우지 않음)
+function fitStartCards() {
+  const home = document.getElementById('homePage');
+  const main = home && home.closest('.start-main');
+  const strip = el.companyGrid;
+  if (!home || !main || !strip || !home.classList.contains('active')) return;
+  strip.classList.remove('as-grid');
+  if (home.classList.contains('recent-first')) {
+    const cards = strip.querySelectorAll('.company-card');
+    const card = cards[0];
+    if (card) {
+      const gap = 14;
+      const perRow = Math.max(1, Math.floor((strip.clientWidth + gap) / (card.offsetWidth + gap)));
+      const rows = Math.ceil(cards.length / perRow);
+      const cs = getComputedStyle(home);
+      const wrap = strip.closest('.tpl-strip-wrap');
+      const spare = main.clientHeight - home.offsetHeight + parseFloat(cs.paddingBottom) + (wrap ? parseFloat(getComputedStyle(wrap).marginBottom) : 0) - 16;
+      const extra = (rows - 1) * (card.offsetHeight + gap);
+      if (rows > 1 && extra <= spare) strip.classList.add('as-grid');
+    }
+  }
+  updateStripButtons();
 }
 
 // [9.3 R3] 최근 작업이 없을 때: 3단계 흐름 안내(실제로 누를 수 있는 단추는 1단계에만)

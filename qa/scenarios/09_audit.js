@@ -37,7 +37,9 @@ try {
   // 3. 좁은 창: 파일 단추 셋 다 같은 규칙
   const narrow = innerWidth <= 1420;
   const fs = (id) => parseFloat(getComputedStyle($(id)).fontSize);
-  check(`3. 파일 단추 글자 숨김이 같은지(창 ${innerWidth}px)`, narrow ? fs('#saveBtn') === 0 && fs('#saveMyTplTopBtn') === 0 && fs('#pdfBtn') === 0 : fs('#saveMyTplTopBtn') > 0 && fs('#saveBtn') > 0, `${fs('#saveBtn')} ${fs('#saveMyTplTopBtn')} ${fs('#pdfBtn')}`);
+  // [9.3 R5] 파일 단추: 저장은 왼쪽 빠른 실행(아이콘), 내 양식·PDF·인쇄는 펼침 메뉴 안(글자 그대로)
+  void narrow; void fs;
+  check(`3. 파일 단추: 저장·실행 취소·다시 실행은 빠른 실행, 내 양식은 [저장 ▾], PDF·인쇄는 [엑셀로 내보내기 ▾] 안(창 ${innerWidth}px)`, !!$('.qat #saveBtn') && !!$('.qat #undoBtn') && !!$('.qat #redoBtn') && !!$('#saveMenu #saveMyTplTopBtn') && !!$('#exportMenu #pdfBtn') && !!$('#exportMenu #printBtn') && !!$('#exportSplit #exportMenuBtn'));
   check('3. 도구 막대가 창 안에 들어감', $('#exportBtn').getBoundingClientRect().right <= innerWidth && $('#ribbonCollapseBtn').getBoundingClientRect().right <= innerWidth, `${Math.round($('#ribbonCollapseBtn').getBoundingClientRect().right)} / ${innerWidth}`);
   await shot('a02_editor');
 
@@ -226,9 +228,14 @@ try {
   el.sheetTabsBar.scrollLeft = 0; el.sheetTabsBar.dispatchEvent(new Event('scroll')); await sleep(150);
   check('R4. 탭이 넘치면 오른쪽 끝 페이드', el.sheetTabsBar.classList.contains('fade-r') && /gradient/.test(getComputedStyle(el.sheetTabsBar).webkitMaskImage || getComputedStyle(el.sheetTabsBar).maskImage || ''), el.sheetTabsBar.className);
   // [9.3 R4] 1280px 상단 바: PDF 단추에 PDF 배지(내 양식과 구분), 도움말 ? 단추 상시
-  const badge = $('#pdfBtn .pdf-badge');
-  check('R4. 1280px: PDF 단추에 "PDF" 배지(브랜드 블루), 내 양식 단추엔 없음', !!badge && getComputedStyle(badge).display !== 'none' && badge.textContent === 'PDF' && getComputedStyle(badge).backgroundColor === 'rgb(37, 99, 235)' && !$('#saveMyTplTopBtn .pdf-badge'), badge && getComputedStyle(badge).backgroundColor);
+  // [R4 → 9.3 R5] 1280px 상단 바: 아이콘만 나란히 서는 단추가 없음(PDF·내 양식은 글자 있는 메뉴 항목) → 서로 헷갈릴 일 없음
+  const iconOnly = $$('.app-toolbar > button, .app-toolbar .qat > button').filter((b) => b.offsetParent && !b.textContent.trim()).map((b) => b.id);
+  check('R4. 1280px: PDF·내 양식은 글자 있는 메뉴 항목(아이콘끼리 구분할 필요 없음)', $('#pdfBtn').textContent.includes('PDF') && $('#saveMyTplTopBtn').textContent.includes('내 양식') && !iconOnly.includes('pdfBtn') && !iconOnly.includes('saveMyTplTopBtn'), iconOnly.join(','));
+  await clickEl($('#exportMenuBtn'), 300);
+  check('R5. [엑셀로 내보내기 ▾] → PDF·인쇄 메뉴(단추 아래, 창 안)', !$('#exportMenu').hidden && $('#exportMenu').getBoundingClientRect().right <= innerWidth && $('#exportMenu').getBoundingClientRect().top >= $('#exportSplit').getBoundingClientRect().bottom - 1);
   await shot('a14_topbar_1280');
+  document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await sleep(150);
+  check('R5. Esc로 메뉴 닫힘', $('#exportMenu').hidden);
   await clickEl($$('#sheetTabsBar .sheet-tab')[0], 600);
   await shot('a13_posco_1280');
   await resizeTo(wasW, wasH);
