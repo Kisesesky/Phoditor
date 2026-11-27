@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Phoditor 앱 아이콘: 맥 아이콘 격자(1024 안에 824 둥근 사각형, 위아래 여백 100) · 사진첩 펼침 -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient>
+    <linearGradient id="ph" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60A5FA"/><stop offset="1" stop-color="#2563EB"/></linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0B1B4D" flood-opacity=".35"/></filter>
+  </defs>
+  <rect x="100" y="100" width="824" height="824" rx="185" fill="url(#bg)"/>
+  <!-- 뒤쪽 쪽 -->
+  <g filter="url(#sh)">
+    <rect x="300" y="230" width="460" height="580" rx="34" fill="#DBEAFE" transform="rotate(7 530 520)"/>
+    <rect x="264" y="214" width="460" height="580" rx="34" fill="#fff"/>
+  </g>
+  <!-- 사진 칸 2개 + 글 줄 -->
+  <rect x="304" y="258" width="380" height="228" rx="16" fill="url(#ph)"/>
+  <circle cx="374" cy="320" r="28" fill="#fff"/>
+  <path d="M304 456 L408 372 L470 420 L528 380 L684 470 V470 A16 16 0 0 1 668 486 H320 A16 16 0 0 1 304 470 Z" fill="#BFDBFE"/>
+  <rect x="304" y="514" width="180" height="140" rx="12" fill="#93C5FD"/>
+  <rect x="504" y="514" width="180" height="140" rx="12" fill="#93C5FD"/>
+  <rect x="304" y="684" width="380" height="18" rx="9" fill="#CBD5E1"/>
+  <rect x="304" y="722" width="250" height="18" rx="9" fill="#E2E8F0"/>
+</svg>

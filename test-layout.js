@@ -4,8 +4,8 @@ const os = require('os');
 const path = require('path');
 const assert = require('assert');
 const ExcelJS = require('exceljs');
-const { exportWorkbook } = require('./export');
-const { photoRowOffsets, clampPhotoScale } = require('./docmodel');
+const { exportWorkbook, computeSlotPlacement } = require('./export');
+const { photoRowOffsets, clampPhotoScale, LAYOUT_SPANS } = require('./docmodel');
 
 const DEFS = path.join(__dirname, 'data', 'templateDefs');
 const BLANKS = path.join(__dirname, 'data', 'blanks');
@@ -107,6 +107,30 @@ async function run() {
   assert.strictEqual(clampPhotoScale(undefined), 1);
   assert.strictEqual(clampPhotoScale(1.234), 1.23);
   ok('사진 칸 높이 범위 60~180%');
+
+  // 6. [2026-11-27] 큰 사진 섞인 배치: 자리 크기·위치(내보내기 계산)
+  {
+    const area = { x: 0, y: 0, width: 900, height: 600 };
+    const slot = (k, i) => computeSlotPlacement(area, k, i, 1, 1);
+    assert.strictEqual(LAYOUT_SPANS.L12.count, 3);
+    assert.strictEqual(slot('L12', 0).slotW, 600); assert.strictEqual(slot('L12', 0).slotH, 600); // 왼쪽 2/3 × 전체 높이
+    assert.strictEqual(slot('L12', 1).slotX, 600); assert.strictEqual(slot('L12', 2).slotY, 300); // 오른쪽 위·아래
+    assert.strictEqual(slot('L13', 3).slotH, 200); assert.strictEqual(slot('L13', 3).slotY, 400);
+    assert.strictEqual(slot('T13', 0).slotW, 900); assert.strictEqual(slot('T13', 0).slotH, 400); // 위쪽 전체 폭 × 2/3 높이
+    assert.strictEqual(slot('T13', 2).slotX, 300); assert.strictEqual(slot('T13', 2).slotY, 400);
+    assert.strictEqual(LAYOUT_SPANS.T23.count, 5);
+    assert.strictEqual(slot('T23', 1).slotX, 450); assert.strictEqual(slot('T23', 1).slotW, 450);
+    assert.strictEqual(slot('T23', 4).slotX, 600); assert.strictEqual(slot('T23', 4).slotW, 300);
+    // 어떤 배치든 자리들이 겹치지 않고 영역을 꼭 채움(넓이 합 = 영역)
+    for (const [k, sp] of Object.entries(LAYOUT_SPANS)) {
+      let sum = 0;
+      for (let i = 0; i < sp.count; i++) { const q = slot(k, i); sum += q.slotW * q.slotH; }
+      assert.ok(Math.abs(sum - 900 * 600) < 1, `${k} 넓이 합 ${sum}`);
+    }
+    // 기존 격자 배치는 그대로
+    assert.strictEqual(slot('2x2', 3).slotX, 450); assert.strictEqual(slot('2x2', 3).slotY, 300);
+    ok('큰 사진 섞인 배치 4가지: 자리 위치·크기, 빈틈·겹침 없음, 기존 격자 그대로');
+  }
 
   console.log(`배치·줄바꿈 테스트 ${pass}/${pass} 통과`);
 }

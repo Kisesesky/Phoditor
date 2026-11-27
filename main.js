@@ -19,6 +19,28 @@ const { writeProjectZip, readProjectFile } = require('./project');
 const { getPreviewFonts, isPreviewFont, installBundled, resetCache: resetFontCache } = require('./fontcatalog');
 const { extractSheetModel, extractDrawings, extractPageNumbering, defaultFontOf, usePaletteOf } = require('./sheetmodel');
 
+// [2026-11-27 설치 파일] 앱 이름이 Phoditor로 바뀌어도 예전 설정 폴더(최근 작업·내 양식·내보내기 폴더·MYBOX 기간)를 그대로 쓴다.
+// 테스트 하니스처럼 userData를 미리 따로 정한 경우는 건드리지 않는다.
+const LEGACY_USERDATA_NAME = 'template-photo-excel-editor';
+if (path.basename(app.getPath('userData')) === app.getName() && app.getName() !== LEGACY_USERDATA_NAME) {
+  app.setPath('userData', path.join(app.getPath('appData'), LEGACY_USERDATA_NAME));
+}
+
+// [2026-11-27] Finder에서 .pbook을 두 번 누르면 앱이 그 작업을 연다(앱이 꺼져 있었으면 켜진 뒤에)
+let pendingOpenPath = null;
+function deliverOpenPath() {
+  if (!pendingOpenPath || !mainWindow || mainWindow.webContents.isLoading()) return;
+  mainWindow.webContents.send('open-path', pendingOpenPath);
+  pendingOpenPath = null;
+}
+app.on('open-file', (event, filePath) => {
+  if (!/\.pbook$/i.test(filePath)) return;
+  event.preventDefault();
+  pendingOpenPath = filePath;
+  if (mainWindow) { if (mainWindow.isMinimized()) mainWindow.restore(); mainWindow.focus(); }
+  deliverOpenPath();
+});
+
 const TEMPLATE_DEFS_DIR = path.join(__dirname, 'data', 'templateDefs');
 const BLANKS_DIR = path.join(__dirname, 'data', 'blanks');
 const THUMB_CACHE_DIR = path.join(os.tmpdir(), 'template-photo-excel-editor-thumbs');
@@ -281,7 +303,7 @@ function createWindow() {
     height: 920,
     minWidth: 1180,
     minHeight: 720,
-    title: '사진첩 에디터',
+    title: 'Phoditor',
     // [UI 개편 2026-11-25] 맥 앱처럼 제목 막대를 도구 막대와 합친다(신호등 단추는 왼쪽 위 그대로)
     titleBarStyle: 'hiddenInset',
     trafficLightPosition: { x: 18, y: 18 },
@@ -294,6 +316,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  mainWindow.webContents.on('did-finish-load', () => setTimeout(deliverOpenPath, 300));
   attachCloseGuard(mainWindow);
 }
 
@@ -543,7 +566,9 @@ function buildAppMenu() {
         { label: '다른 이름으로 저장…', accelerator: 'Shift+CmdOrCtrl+S', click: send('save-as') },
         { type: 'separator' },
         { label: '엑셀로 내보내기…', accelerator: 'CmdOrCtrl+E', click: send('export') },
-        { label: 'PDF로 내보내기…', accelerator: 'Shift+CmdOrCtrl+E', click: send('export-pdf') }
+        { label: 'PDF로 내보내기…', accelerator: 'Shift+CmdOrCtrl+E', click: send('export-pdf') },
+        { type: 'separator' },
+        { label: '인쇄…', accelerator: 'CmdOrCtrl+P', click: send('print') }
       ]
     },
     {
@@ -909,12 +934,24 @@ async function resolveExportTarget({ outputDir, fileName }, ext, kind) {
 }
 ipcMain.handle('set-reveal-after-export', (_event, on) => { writePrefs({ revealAfterExport: !!on }); return true; });
 
-ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggestedName, outputDir, fileName }) => {
+// [2026-11-27 인쇄 경로] PDF·인쇄는 Mac용 Excel 자동화로 만든다. 시작 전에 Excel이 있는지, 지난번 자동화 권한 결과가 어땠는지 알려 준다.
+// 권한은 묻지 않고 확인할 방법이 없어서, 지난 PDF 시도 결과(ok/denied)를 기억해 둔다.
+ipcMain.handle('excel-status', () => {
+  const prefs = readPrefs();
+  return { installed: fs.existsSync(EXCEL_APP), automation: prefs.excelAutomation === 'ok' || prefs.excelAutomation === 'denied' ? prefs.excelAutomation : 'unknown' };
+});
+ipcMain.handle('open-automation-settings', () => shell.openExternal('x-apple.systempreferences:com.apple.preference.security?Privacy_Automation'));
+// 인쇄용 PDF는 임시 폴더에 만든 뒤 기본 PDF 앱으로 연다(거기서 ⌘P)
+const PRINT_DIR = () => path.join(os.tmpdir(), 'Phoditor-인쇄');
+
+ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggestedName, outputDir, fileName, photoMode, forPrint }) => {
   const def = templateDefCache.get(templateId);
   if (!def) return { ok: false, error: '템플릿 정의서를 찾을 수 없습니다.' };
   if (!fs.existsSync(EXCEL_APP)) return { ok: false, error: 'PDF는 Mac용 Microsoft Excel로 만들어요. 이 Mac에 Excel이 없어요.' };
   let target;
-  const chosen = await resolveExportTarget({ outputDir, fileName }, 'pdf', 'pdf').catch((e) => ({ error: e.message }));
+  const chosen = forPrint
+    ? (() => { fs.mkdirSync(PRINT_DIR(), { recursive: true }); return { target: path.join(PRINT_DIR(), `${String(fileName || suggestedName || '사진첩').replace(/[\\/:*?"<>|]/g, '_')}_${Date.now()}.pdf`) }; })()
+    : await resolveExportTarget({ outputDir, fileName }, 'pdf', 'pdf').catch((e) => ({ error: e.message }));
   if (chosen && chosen.error) return { ok: false, error: chosen.error };
   if (chosen && chosen.canceled) return { ok: false, canceled: true };
   if (chosen) target = chosen.target;
@@ -938,7 +975,7 @@ ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggested
       return { ok: false, error: `Excel 작업 폴더를 쓸 수 없어요(시스템 설정 > 개인정보 보호 및 보안 > 앱 관리 권한 확인): ${err.message}` };
     }
     const blankPath = path.join(BLANKS_DIR, `${def.id}.xlsx`);
-    await exportWorkbook({ templateDef: def, editorState, blankXlsxPath: fs.existsSync(blankPath) ? blankPath : null, outputPath: xlsx });
+    await exportWorkbook({ templateDef: def, editorState, blankXlsxPath: fs.existsSync(blankPath) ? blankPath : null, outputPath: xlsx, photoMode: photoMode === 'original' ? 'original' : 'print' });
     const hfs = await runOsa([`POSIX file "${pdf}" as string`], 20000);
     await runOsa([
       'with timeout of 300 seconds',
@@ -952,12 +989,15 @@ ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggested
     ], 320000);
     if (!fs.existsSync(pdf)) return { ok: false, error: 'Excel이 PDF를 만들지 못했어요.' };
     fs.copyFileSync(pdf, target);
+    writePrefs({ excelAutomation: 'ok' });
     const pages = (fs.readFileSync(target).toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-    return { ok: true, filePath: target, pages, sizeBytes: fs.statSync(target).size };
+    if (forPrint) await shell.openPath(target);
+    return { ok: true, filePath: target, pages, sizeBytes: fs.statSync(target).size, forPrint: !!forPrint };
   } catch (err) {
     const msg = String(err.message || err);
     if (/-1743|not authorized|권한/.test(msg)) {
-      return { ok: false, error: 'Excel을 제어할 권한이 없어요. 시스템 설정 > 개인정보 보호 및 보안 > 자동화에서 이 앱이 Microsoft Excel을 제어하도록 허용해 주세요.' };
+      writePrefs({ excelAutomation: 'denied' });
+      return { ok: false, denied: true, error: 'Excel을 제어할 권한이 없어요. 시스템 설정 > 개인정보 보호 및 보안 > 자동화에서 이 앱이 Microsoft Excel을 제어하도록 허용해 주세요.' };
     }
     return { ok: false, error: msg };
   } finally {
@@ -968,7 +1008,7 @@ ipcMain.handle('export-pdf', async (_event, { templateId, editorState, suggested
   }
 });
 
-ipcMain.handle('export-xlsx', async (_event, { templateId, editorState, suggestedName, outputDir, fileName }) => {
+ipcMain.handle('export-xlsx', async (_event, { templateId, editorState, suggestedName, outputDir, fileName, photoMode }) => {
   const def = templateDefCache.get(templateId);
   if (!def) return { ok: false, error: '템플릿 정의서를 찾을 수 없습니다.' };
 
@@ -1008,7 +1048,8 @@ ipcMain.handle('export-xlsx', async (_event, { templateId, editorState, suggeste
       templateDef: def,
       editorState,
       blankXlsxPath: fs.existsSync(blankPath) ? blankPath : null,
-      outputPath
+      outputPath,
+      photoMode: photoMode === 'original' ? 'original' : 'print' // 앱 기본은 인쇄용
     });
     return { ok: true, filePath: outputPath, stats };
   } catch (err) {

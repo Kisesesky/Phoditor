@@ -176,5 +176,31 @@
     return Math.round(Math.min(PHOTO_SCALE_MAX, Math.max(PHOTO_SCALE_MIN, n)) * 100) / 100;
   }
 
-  return { deepClone, UndoHistory, serializeEditor, attachSheetDefs, transformAnnotations, photoRowOffsets, clampPhotoScale, PHOTO_SCALE_MIN, PHOTO_SCALE_MAX };
+  // --- [2026-11-27] 큰 사진 섞인 배치: 하늘채 원본에 자주 나오는 모양을 격자 칸 합치기로 ---
+  // cells: [열, 행, 열 수, 행 수] (cols×rows 격자 기준, 0부터). 순서 = 사진 자리 차례(큰 사진 먼저)
+  const LAYOUT_SPANS = {
+    L12: { cols: 3, rows: 2, label: '왼큰+2', tip: '왼쪽 큰 사진 1장 + 오른쪽 작은 사진 2장', cells: [[0, 0, 2, 2], [2, 0, 1, 1], [2, 1, 1, 1]] },
+    L13: { cols: 3, rows: 3, label: '왼큰+3', tip: '왼쪽 큰 사진 1장 + 오른쪽 작은 사진 3장', cells: [[0, 0, 2, 3], [2, 0, 1, 1], [2, 1, 1, 1], [2, 2, 1, 1]] },
+    T13: { cols: 3, rows: 3, label: '위큰+3', tip: '위쪽 큰 사진 1장 + 아래 작은 사진 3장', cells: [[0, 0, 3, 2], [0, 2, 1, 1], [1, 2, 1, 1], [2, 2, 1, 1]] },
+    T23: { cols: 6, rows: 3, label: '위큰2+3', tip: '위쪽 큰 사진 2장 + 아래 작은 사진 3장', cells: [[0, 0, 3, 2], [3, 0, 3, 2], [0, 2, 2, 1], [2, 2, 2, 1], [4, 2, 2, 1]] }
+  };
+  for (const s of Object.values(LAYOUT_SPANS)) s.count = s.cells.length;
+  // 배치 키 → 정의(기본 6가지 · 큰 사진 섞기 · "열x행" 1~5)
+  function layoutSpec(presets, key) {
+    if (typeof key !== 'string') return undefined;
+    if (presets[key]) return presets[key];
+    if (LAYOUT_SPANS[key]) return LAYOUT_SPANS[key];
+    const m = /^([1-5])x([1-5])$/.exec(key);
+    if (!m) return undefined;
+    const cols = Number(m[1]);
+    const rows = Number(m[2]);
+    return { cols, rows, count: cols * rows, label: `${cols}×${rows}` };
+  }
+  // 자리 하나의 격자 위치 { c, r, cs, rs }
+  function slotCell(spec, i) {
+    if (spec.cells) { const [c, r, cs, rs] = spec.cells[i] || spec.cells[0]; return { c, r, cs, rs }; }
+    return { c: i % spec.cols, r: Math.floor(i / spec.cols), cs: 1, rs: 1 };
+  }
+
+  return { deepClone, UndoHistory, serializeEditor, attachSheetDefs, transformAnnotations, photoRowOffsets, clampPhotoScale, PHOTO_SCALE_MIN, PHOTO_SCALE_MAX, LAYOUT_SPANS, layoutSpec, slotCell };
 });

@@ -449,8 +449,8 @@ function openLightbox(list, idx) {
     if (!p.isCropped && !p.previewUrl && p.path) window.api.getSlotPreview(p.path).then((u) => { if (u) { p.previewUrl = u; if (list[i] === p) img.src = u; } });
   };
   const back = h('div', { class: 'modal-backdrop open dyn-modal lightbox' }, img, cap,
-    h('button', { class: 'lb-nav lb-prev', onclick: (e) => { e.stopPropagation(); i = Math.max(0, i - 1); show(); } }, '‹'),
-    h('button', { class: 'lb-nav lb-next', onclick: (e) => { e.stopPropagation(); i = Math.min(list.length - 1, i + 1); show(); } }, '›'),
+    h('button', { class: 'lb-nav lb-prev', onclick: (e) => { e.stopPropagation(); i = Math.max(0, i - 1); show(); }, 'aria-label': '앞 사진' }, svgIcon('chevL')),
+    h('button', { class: 'lb-nav lb-next', onclick: (e) => { e.stopPropagation(); i = Math.min(list.length - 1, i + 1); show(); }, 'aria-label': '다음 사진' }, svgIcon('chevR')),
     h('button', { class: 'lb-close', onclick: () => back.remove() }, '닫기'));
   back.addEventListener('click', (e) => { if (e.target === back) back.remove(); });
   const onKey = (e) => {

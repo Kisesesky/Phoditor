@@ -1,11 +1,12 @@
 {
   "name": "template-photo-excel-editor",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "템플릿 사진 엑셀 에디터 (1·2단계 통합 앱, PLAN v0.7 기준)",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "node test-export.js && node test-print.js && node test-rename.js && node test-fonts.js && node test-annotate.js && node test-project.js && node test-mybox.js && node test-layout.js && node test-crop.js",
+    "test": "node test-export.js && node test-print.js && node test-rename.js && node test-fonts.js && node test-annotate.js && node test-project.js && node test-mybox.js && node test-layout.js && node test-crop.js && node test-printphoto.js",
+    "test:printphoto": "node test-printphoto.js",
     "test:export": "node test-export.js",
     "test:crop": "node test-crop.js",
     "test:mybox": "node test-mybox.js",
@@ -15,13 +16,71 @@
     "test:annotate": "node test-annotate.js",
     "test:project": "node test-project.js",
     "test:layout": "node test-layout.js",
-    "test:gui": "node qa/run-gui.js"
+    "test:gui": "node qa/run-gui.js",
+    "dist": "electron-builder --mac dmg",
+    "dist:dir": "electron-builder --mac dir"
   },
   "dependencies": {
     "exceljs": "4.4.0",
     "jszip": "^3.10.1"
   },
   "devDependencies": {
-    "electron": "^33.0.0"
-  }
+    "electron": "^33.0.0",
+    "electron-builder": "^26.18.0"
+  },
+  "productName": "Phoditor",
+  "build": {
+    "appId": "com.phoditor.app",
+    "productName": "Phoditor",
+    "copyright": "Phoditor",
+    "asar": false,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "export.js",
+      "printfix.js",
+      "project.js",
+      "docmodel.js",
+      "pageview.js",
+      "fontcatalog.js",
+      "mybox.js",
+      "sheetmodel.js",
+      "sheetrename.js",
+      "simpleformula.js",
+      "renderer/**",
+      "data/**",
+      "assets/**",
+      "fonts/**",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "assets/app-icon.png",
+      "extendInfo": {
+        "NSAppleEventsUsageDescription": "PDF를 만들 때 Microsoft Excel에 엑셀 파일을 열어 PDF로 저장하라고 요청합니다."
+      },
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.inherit.plist",
+      "identity": "-"
+    },
+    "fileAssociations": [
+      {
+        "ext": "pbook",
+        "name": "Phoditor 사진첩 작업",
+        "role": "Editor",
+        "icon": "assets/pbook-icon.png"
+      }
+    ],
+    "dmg": {
+      "title": "Phoditor ${version}"
+    }
+  },
+  "author": "Phoditor"
 }

@@ -126,9 +126,9 @@ function photoScaleSection(sheet) {
   const split = state.splitBlocks || [];
   return sec('사진 칸 높이 (이 시트 전체)',
     h('div', { class: 'insp-row' },
-      h('button', { class: 'icon-btn', title: '5% 줄이기', disabled: cur <= DM.PHOTO_SCALE_MIN, onclick: () => setScale(cur - 0.05) }, '−'),
+      h('button', { class: 'icon-btn', title: '5% 줄이기', 'aria-label': '5% 줄이기', disabled: cur <= DM.PHOTO_SCALE_MIN, onclick: () => setScale(cur - 0.05) }, svgIcon('minus')),
       range,
-      h('button', { class: 'icon-btn', title: '5% 늘리기', disabled: cur >= DM.PHOTO_SCALE_MAX, onclick: () => setScale(cur + 0.05) }, '+'),
+      h('button', { class: 'icon-btn', title: '5% 늘리기', 'aria-label': '5% 늘리기', disabled: cur >= DM.PHOTO_SCALE_MAX, onclick: () => setScale(cur + 0.05) }, svgIcon('plus')),
       label),
     h('div', { class: 'insp-actions' },
       h('button', { disabled: cur === 1, onclick: () => setScale(1) }, '원래 높이로'),
@@ -187,9 +187,18 @@ function layoutPicker(sheetIdx, bIdx, paIdx, curLayout, onPick) {
     wrap.appendChild(h('button', { class: curLayout === key ? 'on' : '', 'data-layout': key, 'data-tip': `가로 ${spec.cols} × 세로 ${spec.rows}`, onclick: () => pick(key) }, ico, spec.label));
   }
   outer.appendChild(wrap);
+  // [2026-11-27] 큰 사진 섞기(하늘채처럼 큰 사진 + 작은 사진)
+  const spanWrap = h('div', { class: 'layout-pick span' });
+  for (const [key, spec] of Object.entries(LAYOUT_SPANS)) {
+    const ico = h('span', { class: 'lp-ico', style: `grid-template-columns:repeat(${spec.cols},1fr);grid-template-rows:repeat(${spec.rows},1fr)` });
+    spec.cells.forEach(([c, r, cs, rs]) => ico.appendChild(h('i', { style: `grid-column:${c + 1} / span ${cs};grid-row:${r + 1} / span ${rs}` })));
+    spanWrap.appendChild(h('button', { class: curLayout === key ? 'on' : '', 'data-layout': key, 'data-tip': `${spec.tip} (${spec.count}장)`, onclick: () => pick(key) }, ico, spec.label));
+  }
+  outer.appendChild(h('div', { class: 'span-label', text: '큰 사진 섞기' }));
+  outer.appendChild(spanWrap);
   // 사용자 지정: 5×5 칸 위에 마우스를 올려 크기를 고르고 누른다(표 넣기처럼)
   const cur = LAYOUT_SPECS[curLayout];
-  const custom = !!cur && !LAYOUT_PRESETS[curLayout];
+  const custom = !!cur && !LAYOUT_PRESETS[curLayout] && !LAYOUT_SPANS[curLayout];
   const label = h('span', { class: 'lg-label', text: custom ? `지금 ${cur.label}` : '사용자 지정 (최대 5×5)' });
   const grid = h('div', { class: 'layout-grid' });
   const cells = [];

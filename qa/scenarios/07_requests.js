@@ -85,8 +85,8 @@ try {
   check('블록 시트 속성에 "사진 칸 높이"', !!scaleSec());
   const h0 = photoH();
   const pages0 = $$('.pv-page').length;
-  await clickEl($$('button', scaleSec()).find((b) => b.textContent === '+'), 600);
-  await clickEl($$('button', scaleSec()).find((b) => b.textContent === '+'), 600);
+  await clickEl($$('button', scaleSec()).find((b) => b.title === '5% 늘리기'), 600);
+  await clickEl($$('button', scaleSec()).find((b) => b.title === '5% 늘리기'), 600);
   check('+ 두 번 → 110%', sheet().photoScale === 1.1 && scaleSec().textContent.includes('110%'), sheet().photoScale);
   check('사진 칸이 실제로 커짐', photoH() > h0 * 1.05, `${Math.round(h0)} → ${Math.round(photoH())}`);
   await clickEl($$('button', scaleSec()).find((b) => b.textContent === '쪽에 꽉 차게'), 900);

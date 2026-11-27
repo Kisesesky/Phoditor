@@ -77,6 +77,7 @@ function renderPhotoAreaCell(td, sheetIdx, blockIdx, paIdx, blockData) {
   for (let sIdx = 0; sIdx < spec.count; sIdx++) {
     const slotEl = document.createElement('div');
     slotEl.className = 'photo-slot';
+    if (spec.cells) { const c = DocModel.slotCell(spec, sIdx); slotEl.style.gridColumn = `${c.c + 1} / span ${c.cs}`; slotEl.style.gridRow = `${c.r + 1} / span ${c.rs}`; }
     slotEl.dataset.slotKey = `${sheetIdx}-${blockIdx}-${paIdx}-${sIdx}`;
     keyActivate(slotEl, () => document.querySelector(`.pv-page .photo-slot[data-slot-key="${sheetIdx}-${blockIdx}-${paIdx}-${sIdx}"]`));
     const isSelected =

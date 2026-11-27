@@ -8,7 +8,8 @@ const path = require('path');
 const zlib = require('zlib');
 const { execFileSync, spawn } = require('child_process');
 
-const APP = path.resolve(__dirname, '..');
+// QA_APP=<폴더>: 그 폴더의 앱 파일로 돌린다(예: 설치 파일 안 Resources/app — 빠진 파일 찾기)
+const APP = process.env.QA_APP ? path.resolve(process.env.QA_APP) : path.resolve(__dirname, '..');
 const OUT = path.join(__dirname, 'out');
 const W = process.env.QA_W || '1440';
 const H = process.env.QA_H || '900';
@@ -66,7 +67,7 @@ function runOne(name) {
     fs.rmSync(path.join(out, 'userData'), { recursive: true, force: true });
     const reportFile = path.join(out, 'report.json');
     if (fs.existsSync(reportFile)) fs.unlinkSync(reportFile);
-    const electron = path.join(APP, 'node_modules', '.bin', 'electron');
+    const electron = path.join(__dirname, '..', 'node_modules', '.bin', 'electron'); // 실행기는 항상 개발 폴더의 것
     const child = spawn(electron, [path.join(__dirname, 'harness.js'), APP, script, out, photos, W, H, ...(process.env.QA_SCROLLBARS ? ['-AppleShowScrollBars', process.env.QA_SCROLLBARS] : [])], { cwd: APP, stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env } });
     let log = '';
     child.stdout.on('data', (d) => { log += d; });
@@ -80,9 +81,10 @@ function runOne(name) {
   });
 }
 
-const photos = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'phoditor-qa-')), 'photos');
+// QA_PHOTOS=<폴더>: 시험 사진 대신 그 폴더로(실측용). 그 폴더는 읽기만 한다
+const photos = process.env.QA_PHOTOS || path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'phoditor-qa-')), 'photos');
 (async () => {
-  makePhotos(photos);
+  if (!process.env.QA_PHOTOS) makePhotos(photos);
   const list = fs.readdirSync(path.join(__dirname, 'scenarios')).filter((f) => f.endsWith('.js') && f.includes(filter)).sort();
   let failed = 0;
   let total = 0;

@@ -256,6 +256,8 @@
     .insp-actions { display: flex; flex-wrap: wrap; gap: 6px; }
     .insp-actions button { flex: 1 1 auto; }
     .layout-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .layout-pick.span { grid-template-columns: repeat(4, 1fr); }
+    .span-label { display: block; margin: 10px 0 6px; font-size: 11.5px; color: var(--ink-2); }
     .layout-pick button { flex-direction: column; padding: 7px 4px; font-size: 11px; gap: 5px; }
     .layout-pick button.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
     .lp-ico { display: grid; gap: 2px; width: 30px; height: 22px; }
@@ -296,6 +298,10 @@
     .zoom-ctl { display: flex; align-items: center; gap: 2px; }
     .zoom-ctl button { padding: 3px 6px; border-color: transparent; background: transparent; font-size: 12px; min-width: 26px; }
     .zoom-ctl button:hover { background: rgba(0,0,0,.06); }
+    .zoom-ctl button svg.i, .sheet-tab-del svg.i, .icon-btn svg.i { width: 14px; height: 14px; }
+    .sheet-add-btn svg.i, .art-nav svg.i { width: 16px; height: 16px; }
+    .strip-scroll svg.i, .lb-nav svg.i { width: 22px; height: 22px; }
+    .sheet-tab-del, .sheet-add-btn, .art-nav, .strip-scroll, .lb-nav { display: inline-flex; align-items: center; justify-content: center; }
     #zoomLabel { min-width: 52px; }
     .font-banner { display: none; align-items: center; gap: 6px; color: var(--warn); background: var(--warn-soft); border: 1px solid var(--warn-border); border-radius: 999px; padding: 2px 10px 2px 8px; font-size: 11.5px; cursor: pointer; max-width: 260px; }
     .font-banner.visible { display: inline-flex; }
@@ -317,12 +323,12 @@
     /* [기능 추가 2026-11-25] */
     .app-toolbar button { white-space: nowrap; flex: none; }
     .doc-kicker { font-size: 11px; color: var(--ink-muted); white-space: nowrap; max-width: 230px; overflow: hidden; text-overflow: ellipsis; }
-    #pdfBtn { font-size: 12.5px; }
+    #pdfBtn, #printBtn { font-size: 12.5px; }
     /* 좁은 창(1420px 이하): 도구 막대 단추는 아이콘만 */
     @media (max-width: 1420px) {
       .tb-btn { font-size: 0; min-width: 36px; padding: 7px 8px; gap: 0; }
       .tb-btn svg.i { width: 18px; height: 18px; }
-      #saveBtn, #saveMyTplTopBtn, #pdfBtn { font-size: 0; gap: 0; }
+      #saveBtn, #saveMyTplTopBtn, #pdfBtn, #printBtn { font-size: 0; gap: 0; }
       .tb-sep { margin: 0 2px; }
     }
     .icon-btn { padding: 6px 7px; }
@@ -386,6 +392,7 @@
     .ribbon-tabs button.on::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: -9px; height: 2.5px; border-radius: 2px; background: var(--accent); }
     .ribbon-tabs button.ctx-on:not(.on)::before { content: ''; position: absolute; top: 4px; right: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
     .file-btn { gap: 6px; }
+    .steps { margin: 6px 0 0; padding-left: 20px; font-size: 13px; line-height: 1.7; color: var(--ink); }
     .ribbon { flex: none; display: flex; align-items: center; min-height: 54px; padding: 3px 12px; background: #fff; border-bottom: 1px solid var(--line); position: relative; }
     .ribbon.collapsed { min-height: 0; height: 0; padding: 0; overflow: hidden; border-bottom: none; }
     .rb-panel { display: none; align-items: center; gap: 4px; flex-wrap: nowrap; min-width: 0; overflow-x: auto; }
@@ -574,7 +581,7 @@
     table.pv-grid td.flash { animation: flash 1.2s ease; }
     @keyframes flash { 0%,60% { box-shadow: inset 0 0 0 3px var(--danger); } 100% { box-shadow: inset 0 0 0 1.5px rgba(217,45,32,.75); } }
     table.pv-grid td.repeated { background-image: linear-gradient(rgba(var(--repeat-rgb), .06), rgba(var(--repeat-rgb), .06)); }
-    table.pv-grid td.repeated::before { content: '↻'; position: absolute; right: 2px; top: 0; font: 600 10px 'Pretendard', sans-serif; color: rgba(var(--repeat-rgb), .75); zoom: var(--ui-zoom, 1); pointer-events: none; }
+    table.pv-grid td.repeated::before { content: ''; width: 9px; height: 9px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 12a8 8 0 1 1-2.3-5.6'/%3E%3Cpath d='M20 4v5h-5'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 12a8 8 0 1 1-2.3-5.6'/%3E%3Cpath d='M20 4v5h-5'/%3E%3C/svg%3E") center / contain no-repeat; position: absolute; right: 2px; top: 0; font: 600 10px 'Pretendard', sans-serif; color: rgba(var(--repeat-rgb), .75); zoom: var(--ui-zoom, 1); pointer-events: none; }
     .anno-layer { position: absolute; pointer-events: none; z-index: 2; }
     .anno-svg { position: absolute; left: 0; top: 0; overflow: visible; }
     .anno-text { position: absolute; display: flex; align-items: center; justify-content: center; text-align: center; white-space: pre-wrap; line-height: 1.15; box-sizing: border-box; padding: 1px 3px; overflow: hidden; font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; }
@@ -728,9 +735,9 @@
             <div id="typeTabs" class="type-tabs"></div>
           </div>
           <div class="tpl-strip-wrap">
-            <button class="strip-scroll prev" id="stripPrev" data-tip="앞으로">‹</button>
+            <button class="strip-scroll prev" id="stripPrev" data-tip="앞으로" aria-label="앞으로"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
             <div id="companyGrid" class="tpl-strip"></div>
-            <button class="strip-scroll next" id="stripNext" data-tip="뒤로">›</button>
+            <button class="strip-scroll next" id="stripNext" data-tip="뒤로" aria-label="뒤로"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
           </div>
           <div class="work-head">
             <div id="workTabs" class="work-tabs">
@@ -787,6 +794,7 @@
       <button id="saveBtn" class="ghost file-btn" data-tip="작업 저장 (⌘S)"><svg class="i" viewBox="0 0 24 24"><path d="M5 3h11l3 3v13a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"/><path d="M7 3v5h8V3M7 21v-7h10v7"/></svg><span>저장</span></button>
       <button id="saveMyTplTopBtn" class="ghost file-btn" data-tip="지금 구성을 내 양식으로 저장(사진 빼고)"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/></svg><span>내 양식</span></button>
       <button id="pdfBtn" class="ghost file-btn" data-tip="PDF로 내보내기 (⇧⌘E)"><svg class="i" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span>PDF</span></button>
+      <button id="printBtn" class="ghost file-btn" data-tip="인쇄 (⌘P) — Excel로 PDF를 만들어 바로 열어요"><svg class="i" viewBox="0 0 24 24"><path d="M7 8V3h10v5"/><rect x="3" y="8" width="18" height="9" rx="2"/><path d="M7 14h10v7H7z"/><path d="M17 11.5h.01"/></svg><span>인쇄</span></button>
       <button id="exportBtn" class="primary"><svg class="i" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5"/><path d="M5 19h14"/></svg>엑셀로 내보내기</button>
       <button id="ribbonCollapseBtn" class="ghost icon-btn rb-collapse" data-tip="리본 접기" aria-expanded="true" aria-controls="ribbon"><svg class="i" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
       <span id="templateStatusBadge" hidden></span>
@@ -930,9 +938,9 @@
         <span id="pageCountText"></span>
         <span id="sizeEstimateBadge" class="badge">예상 용량 계산 중</span>
         <div class="zoom-ctl">
-          <button id="zoomOutBtn" title="축소">−</button>
+          <button id="zoomOutBtn" title="축소" aria-label="축소"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button>
           <button id="zoomLabel" title="쪽 너비에 맞추기">맞춤</button>
-          <button id="zoomInBtn" title="확대">+</button>
+          <button id="zoomInBtn" title="확대" aria-label="확대"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
         </div>
       </div>
     </footer>

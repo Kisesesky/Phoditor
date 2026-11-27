@@ -6,25 +6,71 @@
 // [3순위 2026-11-25] PDF 내보내기 · 넘치는 글자 경고/칸에 맞게 줄이기 · 반복값 표시 · 사진 위 표시 · 지난 현장 복제
 // =====================================================================
 
+// --- [2026-11-27] PDF·인쇄 전에 Excel 확인: 없으면 시작 전에 알리고, 권한을 거절했었으면 고치는 길을 보여 준다 ---
+async function excelReady() {
+  const st = await window.api.excelStatus();
+  if (!st.installed) {
+    const back = openModal('Excel이 필요해요', [
+      h('p', { class: 'insp-note', text: 'PDF와 인쇄는 Mac용 Microsoft Excel로 만들어요(엑셀에서 연 것과 똑같이 나오게). 이 Mac에는 Excel이 없어요.' }),
+      h('p', { class: 'insp-note', text: '[엑셀로 내보내기]로 파일을 만든 뒤, Excel이 있는 컴퓨터에서 열어 인쇄하거나 PDF로 저장해 주세요.' })
+    ], [h('button', { class: 'primary', onclick: () => back.remove() }, '확인')], 460);
+    return false;
+  }
+  if (st.automation === 'denied') {
+    return new Promise((resolve) => {
+      const back = openModal('Excel 제어를 허용해 주세요', [
+        h('p', { class: 'insp-note', text: '지난번에 이 앱이 Excel을 제어하는 것이 막혔어요. 아래 순서로 허용하면 PDF와 인쇄가 돼요.' }),
+        h('ol', { class: 'steps' },
+          h('li', { text: '[설정 열기]를 눌러요(시스템 설정 > 개인정보 보호 및 보안 > 자동화).' }),
+          h('li', { text: 'Phoditor 아래의 Microsoft Excel을 켜요.' }),
+          h('li', { text: '돌아와서 [다시 시도]를 눌러요.' }))
+      ], [
+        h('button', { onclick: () => { back.remove(); resolve(false); } }, '취소'),
+        h('button', { onclick: () => window.api.openAutomationSettings() }, '설정 열기'),
+        h('button', { class: 'primary', onclick: () => { back.remove(); resolve(true); } }, '다시 시도')
+      ], 480);
+      // 바깥 누르기·Esc로 닫혀도 '취소'로 끝낸다(기다림이 남아 단추가 막히지 않게)
+      const obs = new MutationObserver(() => { if (!back.isConnected) { obs.disconnect(); resolve(false); } });
+      obs.observe(document.body, { childList: true });
+    });
+  }
+  return true;
+}
+
+// [2026-11-27] 인쇄: Excel로 PDF를 만들어 기본 PDF 앱으로 연다(거기서 ⌘P). 저장 위치는 묻지 않는다(임시 폴더)
+async function handlePrint() {
+  if (!state.editor) return;
+  if (!(await excelReady())) return;
+  return handleExportPdf({ forPrint: true, fileName: exportBaseName('pdf') });
+}
+
 // --- PDF 내보내기 (Mac Excel로 인쇄) ---
 async function handleExportPdf(opt = {}) {
   if (!state.editor) return;
   el.pdfBtn.disabled = true;
-  showToast('PDF 만드는 중… Excel이 잠시 열렸다 닫혀요(처음이면 "Excel 제어 허용"을 눌러 주세요).', 60000);
+  el.printBtn.disabled = true;
+  const st = await window.api.excelStatus();
+  const first = st.automation === 'unknown' ? ' 처음 한 번은 "Excel을 제어하도록 허용할까요?"가 떠요 — [허용]을 눌러 주세요.' : '';
+  showToast(`${opt.forPrint ? '인쇄 준비 중' : 'PDF 만드는 중'}… Excel이 잠시 열렸다 닫혀요.${first}`, 60000);
   try {
     const res = await window.api.exportPdf({
       templateId: state.templateDef.id,
       editorState: state.editor,
       suggestedName: `${currentSiteName() || state.templateDef.company}_${state.templateDef.type}`,
       outputDir: opt.outputDir,
-      fileName: opt.fileName
+      fileName: opt.fileName,
+      photoMode: opt.photoMode || getPhotoMode(),
+      forPrint: !!opt.forPrint
     });
     if (res.canceled) return hideToast();
     if (res.ok && opt.reveal) window.api.revealFile(res.filePath);
-    if (res.ok) showToast(`PDF 저장 완료: ${res.filePath.split('/').pop()} (${res.pages || '?'}쪽, ${(res.sizeBytes / 1048576).toFixed(1)}MB)`, 5000);
+    if (res.ok && res.forPrint) showToast(`인쇄 준비 완료(${res.pages || '?'}쪽) — 열린 PDF에서 ⌘P로 인쇄하세요.`, 6000);
+    else if (res.ok) showToast(`PDF 저장 완료: ${res.filePath.split('/').pop()} (${res.pages || '?'}쪽, ${(res.sizeBytes / 1048576).toFixed(1)}MB)`, 5000);
+    else if (res.denied) { hideToast(); if (await excelReady()) return handleExportPdf(opt); }
     else showToast(`PDF를 만들지 못했어요: ${res.error}`, 8000);
   } finally {
     el.pdfBtn.disabled = false;
+    el.printBtn.disabled = false;
   }
 }
 

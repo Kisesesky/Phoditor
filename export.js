@@ -8,7 +8,7 @@ const JSZip = require('jszip');
 const { restorePrintSettings, sheetPaths, relsPathOf, resolveTarget, drawingRelOf } = require('./printfix');
 const { renameSheetsInZip } = require('./sheetrename');
 const { evaluateSimpleFormulas } = require('./simpleformula');
-const { photoRowOffsets, clampPhotoScale } = require('./docmodel');
+const { photoRowOffsets, clampPhotoScale, layoutSpec, slotCell } = require('./docmodel');
 
 // [PDF 비교 수정 2026-11-25] 목차 차례 번호 수식(=B4+1)은 남기고 계산값을 함께 저장한다.
 // (A안 번호 매기기처럼 fullCalcOnLoad는 쓰지 않는다. 계산값이 있으면 Excel이 그대로 보여 준다.)
@@ -156,27 +156,23 @@ const LAYOUT_PRESETS = {
   '1x3': { cols: 1, rows: 3, count: 3, label: '1×3' }
 };
 // [2026-11-26] 사용자 지정 배치: "열x행" 아무 조합(1~5 × 1~5)을 같은 방식으로 꺼낸다. 목록(Object.entries)은 기본 6가지만.
+// [2026-11-27] 큰 사진 섞인 배치(L12·L13·T13·T23)도 같은 길로(정의는 docmodel.js 한 곳)
 const LAYOUT_SPECS = new Proxy(LAYOUT_PRESETS, {
   get(t, k) {
     if (typeof k !== 'string') return t[k];
-    if (t[k]) return t[k];
-    const m = /^([1-5])x([1-5])$/.exec(k);
-    if (!m) return undefined;
-    const cols = Number(m[1]);
-    const rows = Number(m[2]);
-    return { cols, rows, count: cols * rows, label: `${cols}×${rows}` };
+    return layoutSpec(t, k);
   }
 });
 
 function computeSlotPlacement(areaBoundsPx, layoutKey, slotIndex, imgW, imgH) {
   const spec = LAYOUT_SPECS[layoutKey] || LAYOUT_SPECS['1x1'];
-  const colIdx = slotIndex % spec.cols;
-  const rowIdx = Math.floor(slotIndex / spec.cols);
-
-  const slotW = areaBoundsPx.width / spec.cols;
-  const slotH = areaBoundsPx.height / spec.rows;
-  const slotX = areaBoundsPx.x + colIdx * slotW;
-  const slotY = areaBoundsPx.y + rowIdx * slotH;
+  const cell = slotCell(spec, slotIndex);
+  const unitW = areaBoundsPx.width / spec.cols;
+  const unitH = areaBoundsPx.height / spec.rows;
+  const slotW = unitW * cell.cs;
+  const slotH = unitH * cell.rs;
+  const slotX = areaBoundsPx.x + cell.c * unitW;
+  const slotY = areaBoundsPx.y + cell.r * unitH;
 
   // Padding rule: min(8px, 5% of slot size)
   const pad = Math.min(8, slotW * 0.05, slotH * 0.05);
@@ -391,6 +387,103 @@ function loadPhotoForEmbed(filePath) {
   };
 }
 
+
+// [2026-11-27 인쇄용 사진] 내보낼 때 사진을 "들어갈 자리 크기 × 인쇄 해상도"만큼만 줄여 넣는다.
+// 원본 파일은 읽기만 하고, 줄인 사진은 임시 파일에서 만든다. 자리 안 위치·크기(비율)는 원본과 똑같다.
+const PRINT_DPI = 300;
+const PRINT_JPEG_QUALITY = 90;
+const PRINT_SLACK = 1.1; // 필요한 크기보다 10% 이상 클 때만 줄인다(이미 작은 사진은 그대로)
+
+function execFileAsync(cmd, args) {
+  return new Promise((resolve, reject) => {
+    require('child_process').execFile(cmd, args, { maxBuffer: 1024 * 1024 }, (err) => (err ? reject(err) : resolve()));
+  });
+}
+
+// 자리 하나에 필요한 사진 긴 변 픽셀(자리 안쪽 여백 뺀 긴 변 × dpi). 엑셀 픽셀은 1/96인치
+function printPxForSlot(areaBoundsPx, layoutKey, slotIndex, dpi = PRINT_DPI) {
+  const p = computeSlotPlacement(areaBoundsPx, layoutKey, slotIndex, 1, 1);
+  const availLong = Math.max(p.slotW, p.slotH) - 2 * p.pad;
+  return Math.max(200, Math.ceil((availLong / 96) * dpi));
+}
+
+function jpegResult(buf, flags) {
+  const info = parseJpegInfo(buf) || { width: 800, height: 600 };
+  return { buffer: buf, extension: 'jpeg', width: info.width, height: info.height, ...flags, sha256: crypto.createHash('sha256').update(buf).digest('hex') };
+}
+
+// 한 번의 sips로 변환·회전·축소. 입력이 이미 충분히 작으면 null
+async function sipsShrink(inPath, { needPx, rotateDeg = 0, longSide = null, convert = false }) {
+  const shrink = longSide == null || longSide > needPx * PRINT_SLACK;
+  if (!shrink && !rotateDeg && !convert) return null;
+  const out = path.join(os.tmpdir(), `tpe_print_${crypto.randomBytes(6).toString('hex')}.jpg`);
+  const args = ['-s', 'format', 'jpeg', '-s', 'formatOptions', String(shrink ? PRINT_JPEG_QUALITY : 95)];
+  if (rotateDeg) args.push('-r', String(rotateDeg));
+  if (shrink) args.push('-Z', String(needPx));
+  args.push(inPath, '--out', out);
+  try {
+    await execFileAsync('sips', args);
+    return fs.readFileSync(out);
+  } finally {
+    if (fs.existsSync(out)) fs.unlinkSync(out);
+  }
+}
+
+// 인쇄용으로 사진 하나 준비. source = { path } 또는 { crop: base64 }
+async function loadPhotoForPrint(source, needPx) {
+  if (source.crop) {
+    const loaded = loadCroppedPhotoForEmbed(source.crop);
+    if (Math.max(loaded.width, loaded.height) <= needPx * PRINT_SLACK || process.platform !== 'darwin') return loaded;
+    const tmp = writeTempImage(loaded);
+    try {
+      const buf = await sipsShrink(tmp, { needPx, longSide: Math.max(loaded.width, loaded.height) });
+      return buf ? jpegResult(buf, { converted: false, exifRotated: false, cropped: true, downscaled: true }) : loaded;
+    } finally {
+      if (fs.existsSync(tmp)) fs.unlinkSync(tmp);
+    }
+  }
+  const filePath = source.path;
+  const ext = path.extname(filePath).toLowerCase().replace(/^\./, '');
+  if (process.platform !== 'darwin') return loadPhotoForEmbed(filePath);
+  if (['heic', 'heif', 'webp', 'tif', 'tiff'].includes(ext)) {
+    // 변환 먼저(크기를 모르므로), 그다음 필요하면 줄이기
+    const conv = await sipsShrink(filePath, { needPx, longSide: 0, convert: true });
+    const c = jpegResult(conv, { converted: true, exifRotated: false });
+    if (Math.max(c.width, c.height) <= needPx * PRINT_SLACK) return c;
+    const tmp = writeTempImage(c);
+    try {
+      return jpegResult(await sipsShrink(tmp, { needPx, longSide: Math.max(c.width, c.height) }), { converted: true, exifRotated: false, downscaled: true });
+    } finally {
+      if (fs.existsSync(tmp)) fs.unlinkSync(tmp);
+    }
+  }
+  const head = fs.readFileSync(filePath);
+  const info = getImageInfoFromBuffer(head, ext);
+  if (!info) return loadPhotoForEmbed(filePath);
+  const rotateDeg = (ext === 'jpg' || ext === 'jpeg') && info.orientation && info.orientation !== 1 ? orientationToDegrees(info.orientation) : 0;
+  const longSide = Math.max(info.width, info.height);
+  if (!rotateDeg && longSide <= needPx * PRINT_SLACK) return loadPhotoForEmbed(filePath);
+  try {
+    const buf = await sipsShrink(filePath, { needPx, rotateDeg, longSide });
+    return jpegResult(buf, { converted: false, exifRotated: !!rotateDeg, downscaled: longSide > needPx * PRINT_SLACK });
+  } catch (_) {
+    return loadPhotoForEmbed(filePath); // sips가 못 하면 예전 방식
+  }
+}
+
+// 여러 장을 CPU 수만큼 나란히
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length);
+  let i = 0;
+  const worker = async () => {
+    while (i < items.length) {
+      const k = i++;
+      out[k] = await fn(items[k], k);
+    }
+  };
+  await Promise.all(Array.from({ length: Math.max(1, Math.min(limit, items.length)) }, worker));
+  return out;
+}
 
 // Stage 2 A: In-memory cropped JPEG (quality >= 95) embedding helper (never touches original file)
 function loadCroppedPhotoForEmbed(croppedDataBase64, fallbackExt = 'jpeg') {
@@ -1049,7 +1142,8 @@ function extractSiteName(editorState) {
 
 // --- Main Export Function ---
 
-async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputPath }) {
+// photoMode: 'original'(원본 바이트 그대로, 기본) | 'print'(자리 크기 × 300dpi로 줄여 넣음)
+async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputPath, photoMode = 'original' }) {
   if (blankXlsxPath && path.resolve(blankXlsxPath) === path.resolve(outputPath)) {
     throw new Error('원본 빈 양식 파일을 덮어쓸 수 없습니다. 다른 경로로 저장해 주세요.');
   }
@@ -1118,6 +1212,9 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
   let uniqueImagesEmbedded = 0;
   let convertedCount = 0;
   let exifRotatedCount = 0;
+  let downscaledCount = 0;
+  const photoSources = new Map(); // 사진 키 -> { source, needPx }
+  const pendingPlacements = [];
 
   // 4. Populate each sheet
   for (const sState of editorState.sheets) {
@@ -1271,49 +1368,17 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
             const slot = paState.slots[sIdx];
             if (!slot) continue;
 
-            let loaded = null;
-            if (slot.croppedDataBase64) {
-              loaded = loadCroppedPhotoForEmbed(slot.croppedDataBase64);
-            } else if (slot.path && fs.existsSync(slot.path)) {
-              loaded = loadPhotoForEmbed(slot.path);
-            } else {
-              continue;
-            }
-            if (loaded.converted) convertedCount++;
-            if (loaded.exifRotated) exifRotatedCount++;
-
-            let cached = imageCache.get(loaded.sha256);
-            if (!cached) {
-              const imageId = wb.addImage({
-                buffer: loaded.buffer,
-                extension: loaded.extension
-              });
-              cached = { imageId, width: loaded.width, height: loaded.height };
-              imageCache.set(loaded.sha256, cached);
-              uniqueImagesEmbedded++;
-            }
-
-            const placement = computeSlotPlacement(
-              areaBoundsPx,
-              paState.layout,
-              sIdx,
-              cached.width,
-              cached.height
-            );
-
-            const tlCol = pxToFractionalIndex(placement.x, colWidthsPx);
-            const tlRow = pxToFractionalIndex(placement.y, rowHeightsPx);
-
-            ws.addImage(cached.imageId, {
-              tl: { col: tlCol, row: tlRow },
-              ext: { width: Math.round(placement.width), height: Math.round(placement.height) },
-              editAs: 'oneCell'
-            });
-            totalPhotoPlacements++;
-            // [사진 표시 2026-11-25] 사진 위 화살표·네모·글상자 → 나중에 엑셀 도형으로 넣는다
-            if (Array.isArray(slot.annotations) && slot.annotations.length) {
-              annotationJobs.push({ sheetName: sState.name, x: placement.x, y: placement.y, w: placement.width, h: placement.height, items: slot.annotations });
-            }
+            // [2026-11-27 인쇄용 사진] 여기서는 자리만 모으고, 사진 준비(줄이기)는 시트를 다 돈 뒤 한꺼번에 나란히 한다
+            let source = null;
+            if (slot.croppedDataBase64) source = { crop: slot.croppedDataBase64 };
+            else if (slot.path && fs.existsSync(slot.path)) source = { path: slot.path };
+            else continue;
+            const key = source.crop ? `crop:${crypto.createHash('sha1').update(source.crop).digest('hex')}` : `path:${source.path}`;
+            const needPx = printPxForSlot(areaBoundsPx, paState.layout, sIdx);
+            const known = photoSources.get(key);
+            if (!known) photoSources.set(key, { source, needPx });
+            else known.needPx = Math.max(known.needPx, needPx); // 같은 사진이 더 큰 자리에도 있으면 큰 쪽에 맞춘다
+            pendingPlacements.push({ ws, colWidthsPx, rowHeightsPx, areaBoundsPx, layout: paState.layout, sIdx, key, annotations: slot.annotations, sheetName: sState.name });
           }
         }
       }
@@ -1331,6 +1396,45 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
       applyCellFontOverrides(ws, sState.cellFonts, starts);
       updatePrintArea(ws, sState.sheetDef.print, startRow, rows, blockCount, lastRow);
       regeneratePageBreaks(ws, layout, starts);
+    }
+  }
+
+  // [2026-11-27 인쇄용 사진] 고유 사진마다 한 번씩 준비(인쇄용이면 CPU 수만큼 나란히 줄임) → 자리에 넣기
+  {
+    const keys = [...photoSources.keys()];
+    const limit = photoMode === 'print' ? Math.max(1, Math.min(8, os.cpus().length)) : 1;
+    const results = await mapLimit(keys, limit, async (k) => {
+      const s = photoSources.get(k);
+      if (photoMode === 'print') return loadPhotoForPrint(s.source, s.needPx);
+      return s.source.crop ? loadCroppedPhotoForEmbed(s.source.crop) : loadPhotoForEmbed(s.source.path);
+    });
+    const prepared = new Map(keys.map((k, i) => [k, results[i]]));
+    for (const p of pendingPlacements) {
+      const loaded = prepared.get(p.key);
+      if (!loaded) continue;
+      if (loaded.converted) convertedCount++;
+      if (loaded.exifRotated) exifRotatedCount++;
+      let cached = imageCache.get(loaded.sha256);
+      if (!cached) {
+        const imageId = wb.addImage({ buffer: loaded.buffer, extension: loaded.extension });
+        cached = { imageId, width: loaded.width, height: loaded.height };
+        imageCache.set(loaded.sha256, cached);
+        uniqueImagesEmbedded++;
+        if (loaded.downscaled) downscaledCount++;
+      }
+      const placement = computeSlotPlacement(p.areaBoundsPx, p.layout, p.sIdx, cached.width, cached.height);
+      const tlCol = pxToFractionalIndex(placement.x, p.colWidthsPx);
+      const tlRow = pxToFractionalIndex(placement.y, p.rowHeightsPx);
+      p.ws.addImage(cached.imageId, {
+        tl: { col: tlCol, row: tlRow },
+        ext: { width: Math.round(placement.width), height: Math.round(placement.height) },
+        editAs: 'oneCell'
+      });
+      totalPhotoPlacements++;
+      // [사진 표시 2026-11-25] 사진 위 화살표·네모·글상자 → 나중에 엑셀 도형으로 넣는다
+      if (Array.isArray(p.annotations) && p.annotations.length) {
+        annotationJobs.push({ sheetName: p.sheetName, x: placement.x, y: placement.y, w: placement.width, h: placement.height, items: p.annotations });
+      }
     }
   }
 
@@ -1399,6 +1503,8 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
     uniqueImagesEmbedded,
     convertedCount,
     exifRotatedCount,
+    downscaledCount,
+    photoMode,
     replacedPlaceholders,
     renamedSheets,
     annotationCount
@@ -1406,6 +1512,9 @@ async function exportWorkbook({ templateDef, editorState, blankXlsxPath, outputP
 }
 
 module.exports = {
+  printPxForSlot,
+  loadPhotoForPrint,
+  PRINT_DPI,
   colToNum,
   numToCol,
   parseAbsCell,

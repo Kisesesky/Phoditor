@@ -84,8 +84,8 @@ function templateCard({ item, name, color, meta, onOpen, kicker }) {
   };
   const img = h('img', { class: 'cover-thumb', alt: `${name} 미리보기`, draggable: 'false' });
   const cap = h('div', { class: 'art-cap' });
-  const prev = h('button', { class: 'art-nav prev', 'aria-label': '앞 시트' }, '‹');
-  const next = h('button', { class: 'art-nav next', 'aria-label': '다음 시트' }, '›');
+  const prev = h('button', { class: 'art-nav prev', 'aria-label': '앞 시트' }, svgIcon('chevL'));
+  const next = h('button', { class: 'art-nav next', 'aria-label': '다음 시트' }, svgIcon('chevR'));
   function show() {
     if (!pages.length) return;
     img.src = `data/thumbs/${pages[i].file.split('/').map(encodeURIComponent).join('/')}`;
@@ -454,7 +454,8 @@ function renderSheetTabs() {
     if (s.role === 'block') {
       const delBtn = document.createElement('button');
       delBtn.className = 'sheet-tab-del';
-      delBtn.textContent = '×';
+      delBtn.appendChild(svgIcon('close'));
+      delBtn.setAttribute('aria-label', '시트 삭제');
       delBtn.title = '시트 삭제';
       delBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -484,7 +485,8 @@ function renderSheetTabs() {
 
   const addBtn = document.createElement('button');
   addBtn.className = 'sheet-add-btn';
-  addBtn.textContent = '+';
+  addBtn.appendChild(svgIcon('plus'));
+  addBtn.setAttribute('aria-label', '새 블록 시트 추가');
   addBtn.title = '새 블록 시트 추가';
   addBtn.addEventListener('click', openAddSheetModal);
   el.sheetTabsBar.appendChild(addBtn);

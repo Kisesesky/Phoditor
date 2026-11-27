@@ -84,6 +84,7 @@ el.pasteTableBtn.addEventListener('click', openPasteTable);
 el.gridViewport.addEventListener('scroll', () => updateRailActive(), { passive: true });
 el.saveBtn.addEventListener('click', () => saveProject(false));
 el.pdfBtn.addEventListener('click', () => openExportDialog('pdf'));
+el.printBtn.addEventListener('click', () => handlePrint());
 el.overflowChip.addEventListener('click', () => {
   const list = state.overflowCells || [];
   if (!list.length) return;
@@ -193,6 +194,9 @@ window.api.onThumbReady(({ path: p, thumbUrl, done, total }) => {
 });
 
 // 앱 메뉴(⌘N·⌘O·⌘S·⌘Z …)
+// [2026-11-27] Finder에서 .pbook 두 번 누름 → 그 작업 열기(저장 안 한 내용이 있으면 먼저 묻는다)
+window.api.onOpenPath((p) => openProject(p));
+
 window.api.onMenu(async (cmd) => {
   const inField = document.activeElement && /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName);
   if ((cmd === 'undo' || cmd === 'redo') && inField) {
@@ -208,6 +212,7 @@ window.api.onMenu(async (cmd) => {
   else if (cmd === 'new') { if (inEditor) goToStart(); }
   else if (cmd === 'export' && inEditor) openExportDialog('xlsx');
   else if (cmd === 'export-pdf' && inEditor) openExportDialog('pdf');
+  else if (cmd === 'print' && inEditor) handlePrint();
   else if (cmd === 'zoom-in' && inEditor) el.zoomInBtn.click();
   else if (cmd === 'zoom-out' && inEditor) el.zoomOutBtn.click();
   else if (cmd === 'zoom-fit' && inEditor) el.zoomLabel.click();

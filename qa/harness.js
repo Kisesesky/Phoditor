@@ -36,6 +36,20 @@ app.on('browser-window-created', (_e, win) => {
       shotN++;
       return;
     }
+    // Excel 상태 흉내(진짜 Excel을 움직이지 않게): __QA_EXCEL__:{"installed":false,"automation":"unknown"}
+    if (typeof message === 'string' && message.startsWith('__QA_EXCEL__:')) {
+      const st = JSON.parse(message.slice('__QA_EXCEL__:'.length));
+      const { ipcMain } = require('electron');
+      ipcMain.removeHandler('excel-status');
+      ipcMain.handle('excel-status', () => st);
+      wc.executeJavaScript('window.__qaExcelSet = (window.__qaExcelSet || 0) + 1').catch(() => {});
+      return;
+    }
+    // Finder에서 .pbook 두 번 누름 흉내: __QA_OPENFILE__:<경로> → 맥이 보내는 것과 같은 open-file 이벤트
+    if (typeof message === 'string' && message.startsWith('__QA_OPENFILE__:')) {
+      app.emit('open-file', { preventDefault() {} }, message.slice('__QA_OPENFILE__:'.length));
+      return;
+    }
     // 진짜 키 누름(Tab 순회 등): __QA_KEY__:{"key":"Tab","mods":["shift"]}
     if (typeof message === 'string' && message.startsWith('__QA_KEY__:')) {
       const o = JSON.parse(message.slice('__QA_KEY__:'.length));

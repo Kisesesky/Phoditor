@@ -11,15 +11,12 @@ const LAYOUT_PRESETS = {
   '1x3': { cols: 1, rows: 3, count: 3, label: '1×3' }
 };
 // [2026-11-26] 사용자 지정 배치: "열x행" 아무 조합(1~5 × 1~5)을 같은 방식으로 꺼낸다. 목록(Object.entries)은 기본 6가지만.
+// [2026-11-27] 큰 사진 섞인 배치(L12·L13·T13·T23)도 같은 길로(정의는 docmodel.js 한 곳 — 내보내기와 똑같은 모양)
+const LAYOUT_SPANS = DocModel.LAYOUT_SPANS;
 const LAYOUT_SPECS = new Proxy(LAYOUT_PRESETS, {
   get(t, k) {
     if (typeof k !== 'string') return t[k];
-    if (t[k]) return t[k];
-    const m = /^([1-5])x([1-5])$/.exec(k);
-    if (!m) return undefined;
-    const cols = Number(m[1]);
-    const rows = Number(m[2]);
-    return { cols, rows, count: cols * rows, label: `${cols}×${rows}` };
+    return DocModel.layoutSpec(t, k);
   }
 });
 
@@ -195,6 +192,7 @@ const el = {
   myboxExpiryPreview: document.getElementById('myboxExpiryPreview'),
   pageRail: document.getElementById('pageRail'),
   pdfBtn: document.getElementById('pdfBtn'),
+  printBtn: document.getElementById('printBtn'),
   overflowChip: document.getElementById('overflowChip')
 };
 
@@ -227,6 +225,7 @@ const SHORTCUTS = [
   ['⌘ O', '작업 열기'],
   ['⌘ E', '엑셀로 내보내기'],
   ['⇧ ⌘ E', 'PDF로 내보내기'],
+  ['⌘ P', '인쇄(Excel로 PDF를 만들어 열기)'],
   ['⌘ ↵', '선택한 블록 아래에 블록 추가'],
   ['⌘ D', '블록 복제(글자·사진 포함)'],
   ['⌘ ⌫', '선택한 블록 삭제'],
@@ -260,6 +259,23 @@ function keyActivate(node, refind) {
     }
   });
   return node;
+}
+
+// [2026-11-27] 글자 기호(‹ › − + ×) 대신 쓰는 선 아이콘(다른 아이콘과 같은 규격: 24격자 · 선 1.7 · 둥근 끝)
+const SVG_ICON_PATHS = {
+  chevL: '<path d="M15 5l-7 7 7 7"/>',
+  chevR: '<path d="M9 5l7 7-7 7"/>',
+  minus: '<path d="M5 12h14"/>',
+  plus: '<path d="M12 5v14M5 12h14"/>',
+  close: '<path d="M6 6l12 12M18 6L6 18"/>'
+};
+function svgIcon(name) {
+  const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  s.setAttribute('viewBox', '0 0 24 24');
+  s.setAttribute('class', 'i');
+  s.setAttribute('aria-hidden', 'true');
+  s.innerHTML = SVG_ICON_PATHS[name] || '';
+  return s;
 }
 
 // [2026-11-27] 경고 삼각형 선 아이콘(그림문자 대신). 색은 감싸는 글자색(경고 칸은 --warn)을 따른다.

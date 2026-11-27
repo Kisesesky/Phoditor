@@ -89,6 +89,14 @@ function collectAllPlacedPhotoInfo() {
   return { photoPaths, croppedItems };
 }
 
+// [2026-11-27 인쇄용 사진] 내보낼 때 사진 크기: print(자리 크기 × 300dpi로 줄임, 기본) | original(원본 그대로)
+function getPhotoMode() {
+  try { return localStorage.getItem('phoditor.photoMode') === 'original' ? 'original' : 'print'; } catch (_) { return 'print'; }
+}
+function setPhotoMode(m) {
+  try { localStorage.setItem('phoditor.photoMode', m === 'original' ? 'original' : 'print'); } catch (_) {}
+}
+
 async function refreshSizeEstimate() {
   if (!state.templateDef) return;
   const { photoPaths, croppedItems } = collectAllPlacedPhotoInfo();
@@ -98,8 +106,12 @@ async function refreshSizeEstimate() {
     croppedItems
   });
   state.lastSizeEstimate = est;
-  el.sizeEstimateBadge.textContent = `예상 용량: ${est.totalMB} MB (고유 사진 ${est.uniquePhotoCount}장)`;
-  el.sizeEstimateBadge.classList.toggle('warn', !!est.exceeds500MB);
+  const print = getPhotoMode() === 'print';
+  // 인쇄용은 실제 크기를 내보내 봐야 알아서, 원본 합계를 "최대"로만 보여 준다(추측한 숫자를 쓰지 않음)
+  el.sizeEstimateBadge.textContent = print
+    ? `예상 용량: 최대 ${est.totalMB} MB (고유 사진 ${est.uniquePhotoCount}장 · 인쇄용으로 줄여 넣음)`
+    : `예상 용량: ${est.totalMB} MB (고유 사진 ${est.uniquePhotoCount}장 · 원본 그대로)`;
+  el.sizeEstimateBadge.classList.toggle('warn', !print && !!est.exceeds500MB);
 }
 
 // [2026-11-26] 내보내기 창: 파일 이름과 저장할 폴더를 앱 안에서 고른다(마지막 폴더 기억)
@@ -120,12 +132,15 @@ function shortDir(p) {
 async function openExportDialog(kind = 'xlsx') {
   if (!state.editor) return;
   if (document.querySelector('.dyn-modal.export-dlg')) return;
+  if (kind === 'pdf' && !(await excelReady())) return; // 이름·폴더를 고르기 전에 Excel부터 확인
   const info = await window.api.exportTargetInfo(kind);
   let dir = info.dir;
   const ext = kind === 'pdf' ? 'pdf' : 'xlsx';
   const nameIn = h('input', { type: 'text', value: exportBaseName(kind), id: 'exportNameInput' });
   const dirText = h('div', { class: 'export-dir', id: 'exportDirText', title: dir, text: shortDir(dir) });
   const reveal = h('input', { type: 'checkbox', checked: info.revealAfter ? true : null });
+  const modeSeg = radioGroup('photoMode', [['print', '인쇄용 (권장)'], ['original', '원본 그대로']], getPhotoMode());
+  modeSeg.id = 'exportPhotoModeSeg';
   const back = openModal(kind === 'pdf' ? 'PDF로 내보내기' : '엑셀로 내보내기', [
     h('div', { class: 'form-row' }, h('label', { text: '파일 이름' }), h('div', { class: 'name-row' }, nameIn, h('span', { class: 'ext', text: `.${ext}` }))),
     h('div', { class: 'form-row' }, h('label', { text: '저장할 곳' }), h('div', { class: 'dir-row' },
@@ -134,6 +149,8 @@ async function openExportDialog(kind = 'xlsx') {
         const p = await window.api.pickFolder(dir);
         if (p) { dir = p; dirText.textContent = shortDir(p); dirText.title = p; }
       } }, '바꾸기'))),
+    h('div', { class: 'form-row' }, h('label', { text: '사진 크기' }), modeSeg),
+    h('div', { class: 'insp-note', text: '인쇄용: 사진을 들어갈 자리 크기에 맞춰 300dpi로 줄여 넣어요. 인쇄 화질은 같고 파일이 훨씬 작아져요. 원본 사진 파일은 바뀌지 않아요.' }),
     h('label', { class: 'check-row' }, reveal, ' 다 되면 Finder에서 보여 주기'),
     kind === 'pdf' ? h('div', { class: 'insp-note', text: 'PDF는 Mac용 Excel로 만들어요. Excel이 잠시 열렸다 닫혀요.' }) : null
   ], [
@@ -143,7 +160,8 @@ async function openExportDialog(kind = 'xlsx') {
       if (!fileName) return nameIn.focus();
       back.remove();
       window.api.setRevealAfterExport(reveal.checked);
-      const opt = { outputDir: dir, fileName, reveal: reveal.checked };
+      setPhotoMode(segValue(modeSeg, 'print'));
+      const opt = { outputDir: dir, fileName, reveal: reveal.checked, photoMode: getPhotoMode() };
       if (kind === 'pdf') await handleExportPdf(opt);
       else await handleExport(opt);
     } }, '내보내기')
@@ -155,7 +173,7 @@ async function openExportDialog(kind = 'xlsx') {
 
 async function handleExport(opt = {}) {
   await refreshSizeEstimate();
-  if (state.lastSizeEstimate.exceeds500MB) {
+  if (state.lastSizeEstimate.exceeds500MB && (opt.photoMode || getPhotoMode()) === 'original') {
     const proceed = confirm(
       `예상 파일 용량이 ${state.lastSizeEstimate.totalMB}MB로 500MB를 넘습니다.\n내보내기에 시간이 걸리거나 엑셀에서 열기 무거울 수 있습니다. 계속 내보낼까요?`
     );
@@ -170,14 +188,15 @@ async function handleExport(opt = {}) {
       editorState: state.editor,
       suggestedName: `${currentSiteName() ? `${currentSiteName()}_` : ''}${state.templateDef.type}_${state.templateDef.company}`,
       outputDir: opt.outputDir,
-      fileName: opt.fileName
+      fileName: opt.fileName,
+      photoMode: opt.photoMode || getPhotoMode()
     });
     if (res.canceled) return;
     if (res.ok) {
       if (opt.reveal) window.api.revealFile(res.filePath);
       const mb = (res.stats.sizeBytes / (1024 * 1024)).toFixed(2);
       showToast(
-        `저장 완료 (${mb}MB · 사진 ${res.stats.totalPhotoPlacements}개 배치 / 고유 ${res.stats.uniqueImagesEmbedded}장 저장)`,
+        `저장 완료 (${mb}MB · 사진 ${res.stats.totalPhotoPlacements}개 배치 / 고유 ${res.stats.uniqueImagesEmbedded}장 저장${res.stats.downscaledCount ? ` · 인쇄용으로 줄인 사진 ${res.stats.downscaledCount}장` : ''})`,
         4000
       );
     } else {
