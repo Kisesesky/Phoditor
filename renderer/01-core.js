@@ -266,7 +266,9 @@ const SVG_ICON_PATHS = {
   chevR: '<path d="M9 5l7 7-7 7"/>',
   minus: '<path d="M5 12h14"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
-  close: '<path d="M6 6l12 12M18 6L6 18"/>'
+  close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  list: '<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>'
 };
 function svgIcon(name) {
   const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');

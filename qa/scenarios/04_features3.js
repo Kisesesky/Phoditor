@@ -40,9 +40,10 @@ try {
   ov.click(); await sleep(250);
   const e1 = ov.querySelector('.cell-editor-input'); if (e1) e1.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   await sleep(300);
-  const shrinkCb = $$('#inspBody .check-row input').find((i) => i.parentElement.textContent.includes('칸에 맞게'));
-  check('속성 패널: 칸에 맞게 줄이기', !!shrinkCb);
-  shrinkCb.checked = true; shrinkCb.dispatchEvent(new Event('change')); await sleep(600);
+  // [9.3 R6] 넘침 경고 바로 아래 [칸에 맞게 줄이기](리본 [칸에 맞춤]과 같은 동작)
+  const shrinkBtn = $('#inspBody .insp-note.warn #inspShrinkBtn');
+  check('속성 패널: 칸에 맞게 줄이기', !!shrinkBtn);
+  shrinkBtn.click(); await sleep(600);
   const ov2 = relCell('L{+4}', 0);
   check('줄이면 글자가 작아지고, 너무 작게(60% 미만) 줄면 따로 경고', ov2.dataset.shrink === '1' && parseFloat(ov2.style.fontSize) < 14 && ov2.classList.contains('too-small') && $('#overflowChip').textContent.includes('너무 작게'), `${ov2.style.fontSize} ${ov2.className} ${$('#overflowChip').textContent.trim()}`);
   await edit(relCell('L{+4}', 0), '조금 긴 품목 이름입니다');

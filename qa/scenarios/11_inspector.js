@@ -91,9 +91,11 @@ try {
   await dragTo(ph('landscape_3000'), $('.pv-page .photo-slot'));
   await sleep(900);
   setInspectorCollapsed(true); await sleep(500);
+  state.selectedPhotoSlot = null; renderInspector(); await sleep(100); // 접은 뒤 새로 고르는 상황
   slotEl().dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1 })); await sleep(300);
   check('2. 패널 접힘: 사진 자리 고르면 [사진] 탭에 파란 점(ctx-on)', $('#ribbonTabs [data-tab="photo"]').classList.contains('ctx-on'));
   check('R5. 사진 자리를 고르면 상황 탭 [사진]이 나타남', !$('#ribbonTabs [data-tab="photo"]').hidden);
+  check('R6. 속성 패널이 접혀 있으면 [사진] 탭이 바로 열림', ribbonUi.tab === 'photo' && $('#ribbonTabs [data-tab="photo"]').classList.contains('on'), ribbonUi.tab);
   slotEl().dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 2 })); await sleep(1200);
   check('2. 패널 접힘: 사진 자리 더블클릭 → 자르기 편집기', $('#cropModal').classList.contains('open'));
   await shot('i04_collapsed_crop');

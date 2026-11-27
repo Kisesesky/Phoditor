@@ -56,7 +56,8 @@ try {
   await clickEl($('#selectFolderBtn'), 2500);
   await waitFor(() => $$('#photoGrid .photo-item').length >= 5, 15000);
   const ft = $('#folderPathText').firstChild.textContent;
-  check('4. 내 컴퓨터 경로도 같은 방식(첫 글자가 /)', ft.replace(/[⁦⁩]/g, '').startsWith('/') && $('#folderPathText').title.startsWith('/'), ft.slice(0, 40));
+  const fShown = ft.replace(/[⁦⁩]/g, '');
+  check('4. 내 컴퓨터 경로: 짧게(끝 두 단계, 순서 그대로) · 전체 경로는 말풍선', $('#folderPathText').title.startsWith('/') && $('#folderPathText').title.endsWith(fShown.replace(/^…/, '').replace(/^~/, '')) && (fShown.startsWith('…/') || fShown.startsWith('~') || fShown.startsWith('/')), `${fShown} ← ${$('#folderPathText').title}`);
 
   // 5. 색 토큰
   const root = getComputedStyle(document.documentElement);
@@ -226,6 +227,13 @@ try {
   const addB = $('#sheetAddSlot .sheet-add-btn');
   check('R4. 시트 추가 [+]는 탭 줄 밖에 고정(항상 보임)', !!addB && !addB.closest('#sheetTabsBar') && addB.getBoundingClientRect().right <= $('.status-right').getBoundingClientRect().left + 1 && addB.getBoundingClientRect().width > 0);
   el.sheetTabsBar.scrollLeft = 0; el.sheetTabsBar.dispatchEvent(new Event('scroll')); await sleep(150);
+  // [9.3 R6] 시트 목록 [▾]: 17개 중 어느 시트로든 바로
+  await clickEl($('#sheetListBtn'), 300);
+  const items = $$('#sheetListMenu .drop-item');
+  check('R6. 시트 목록 단추 → 시트 17개 목록(위로 펼침, 창 안)', !$('#sheetListMenu').hidden && items.length === 17 && $('#sheetListMenu').getBoundingClientRect().bottom <= innerHeight && $('#sheetListMenu').getBoundingClientRect().top >= 0, `${items.length}`);
+  await shot('a17_sheet_list');
+  await clickEl(items[10], 600);
+  check('R6. 목록에서 고르면 그 시트로', state.activeSheetIdx === 10 && $('#sheetListMenu').hidden, state.activeSheetIdx);
   check('R4. 탭이 넘치면 오른쪽 끝 페이드', el.sheetTabsBar.classList.contains('fade-r') && /gradient/.test(getComputedStyle(el.sheetTabsBar).webkitMaskImage || getComputedStyle(el.sheetTabsBar).maskImage || ''), el.sheetTabsBar.className);
   // [9.3 R4] 1280px 상단 바: PDF 단추에 PDF 배지(내 양식과 구분), 도움말 ? 단추 상시
   // [R4 → 9.3 R5] 1280px 상단 바: 아이콘만 나란히 서는 단추가 없음(PDF·내 양식은 글자 있는 메뉴 항목) → 서로 헷갈릴 일 없음

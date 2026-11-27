@@ -261,7 +261,8 @@ function toggleDropMenu(btn, menuId, alignRight) {
   btn.setAttribute('aria-expanded', 'true');
   const r = (btn.closest('.split-btn') || btn).getBoundingClientRect();
   const w = menu.offsetWidth;
-  menu.style.top = `${Math.round(r.bottom + 4)}px`;
+  const hgt = menu.offsetHeight;
+  menu.style.top = `${Math.round(r.bottom + 4 + hgt > window.innerHeight - 6 ? Math.max(6, r.top - hgt - 4) : r.bottom + 4)}px`;
   menu.style.left = `${Math.round(alignRight ? Math.max(6, r.right - w) : Math.min(r.left, window.innerWidth - w - 6))}px`;
   const first = menu.querySelector('button:not(:disabled)');
   if (first) first.focus({ preventScroll: true });
@@ -359,9 +360,26 @@ const HELP_FLOW = [
     '[엑셀로 내보내기]: 사진 크기는 원본 그대로(기본) 또는 인쇄용(300dpi로 줄여 파일이 작음) 중에서 골라요.',
     'PDF·인쇄는 Mac용 Excel로 만들어요. 처음 한 번 "Excel 제어 허용"을 눌러 주세요.']]
 ];
+// [9.3 R6] 도움말 그림: 핵심 동작 3가지를 한눈에(선 그림 · 잉크색 + 강조색만)
+const HELP_FIGS = [
+  ['사진 넣기', '왼쪽 사진을 사진 자리로 끌어 놓거나, 자리를 고르고 사진을 눌러요',
+    '<rect x="6" y="14" width="40" height="30" rx="3"/><path d="M10 38l10-11 8 8 6-5 8 8"/><circle cx="18" cy="22" r="3"/><path class="ac" d="M52 29h22m-6-6l6 6-6 6"/><rect class="ac" x="82" y="8" width="52" height="42" rx="3" stroke-dasharray="4 3"/><rect x="88" y="14" width="40" height="30" rx="2"/>'],
+  ['자르기', '사진 자리를 두 번 누르면 자르기. 원본 파일은 그대로예요',
+    '<rect x="10" y="8" width="58" height="42" rx="3"/><path d="M14 44l14-15 10 10 8-6 18 11"/><rect class="ac" x="22" y="16" width="34" height="26"/><path class="ac" d="M22 12v4h-4M56 46v-4h4"/><path d="M80 29h18m-6-6l6 6-6 6"/><rect x="106" y="16" width="28" height="26" rx="2"/><path d="M108 40l8-8 6 6 4-3 6 5"/>'],
+  ['내보내기', '[엑셀로 내보내기] · ▾를 누르면 PDF·인쇄',
+    '<rect class="ac" x="8" y="18" width="78" height="22" rx="5"/><path class="ac" d="M20 24v8m-4-4l4 4 4-4M16 36h8"/><path class="ac" d="M32 29h40"/><path class="ac" d="M74 18v22"/><path class="ac" d="M77 27l3 3 3-3"/><path d="M100 10h22l8 8v30h-30z"/><path d="M122 10v8h8"/><path d="M106 30h16M106 36h12"/>']
+];
+function helpFigures() {
+  return h('div', { class: 'help-figs' }, ...HELP_FIGS.map(([t, d, svg]) => {
+    const fig = h('figure', { class: 'help-fig' });
+    fig.innerHTML = `<svg viewBox="0 0 142 58" aria-hidden="true">${svg}</svg>`;
+    fig.append(h('figcaption', {}, h('b', { text: t }), h('span', { text: d })));
+    return fig;
+  }));
+}
 function openShortcutHelp() {
   if (document.querySelector('.dyn-modal.sc-help')) return;
-  const flow = h('div', { class: 'help-flow', id: 'helpFlow' }, ...HELP_FLOW.map(([t, items]) => h('div', { class: 'help-sec' }, h('h4', { text: t }), h('ul', {}, ...items.map((x) => h('li', { text: x }))))));
+  const flow = h('div', { class: 'help-flow', id: 'helpFlow' }, helpFigures(), ...HELP_FLOW.map(([t, items]) => h('div', { class: 'help-sec' }, h('h4', { text: t }), h('ul', {}, ...items.map((x) => h('li', { text: x }))))));
   const list = h('div', { class: 'shortcut-list' }, ...SHORTCUTS.map(([k, d]) => h('div', { class: 'sc-row' }, h('span', { text: d }), h('span', { class: 'sc-keys' }, ...k.split(' ').map((x) => h('kbd', { text: x }))))));
   const tabs = h('div', { class: 'work-tabs help-tabs', role: 'tablist' });
   const panes = { flow, keys: list };

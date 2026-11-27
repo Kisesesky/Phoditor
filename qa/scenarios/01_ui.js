@@ -74,7 +74,9 @@ try {
   if (ed) ed.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   await sleep(300);
   check('속성 패널: 칸', insp().includes('칸'), insp());
-  const fsel = $$('#inspBody select')[0];
+  // [9.3 R6] 칸 글꼴 조작은 [홈] 리본 한 곳(속성 패널은 상태 요약)
+  check('R6. 속성 패널(칸)에는 글꼴 조작 없음 — 리본 한 곳', !$('#inspBody select') && !$$('#inspBody .check-row input').length && !!$('#inspBody .font-preview'));
+  const fsel = $('#fmtFontSel');
   fsel.value = '궁서'; fsel.dispatchEvent(new Event('change')); await sleep(500);
   const v3 = $$('.pv-page td').find((t) => t.textContent === '1층 로비');
   check('칸 글꼴 궁서 적용(화면)', v3 && v3.style.fontFamily.includes('궁서'), v3 && v3.style.fontFamily);

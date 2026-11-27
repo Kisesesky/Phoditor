@@ -68,12 +68,12 @@ try {
   const ed = v.querySelector('.cell-editor-input');
   if (ed) ed.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
   await sleep(300);
-  const wrapCb = $$('#inspBody label.check-row').find((l) => l.textContent.includes('줄바꿈'));
-  check('속성 패널에 "긴 글은 칸 안에서 줄바꿈"(켜짐)', wrapCb && wrapCb.querySelector('input').checked);
-  wrapCb.querySelector('input').click(); await sleep(500);
+  // [9.3 R6] 줄바꿈 조작은 [홈] 리본 [줄바꿈] 한 곳(속성 패널은 상태 표시)
+  check('속성 패널에 "긴 글은 칸 안에서 줄바꿈"(켜짐)', $('#fmtWrapBtn').classList.contains('on') && /줄바꿈/.test($('#inspBody .insp-kv').textContent), $('#inspBody .insp-kv') && $('#inspBody .insp-kv').textContent);
+  $('#fmtWrapBtn').click(); await sleep(500);
   v = $$('.pv-page td').find((t) => t.textContent === LONG);
   check('끄면 한 줄로(넘침 경고)', v && !v.classList.contains('wrap') && v.classList.contains('overflow'), v && v.className);
-  $$('#inspBody label.check-row').find((l) => l.textContent.includes('줄바꿈')).querySelector('input').click(); await sleep(500);
+  $('#fmtWrapBtn').click(); await sleep(500);
   v = $$('.pv-page td').find((t) => t.textContent === LONG);
   check('다시 켜면 줄바꿈', v && v.classList.contains('wrap'));
 

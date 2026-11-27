@@ -46,7 +46,7 @@ function installNoteFor(excelName) {
   if (!p || p.kind !== 'bundled' || p.installed) return null;
   return h('div', { class: 'insp-note warn' },
     `${p.label}은(는) 앱 미리보기에만 있어요. 엑셀로 인쇄할 때도 이 글꼴로 나오려면 이 Mac에 설치해 주세요.`,
-    h('div', { style: 'margin-top:8px' }, h('button', { class: 'primary', onclick: () => installFontFamily(p) }, `${p.label} 설치`)));
+    h('div', { style: 'margin-top:8px' }, h('button', { onclick: () => installFontFamily(p) }, `${p.label} 설치`)));
 }
 
 async function installFontFamily(p) {
@@ -63,45 +63,31 @@ async function installFontFamily(p) {
 }
 
 function cellFontEditor(sheet, key, cm) {
+  // [9.3 R6] 글꼴·크기·굵게·줄바꿈·칸에 맞춤 조작은 [홈] 리본 한 곳. 여기는 지금 상태(미리보기)와 경고·바로 고치기만
   const cur = fontOverrideOf(sheet, key) || {};
   const baseName = mappedFontName(cm && cm.fontName) || '';
-  const apply = (patch) => {
-    recordUndo('칸 글꼴 바꾸기');
+  const shown = cur.name || baseName;
+  const isBold = cur.bold !== undefined ? cur.bold : !!(cm && cm.fontBold);
+  const size = cur.size || (cm && cm.fontSize) || 11;
+  const how = cur.shrink ? '칸에 맞게 줄임' : cur.wrap === false ? '줄바꿈 안 함' : '줄바꿈';
+  const shrink = () => {
+    recordUndo('칸에 맞게 글자 줄이기');
     sheet.cellFonts = sheet.cellFonts || {};
-    const next = { ...cur, ...patch };
-    for (const k of Object.keys(next)) if (next[k] === undefined || next[k] === '' || next[k] === null) delete next[k];
-    if (Object.keys(next).length) sheet.cellFonts[key] = next;
-    else delete sheet.cellFonts[key];
+    sheet.cellFonts[key] = { ...cur, shrink: true };
     renderActiveSheet();
   };
-  const sizes = [7, 8, 9, 10, 10.5, 11, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48];
-  const curSize = cur.size || (cm && cm.fontSize) || 11;
-  const sizeSel = h('select', { style: 'width:84px' });
-  for (const z of [...new Set([...sizes, curSize])].sort((a, b) => a - b)) sizeSel.appendChild(h('option', { value: String(z), text: `${z}pt` }));
-  sizeSel.value = String(curSize);
-  sizeSel.addEventListener('change', () => apply({ size: Number(sizeSel.value) === (cm && cm.fontSize) ? undefined : Number(sizeSel.value) }));
-  const isBold = cur.bold !== undefined ? cur.bold : !!(cm && cm.fontBold);
-  const boldBtn = h('button', { class: isBold ? 'on' : '', style: 'font-weight:700;width:36px', title: '굵게', onclick: () => apply({ bold: !isBold === !!(cm && cm.fontBold) ? undefined : !isBold }) }, 'B');
-  if (isBold) boldBtn.style.background = 'var(--accent-soft)';
-  const shown = cur.name || baseName;
+  const tooSmall = document.querySelector('td.selected-cell.too-small');
+  const over = document.querySelector('td.selected-cell.overflow');
   return [
     h('div', { class: 'font-preview', style: `font-family:${cssFontFor(shown).family};font-weight:${isBold ? 700 : 400}` }, shown ? `가나다 ABC 123 — ${shown}` : '가나다 ABC 123'),
-    h('div', { class: 'insp-row' }, h('label', { text: '글꼴' }), h('div', { class: 'grow' }, fontSelect(cur.name || '', (v) => apply({ name: v || undefined }), `원래 글꼴 (${baseName || '기본'})`))),
-    h('div', { class: 'insp-row' }, h('label', { text: '크기·굵게' }), h('div', { class: 'grow', style: 'display:flex;gap:6px' }, sizeSel, boldBtn,
-      Object.keys(cur).length ? h('button', { onclick: () => { recordUndo('칸 글꼴 되돌리기'); delete sheet.cellFonts[key]; renderActiveSheet(); } }, '원래대로') : null)),
+    h('dl', { class: 'insp-kv' },
+      h('dt', { text: '크기' }), h('dd', { text: `${size}pt${isBold ? ' · 굵게' : ''}` }),
+      h('dt', { text: '긴 글' }), h('dd', { text: how }),
+      h('dt', { text: '바꾼 서식' }), h('dd', { text: Object.keys(cur).length ? '있음' : '없음(원래대로)' })),
     installNoteFor(cur.name),
-    h('label', { class: 'check-row' }, (() => {
-      const cb = h('input', { type: 'checkbox', checked: !!cur.shrink });
-      cb.addEventListener('change', () => apply({ shrink: cb.checked || undefined }));
-      return cb;
-    })(), ' 칸에 맞게 글자 줄이기 (엑셀 "셀에 맞춤")'),
-    h('label', { class: 'check-row', title: '직접 입력한 글이 칸보다 길면 칸 안에서 다음 줄로 넘깁니다' }, (() => {
-      const cb = h('input', { type: 'checkbox', checked: cur.wrap !== false && !cur.shrink, disabled: !!cur.shrink });
-      cb.addEventListener('change', () => apply({ wrap: cb.checked ? undefined : false }));
-      return cb;
-    })(), ' 긴 글은 칸 안에서 줄바꿈'),
-    document.querySelector('td.selected-cell.too-small') ? h('div', { class: 'insp-note warn', text: document.querySelector('td.selected-cell.too-small').title })
-      : document.querySelector('td.selected-cell.overflow') ? h('div', { class: 'insp-note warn', text: '이 칸은 글자가 칸보다 길어 인쇄할 때 잘리거나 넘칠 수 있어요. 위 [칸에 맞게 글자 줄이기]를 켜거나 글을 줄여 주세요.' }) : null
+    tooSmall ? h('div', { class: 'insp-note warn', text: tooSmall.title })
+      : over ? h('div', { class: 'insp-note warn' }, '이 칸은 글자가 칸보다 길어 인쇄할 때 잘리거나 넘칠 수 있어요.',
+        h('div', { style: 'margin-top:8px' }, h('button', { id: 'inspShrinkBtn', onclick: shrink }, '칸에 맞게 줄이기'))) : null
   ];
 }
 

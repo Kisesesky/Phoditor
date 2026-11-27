@@ -52,6 +52,7 @@ try {
   check('4. 도움말 창: 탭 2개(사용 흐름 | 단축키)', !!help && $$('.help-tabs button', help).map((b) => b.textContent).join('|') === '사용 흐름|단축키');
   check('4. 사용 흐름에 화면에서 걷어낸 설명(현장명·사진 칸 높이·문서 글꼴·1장 배치·원본 파일)', !!help && ['현장명', '사진 칸 높이', '문서 글꼴', '1장 배치', '원본 사진 파일은 바뀌지 않아요'].every((t) => $('#helpFlow').textContent.includes(t)));
   check('4. 처음엔 사용 흐름만(단축키 목록은 숨김)', getComputedStyle($('.sc-help .shortcut-list')).display === 'none');
+  check('R6. 도움말 사용 흐름 위에 그림 3장(사진 넣기·자르기·내보내기)', $$('#helpFlow .help-fig').length === 3 && $$('#helpFlow .help-fig svg').every((s) => s.getBoundingClientRect().height > 40), $$('#helpFlow .help-fig figcaption b').map((b) => b.textContent).join(','));
   await shot('t03_help');
   await clickEl($$('.help-tabs button', help).find((b) => b.textContent === '단축키'), 200);
   check('4. 단축키 탭(사용 흐름은 숨김)', getComputedStyle($('#helpFlow')).display === 'none' && $$('.sc-help .sc-row').length >= 15 && getComputedStyle($('.sc-help .shortcut-list')).display !== 'none');

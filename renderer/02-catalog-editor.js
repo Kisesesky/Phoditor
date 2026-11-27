@@ -192,7 +192,7 @@ async function renderWorkList() {
   if (startUi.workTab === 'recent') {
     const shown = startUi.recentAll ? recent.slice(0, 12) : recent.slice(0, 5);
     for (const r of shown) {
-      const dir = r.path.split('/').slice(0, -1).join('/').replace(/^\/Users\/[^/]+/, '~');
+      const dir = shortPath(r.path.split('/').slice(0, -1).join('/'));
       const row = h('div', { class: 'work-row', role: 'button', tabindex: '0', title: r.path },
         h('span', { class: 'work-ico' }),
         h('div', { class: 'work-text' }, h('div', { class: 'work-title', text: r.title || r.path.split('/').pop() }), h('div', { class: 'work-meta', text: `${(r.templateId || '').replace('_', ' · ')}  ·  ${dir}` })),
@@ -314,6 +314,23 @@ function openSaveMyTemplate() {
     } }, '저장')
   ], 460);
   setTimeout(() => { nameIn.focus(); nameIn.select(); }, 0);
+}
+
+function openSheetList(btn) {
+  const menu = document.getElementById('sheetListMenu');
+  if (!menu) return;
+  menu.replaceChildren(...state.editor.sheets.map((sh, i) => {
+    const b = h('button', { class: 'drop-item' + (i === state.activeSheetIdx ? ' on' : ''), role: 'menuitemradio', 'aria-checked': String(i === state.activeSheetIdx) },
+      h('span', { text: sheetLabel(sh) }), i === state.activeSheetIdx ? svgIcon('check') : null);
+    b.addEventListener('click', () => {
+      state.activeSheetIdx = i; state.selectedBlockIdx = 0; state.selectedCell = null; state.selectedPhotoSlot = null;
+      renderSheetTabs(); renderActiveSheet(); updateToolbarButtons();
+      const t = el.sheetTabsBar.querySelectorAll('.sheet-tab')[i];
+      if (t) t.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    });
+    return b;
+  }));
+  toggleDropMenu(btn, 'sheetListMenu', true);
 }
 
 // [9.3 R4] 시트 탭이 넘치면 오른쪽(왼쪽) 끝을 흐리게: 더 있다는 표시
@@ -554,7 +571,20 @@ function renderSheetTabs() {
   addBtn.setAttribute('aria-label', '새 블록 시트 추가');
   addBtn.title = '새 블록 시트 추가';
   addBtn.addEventListener('click', openAddSheetModal);
-  { const slot = document.getElementById('sheetAddSlot'); if (slot) slot.replaceChildren(addBtn); else el.sheetTabsBar.appendChild(addBtn); } updateSheetTabsFade();
+  {
+    // [9.3 R6] 시트가 많을 때: 탭 줄 끝 [▾]로 전체 시트 목록에서 바로 고르기
+    const listBtn = document.createElement('button');
+    listBtn.className = 'sheet-add-btn sheet-list-btn';
+    listBtn.id = 'sheetListBtn';
+    listBtn.setAttribute('aria-label', '모든 시트 보기');
+    listBtn.setAttribute('aria-haspopup', 'menu');
+    listBtn.dataset.tip = '모든 시트';
+    listBtn.appendChild(svgIcon('list'));
+    listBtn.addEventListener('click', (e) => { e.stopPropagation(); openSheetList(listBtn); });
+    const slot = document.getElementById('sheetAddSlot');
+    if (slot) slot.replaceChildren(listBtn, addBtn); else el.sheetTabsBar.appendChild(addBtn);
+  }
+  updateSheetTabsFade();
 }
 
 // [시트 이름 바꾸기 2026-11-25] 탭 이름은 현장마다 다르다(공용홀1층·가구공사 …).

@@ -82,6 +82,10 @@ function updateRibbon() {
   const photoTab = $id('ribbonTabs').querySelector('[data-tab="photo"]');
   photoTab.classList.toggle('ctx-on', !!area);
   photoTab.hidden = !area;
+  // [9.3 R6] 속성 패널이 접혀 있으면(좁은 창) 사진 일을 할 곳이 리본뿐이라, 사진 자리를 새로 고를 때 [사진] 탭을 바로 보여 줌
+  const slotKey = sl && sl.photo ? `${sl.target.sheetIdx}-${sl.target.blockIdx}-${sl.target.paIdx}-${sl.target.slotIdx}` : null;
+  if (slotKey && slotKey !== ribbonUi.autoSlot && el.inspector.classList.contains('collapsed') && !$id('ribbon').classList.contains('collapsed') && ribbonUi.tab !== 'photo') setRibbonTab('photo');
+  ribbonUi.autoSlot = slotKey;
   if (!area && ribbonUi.tab === 'photo') setRibbonTab('home');
   // 서식
   const c = ribbonCell();

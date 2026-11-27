@@ -586,8 +586,15 @@ async function loadLocalFolder(folderPath, push) {
 }
 
 // .folder-path 는 긴 경로의 앞쪽을 줄이려고 direction: rtl 을 쓴다. 글자 자체는 왼→오로 고립시켜 기호가 반대편으로 밀리지 않게 한다
+function shortPath(p) {
+  // [9.3 R6] /Users/이름/… → ~/…, 길면 끝 두 단계만(…/상위/폴더)
+  if (!p || p[0] !== '/') return p;
+  const home = p.replace(/^\/Users\/[^/]+/, '~');
+  const parts = home.split('/').filter(Boolean);
+  return parts.length > 3 ? `…/${parts.slice(-2).join('/')}` : home;
+}
 function setFolderPathText(node, text) {
-  node.textContent = `\u2066${text}\u2069`;
+  node.textContent = `\u2066${shortPath(text)}\u2069`;
   node.title = text;
 }
 
