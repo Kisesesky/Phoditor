@@ -386,8 +386,6 @@ async function openTemplate(templateId, restore = null) {
     window.api.setDirty(false);
     if (restore) await applyRestoredEditor(restore);
 
-    el.editorTitle.textContent = state.templateDef.generic ? (state.templateDef.title || '공백 양식') : `${state.templateDef.company} 양식`;
-    el.editorKicker.textContent = state.templateDef.type;
     state.selectedPhotoArea = null;
     view.zoom = 'fit';
     // 열 너비 기준 글꼴(MDW)을 실제 글꼴로 재려면 글꼴이 먼저 읽혀 있어야 한다
@@ -403,6 +401,7 @@ async function openTemplate(templateId, restore = null) {
 
     updateFontChip();
     updateDocTitle();
+    if (typeof syncNarrowInspector === 'function') { narrowUserOpen = false; syncNarrowInspector(); }
 
     hideToast();
     el.catalogView.classList.remove('active');

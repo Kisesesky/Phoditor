@@ -22,10 +22,10 @@ try {
   check('표 붙여넣기 창', !!$('.dyn-modal textarea'));
   $('.dyn-modal').remove();
   await clickEl($('#ribbonTabs [data-tab="photo"]'), 300);
-  check('사진 탭: 자리를 안 고르면 꺼져 있고 안내', $('#rbCropBtn').disabled && !$('#rbPhotoHint').hidden);
+  check('사진 탭: 자리를 안 고르면 꺼져 있음(안내문 없이)', $('#rbCropBtn').disabled && !$('#rbPhotoHint') && !$('.rb-panel.on .rb-hint'));
   await shot('d02_ribbon_photo');
   await clickEl($('#ribbonTabs [data-tab="format"]'), 300);
-  check('서식 탭: 칸을 안 고르면 꺼짐', $('#fmtBoldBtn').disabled && !$('#rbFormatHint').hidden);
+  check('서식 탭: 칸을 안 고르면 꺼짐(안내문 없이)', $('#fmtBoldBtn').disabled && !$('#rbFormatHint') && !$('.rb-panel.on .rb-hint'));
   const cell = $$('.pv-page td.editable-cell').find((t) => t.textContent.trim() === '' && t.offsetWidth > 60);
   cell.click(); await sleep(300);
   const ed = cell.querySelector('.cell-editor-input');

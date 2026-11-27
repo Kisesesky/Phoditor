@@ -110,7 +110,6 @@ const el = {
   editRepeatedBtn: document.getElementById('editRepeatedBtn'),
   siteNameInput: document.getElementById('siteNameInput'),
   sizeEstimateBadge: document.getElementById('sizeEstimateBadge'),
-  openSettingsBtn: document.getElementById('openSettingsBtn'),
   exportBtn: document.getElementById('exportBtn'),
   sourceTabLocal: document.getElementById('sourceTabLocal'),
   sourceTabMybox: document.getElementById('sourceTabMybox'),

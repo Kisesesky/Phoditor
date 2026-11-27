@@ -62,8 +62,16 @@ function projectTitle() {
 
 function updateDocTitle() {
   if (!state.templateDef || !el.editorKicker) return;
-  const name = docState.filePath ? docState.filePath.split('/').pop().replace(/\.pbook$/, '') : '저장 안 됨';
-  el.editorKicker.textContent = `${state.templateDef.type} · ${name}${docState.dirty ? ' — 수정됨' : ''}`;
+  // [9.3 R2] 위 줄은 저장 상태 하나(저장 안 됨 / 수정됨 / 저장됨), 제목은 저장한 파일 이름 또는 양식 이름
+  const def = state.templateDef;
+  const tplName = def.generic ? (def.title || '공백 양식') : `${def.company} ${def.type}`;
+  const fileName = docState.filePath ? docState.filePath.split('/').pop().replace(/\.pbook$/, '') : null;
+  el.editorKicker.textContent = !fileName ? '저장 안 됨' : docState.dirty ? '수정됨' : '저장됨';
+  el.editorKicker.dataset.state = !fileName ? 'new' : docState.dirty ? 'dirty' : 'saved';
+  if (el.editorTitle) {
+    el.editorTitle.textContent = fileName || tplName;
+    el.editorTitle.title = fileName ? `${tplName} · ${docState.filePath}` : tplName;
+  }
 }
 
 function markDirty() {

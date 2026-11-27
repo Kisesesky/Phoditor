@@ -29,6 +29,8 @@ el.fontPanelBtn.addEventListener('click', showDocumentInspector);
 el.fontBanner.addEventListener('click', showDocumentInspector);
 let resizeTimer = null;
 window.addEventListener('resize', () => {
+  const changed = syncNarrowInspector();
+  if (changed && state.editor && el.editorView.classList.contains('active')) { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderActiveSheet, 120); return; }
   if (!state.editor || view.zoom !== 'fit' || !el.editorView.classList.contains('active')) return;
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(renderActiveSheet, 120);
@@ -117,14 +119,28 @@ el.photoColsSeg.addEventListener('click', (e) => {
 });
 syncPhotoViewControls();
 // [2026-11-26] 속성 패널 접기/펼치기(기억해 둠). 접으면 캔버스가 넓어져 쪽을 다시 맞춘다
+// [9.3 R2] 창 폭 1280px 이하: 속성 패널을 기본으로 접어 쪽 배율을 지킨다(저장된 선택은 넓은 창용으로 그대로 둠)
+const NARROW_W = 1280;
+let narrowUserOpen = false;
+const isNarrow = () => window.innerWidth <= NARROW_W;
+const savedInspCollapsed = () => { try { return !!localStorage.getItem('phoditor.inspCollapsed'); } catch (_) { return false; } };
 function setInspectorCollapsed(on) {
   el.inspector.classList.toggle('collapsed', on);
-  try { localStorage.setItem('phoditor.inspCollapsed', on ? '1' : ''); } catch (_) {}
+  if (isNarrow()) narrowUserOpen = !on;
+  else { try { localStorage.setItem('phoditor.inspCollapsed', on ? '1' : ''); } catch (_) {} }
   if (state.editor && el.editorView.classList.contains('active')) renderActiveSheet();
+}
+function syncNarrowInspector() {
+  const want = isNarrow() ? !narrowUserOpen : savedInspCollapsed();
+  if (!isNarrow()) narrowUserOpen = false;
+  if (el.inspector.classList.contains('collapsed') === want) return false;
+  el.inspector.classList.toggle('collapsed', want);
+  if (typeof updateRibbon === 'function' && state.editor) updateRibbon();
+  return true;
 }
 el.inspCollapseBtn.addEventListener('click', () => setInspectorCollapsed(true));
 el.inspExpandBtn.addEventListener('click', () => setInspectorCollapsed(false));
-try { if (localStorage.getItem('phoditor.inspCollapsed')) el.inspector.classList.add('collapsed'); } catch (_) {}
+syncNarrowInspector(); // 시작 때: 좁은 창이면 접고, 아니면 저장된 선택대로
 // [2026-11-26] 사진 패널 접기·너비 조절, 속성 패널 너비 조절(기억해 둠)
 const PANE = { side: { min: 200, max: 560, def: 268, varName: '--sidebar-w', key: 'phoditor.sideW' }, insp: { min: 240, max: 520, def: 292, varName: '--inspector-w', key: 'phoditor.inspW' } };
 function setPaneWidth(which, w, save = true) {
@@ -230,7 +246,8 @@ el.siteNameInput.addEventListener('input', () => {
 });
 el.exportBtn.addEventListener('click', () => openExportDialog('xlsx'));
 
-el.dismissFontBannerBtn.addEventListener('click', () => {
+el.dismissFontBannerBtn.addEventListener('click', (e) => {
+  e.stopPropagation(); // 닫기만(띠를 누른 것으로 치지 않음)
   el.fontBanner.classList.remove('visible');
 });
 
@@ -376,7 +393,6 @@ document.addEventListener('keydown', (e) => {
 })();
 
 // Stage 2 Event Wiring
-el.openSettingsBtn.addEventListener('click', openSettingsModal);
 el.myboxSettingsBtn.addEventListener('click', openSettingsModal);
 el.sourceTabLocal.addEventListener('click', () => switchPhotoSource('local'));
 el.sourceTabMybox.addEventListener('click', () => switchPhotoSource('mybox'));

@@ -36,9 +36,12 @@ async function refreshMyboxStatus() {
 function updateMyboxExpiryChip() {
   if (!el.myboxExpiryChip) return;
   const t = expiryText(myboxUi.hasToken, myboxUi.expiry);
-  el.myboxExpiryChip.hidden = false;
+  // [9.3 R2] 헤더 제목 줄에 짧게: 손볼 일이 있을 때만(연결 안 됨·7일 이내·만료됨)
+  const ex = myboxUi.expiry;
+  const need = !myboxUi.hasToken || (ex && (ex.expired || ex.daysLeft <= 7));
+  el.myboxExpiryChip.hidden = !need;
   el.myboxExpiryChip.className = `expiry-chip ${t.cls}`;
-  el.myboxExpiryChip.textContent = t.short;
+  el.myboxExpiryChip.textContent = !myboxUi.hasToken ? '연결 안 됨' : ex && ex.expired ? '만료됨' : ex ? `D-${ex.daysLeft}` : t.short;
   el.myboxExpiryChip.title = `${t.long} (누르면 MYBOX 설정)`;
 }
 function setDaysSeg(days) {

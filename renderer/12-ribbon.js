@@ -14,6 +14,7 @@ function setRibbonTab(tab) {
 }
 function setRibbonCollapsed(on) {
   $id('ribbon').classList.toggle('collapsed', on);
+  $id('ribbonTabs').classList.toggle('rb-closed', on); // 접으면 탭 밑줄도 끔
   document.body.classList.toggle('rb-collapsed', on);
   $id('ribbonCollapseBtn').dataset.tip = on ? '리본 펼치기' : '리본 접기';
   $id('ribbonCollapseBtn').setAttribute('aria-expanded', on ? 'false' : 'true');
@@ -75,22 +76,12 @@ function updateRibbon() {
   const sl = ribbonSlot();
   const area = ribbonArea();
   const photo = sl && sl.photo;
-  $id('rbLayoutBtn').disabled = !area;
   for (const id of ['rbCropBtn', 'rbRotateBtn', 'rbAnnoBtn', 'rbZoomBtn', 'rbRemoveBtn']) $id(id).disabled = !photo;
   $id('rbRevertBtn').disabled = !(photo && photo.isCropped);
-  const hasAreas = isBlock && (sheet.sheetDef.block.photoAreas || []).length > 0;
-  const DM = window.DocModel;
-  const sc = hasAreas ? DM.clampPhotoScale(sheet.photoScale) : 1;
-  $id('rbScaleVal').textContent = `${Math.round(sc * 100)}%`;
-  $id('rbScaleDownBtn').disabled = !hasAreas || sc <= DM.PHOTO_SCALE_MIN;
-  $id('rbScaleUpBtn').disabled = !hasAreas || sc >= DM.PHOTO_SCALE_MAX;
-  $id('rbScaleFitBtn').disabled = !hasAreas;
-  $id('rbPhotoHint').hidden = !!area || !isBlock;
   $id('ribbonTabs').querySelector('[data-tab="photo"]').classList.toggle('ctx-on', !!area);
   // 서식
   const c = ribbonCell();
   $id('ribbonTabs').querySelector('[data-tab="format"]').classList.toggle('ctx-on', !!c);
-  $id('rbFormatHint').hidden = !!c;
   const fmtIds = ['fmtBoldBtn', 'fmtWrapBtn', 'fmtShrinkBtn', 'fmtResetBtn'];
   if (!c) {
     for (const id of fmtIds) { $id(id).disabled = true; $id(id).classList.remove('on'); }
@@ -141,7 +132,6 @@ $id('dupBlockBtn').addEventListener('click', withBlockSel(duplicateBlock));
 $id('moveUpBtn').addEventListener('click', withBlockSel(() => moveBlock(-1)));
 $id('moveDownBtn').addEventListener('click', withBlockSel(() => moveBlock(1)));
 
-$id('rbLayoutBtn').addEventListener('click', () => { const a = ribbonArea(); if (a) openLayoutModal(a.sheetIdx, a.blockIdx, a.paIdx, null); });
 // [2026-11-27 9.3 R1] 사진 편집 행동: 리본 [사진] 탭과 속성 패널이 같은 처리기를 쓴다
 const SLOT_ACTIONS = {
   crop: (s) => openSlotCropEditor(s.target),
@@ -164,9 +154,6 @@ $id('rbAnnoBtn').addEventListener('click', () => runSlotAction('anno'));
 $id('rbZoomBtn').addEventListener('click', () => runSlotAction('zoom'));
 $id('rbRemoveBtn').addEventListener('click', () => runSlotAction('remove'));
 const curSheet = () => state.editor && state.editor.sheets[state.activeSheetIdx];
-$id('rbScaleDownBtn').addEventListener('click', () => { const s = curSheet(); if (s) setPhotoScale(s, window.DocModel.clampPhotoScale(s.photoScale) - 0.05); });
-$id('rbScaleUpBtn').addEventListener('click', () => { const s = curSheet(); if (s) setPhotoScale(s, window.DocModel.clampPhotoScale(s.photoScale) + 0.05); });
-$id('rbScaleFitBtn').addEventListener('click', () => { const s = curSheet(); if (s) fitPhotoScaleToPage(s); });
 
 $id('fmtSizeSel').addEventListener('change', () => {
   const c = ribbonCell();
@@ -204,9 +191,6 @@ $id('fmtResetBtn').addEventListener('click', () => {
   renderActiveSheet();
 });
 
-$id('rbZoomOutBtn').addEventListener('click', () => el.zoomOutBtn.click());
-$id('rbZoomInBtn').addEventListener('click', () => el.zoomInBtn.click());
-$id('rbZoomFitBtn').addEventListener('click', () => el.zoomLabel.click());
 $id('rbSideBtn').addEventListener('click', () => { setSidebarCollapsed(!el.sidebar.classList.contains('collapsed')); updateRibbon(); });
 $id('rbInspBtn').addEventListener('click', () => { setInspectorCollapsed(!el.inspector.classList.contains('collapsed')); updateRibbon(); });
 $id('rbKeysBtn').addEventListener('click', openShortcutHelp);

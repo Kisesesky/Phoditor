@@ -148,5 +148,66 @@ try {
   await pressKey('Enter', [], 300);
   check('8. 제안 항목 Enter → 그 값으로', inp.value === '현관 바닥' && picked === 1 && !$('.suggest-box'), `${inp.value} ${picked}`);
   inp.parentNode.removeChild(inp);
+
+  // 9. [9.3 R2] 공간: 리본 중복 제거 · 접힘 표시 · 사진 패널 헤더 · 1280px 패널 접힘 · 경고 띠
+  const resizeTo = async (w, h) => { console.log('__QA_RESIZE__:' + JSON.stringify({ w, h })); await waitFor(() => innerWidth === w, 4000); await sleep(700); };
+  const fitPct = () => parseInt(($('#zoomLabel').textContent.match(/(\d+)%/) || [])[1] || '0', 10);
+  check('9. 리본에 줌·사진 칸 높이·배치·MYBOX 설정 단추 없음(푸터·속성 패널·사진 패널에만)', !$('#rbZoomOutBtn') && !$('#rbZoomInBtn') && !$('#rbZoomFitBtn') && !$('#rbScaleUpBtn') && !$('#rbLayoutBtn') && !$('#openSettingsBtn') && !!$('#zoomInBtn') && !!$('#myboxSettingsBtn'));
+  check('9. 리본 그룹 캡션 없이 높이 그대로(54px 이하)', $('#ribbon').getBoundingClientRect().height <= 55 && !$('.rb-panel .rb-caption'), $('#ribbon').getBoundingClientRect().height);
+  await clickEl($('#ribbonCollapseBtn'), 300);
+  const onTab = $('#ribbonTabs button.on');
+  check('9. 리본을 접으면 탭 밑줄도 사라짐', getComputedStyle(onTab, '::after').display === 'none');
+  await clickEl($('#ribbonCollapseBtn'), 300);
+  check('9. 펼치면 밑줄 다시', getComputedStyle($('#ribbonTabs button.on'), '::after').display !== 'none');
+  check('9. 위 줄은 저장 상태 하나(저장 안 됨/수정됨/저장됨)', /^(저장 안 됨|수정됨|저장됨)$/.test($('#editorKicker').textContent), $('#editorKicker').textContent);
+  const sideHead = Math.round($('.sidebar .panel-head').getBoundingClientRect().height);
+  check('9. 사진 패널 헤더: 제목·장수와 단추가 한 줄(헤더 180px → 줄어듦)', sideHead < 160 && !!$('#localControls .sidebar-row #selectFolderBtn'), `${sideHead}px`);
+  check('9. 캐시 배지는 사진 칸 안 아래(카드 기준 44px 아님)', /6px/.test(cssRuleText('.cache-badge') || '') && /relative/.test(cssRuleText('.photo-thumb-wrap') || ''), cssRuleText('.cache-badge'));
+
+  // 1280px: 속성 패널 기본 접힘, 쪽 배율 85% 이상
+  const wasW = innerWidth; const wasH = innerHeight;
+  await resizeTo(1280, 800);
+  check('9. 1280px 패널 접힘: 속성 패널이 기본으로 접힘', el.inspector.classList.contains('collapsed'));
+  check('9. 1280px 패널 접힘: 쪽 맞춤 배율 85% 이상', fitPct() >= 85, $('#zoomLabel').textContent);
+  await clickEl($('#inspExpandBtn'), 600);
+  check('9. 1280px에서 펼치면 그대로 펼쳐 둠', !el.inspector.classList.contains('collapsed'));
+  await clickEl($('#inspCollapseBtn'), 400);
+  await resizeTo(wasW, wasH);
+  check('9. 넓은 창으로 돌아오면 저장된 선택(펼침)대로', !el.inspector.classList.contains('collapsed'));
+
+  // 경고 띠: 캔버스 위에 고정, 본문을 밀어냄, 상태 막대에는 없음
+  const vpTop0 = el.gridViewport.getBoundingClientRect().top;
+  await clickEl($('#backToCatalogBtn'), 600);
+  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '준공사진첩'), 200);
+  await clickEl($$('#companyGrid .company-card').find((c) => c.querySelector('.company-name').textContent.trim() === '아크로'), 2200);
+  await waitFor(() => $('#editorView').classList.contains('active'));
+  await sleep(400);
+  const band = $('#canvasNotices');
+  const bR = band.getBoundingClientRect(); const vR = el.gridViewport.getBoundingClientRect();
+  check('9. 경고 띠 표시: 없는 글꼴이 캔버스 위 띠에', $('#fontBanner').classList.contains('visible') && bR.height > 0 && !!band.closest('.canvas-wrap'), `${Math.round(bR.height)}px`);
+  check('9. 경고 띠는 본문을 밀어냄(겹치지 않음)', vR.top >= bR.bottom - 0.5 && vR.top > vpTop0 + 10, `띠 아래 ${Math.round(bR.bottom)} / 본문 위 ${Math.round(vR.top)} (띠 없을 때 ${Math.round(vpTop0)})`);
+  check('9. 상태 막대에는 시트 탭·쪽 수·예상 용량·줌만', !$('.statusbar #fontBanner') && !$('.statusbar #overflowChip') && !!$('.statusbar #pageCountText') && !!$('.statusbar .zoom-ctl'));
+  await shot('a12_warn_band');
+  await clickEl($('#fontBanner'), 400);
+  check('9. 띠를 누르면 글꼴 설정으로(기존 동작)', /문서 글꼴 바꾸기/.test($('#inspBody').textContent));
+  await clickEl($('#dismissFontBannerBtn'), 300);
+  check('9. 닫으면 띠가 사라지고 본문이 올라감', getComputedStyle(band).display === 'none' && Math.abs(el.gridViewport.getBoundingClientRect().top - vpTop0) < 1, Math.round(el.gridViewport.getBoundingClientRect().top));
+
+  // 시트 17개 양식(포스코)을 1280px로: 경고 띠가 있어도 시트 탭 끝까지 이동
+  await clickEl($('#backToCatalogBtn'), 600);
+  await resizeTo(1280, 800);
+  await clickEl($$('#typeTabs button').find((b) => b.firstChild.textContent.trim() === '준공사진첩'), 200);
+  await clickEl($$('#companyGrid .company-card').find((c) => c.querySelector('.company-name').textContent.trim() === '포스코'), 2200);
+  await waitFor(() => $('#editorView').classList.contains('active'));
+  await sleep(500);
+  const tabs = $$('#sheetTabsBar .sheet-tab');
+  check('9. 포스코 1280px: 시트 17개, 경고 띠 표시', tabs.length === 17 && $('#fontBanner').classList.contains('visible'), `${tabs.length}개`);
+  const last = tabs[16];
+  last.scrollIntoView({ inline: 'nearest' }); await sleep(200);
+  await clickEl(last, 700);
+  check('9. 포스코 1280px: 마지막 시트 탭까지 가서 열림', state.activeSheetIdx === 16, state.activeSheetIdx);
+  await clickEl($$('#sheetTabsBar .sheet-tab')[0], 600);
+  await shot('a13_posco_1280');
+  await resizeTo(wasW, wasH);
 } catch (err) { check('예외 없음', false, String(err && err.stack || err)); }
 return { checks, confirms };

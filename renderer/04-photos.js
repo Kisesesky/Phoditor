@@ -387,7 +387,7 @@ function createPhotoCardElement(photo, idx, sourceKey, listRef) {
     const cacheB = document.createElement('span');
     cacheB.className = 'cache-badge';
     cacheB.textContent = '캐시';
-    item.appendChild(cacheB);
+    (item.querySelector('.photo-thumb-wrap') || item).appendChild(cacheB);
   }
 
   const nameEl = document.createElement('div');
@@ -616,7 +616,6 @@ function renderMyboxPanel() {
       ${detail}
     `;
     const goSettingsBtn = document.createElement('button');
-    goSettingsBtn.className = 'primary';
     goSettingsBtn.textContent = mb.error.expired ? '새 토큰 넣기' : 'MYBOX 설정으로 이동';
     goSettingsBtn.addEventListener('click', openSettingsModal);
     errBox.appendChild(goSettingsBtn);
@@ -625,7 +624,7 @@ function renderMyboxPanel() {
   }
 
   if (!mb.folders.length && !mb.files.length) {
-    el.photoGrid.innerHTML = '<div class="photo-empty">이 폴더에 하위 폴더나 지원하는 이미지 파일이 없습니다.</div>';
+    el.photoGrid.innerHTML = '<div class="photo-empty">이 폴더에 하위 폴더나 지원하는 이미지 파일이 없습니다.<br/>암호 폴더·공유받은 폴더는 열 수 없어요.</div>';
     return;
   }
 

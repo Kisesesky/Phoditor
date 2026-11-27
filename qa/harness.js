@@ -45,6 +45,12 @@ app.on('browser-window-created', (_e, win) => {
       wc.executeJavaScript('window.__qaExcelSet = (window.__qaExcelSet || 0) + 1').catch(() => {});
       return;
     }
+    // 창 크기 바꾸기(좁은 창 확인): __QA_RESIZE__:{"w":1280,"h":800}
+    if (typeof message === 'string' && message.startsWith('__QA_RESIZE__:')) {
+      const o = JSON.parse(message.slice('__QA_RESIZE__:'.length));
+      win.setContentSize(o.w, o.h);
+      return;
+    }
     // Finder에서 .pbook 두 번 누름 흉내: __QA_OPENFILE__:<경로> → 맥이 보내는 것과 같은 open-file 이벤트
     if (typeof message === 'string' && message.startsWith('__QA_OPENFILE__:')) {
       app.emit('open-file', { preventDefault() {} }, message.slice('__QA_OPENFILE__:'.length));
